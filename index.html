@@ -141,6 +141,8 @@ section{padding:30px 0 6px}
 .vbtn svg{width:17px;height:17px}
 .vbtn.like.on{background:var(--red-soft);border-color:var(--red);color:var(--red)}
 .vbtn.must.on{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.act.food h3{font-size:17px}
+.kind{font-size:13px;font-weight:700;color:var(--red)}
 .voters{font-size:12px;color:var(--muted);min-height:16px}
 .voters b{color:var(--text)}
 
@@ -199,6 +201,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .pin.v{background:#b3262e}
 .pin.m{background:#b3262e;box-shadow:0 0 0 3px #e4b64f,0 1px 4px rgba(0,0,0,.4)}
 .pin.d{background:#1d2b4f}
+.pin.f{background:#6b4fa0}
 .home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .home svg{width:18px;height:18px;fill:#fff}
 .apt{position:relative;width:46px;height:46px}
@@ -295,6 +298,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <a href="#logistica">Logistica</a>
     <a href="#checklist">Checklist</a>
     <a href="#vedere">Da vedere</a>
+    <a href="#mangiare">Mangiare</a>
     <a href="#mappa">Mappa</a>
     <a href="#classifica">Classifica</a>
     <a href="#programma">Programma</a>
@@ -352,7 +356,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="facts">
       <div class="fact"><b>Buio alle 16</b><span>Il sole tramonta verso le 15:50: le cose all'aperto vanno fatte al mattino, la sera è perfetta per le luci di Natale.</span></div>
       <div class="fact"><b>Meteo 3–9 °C</b><span>Spesso pioggia: strati, giacca impermeabile, scarpe comode.</span></div>
-      <div class="fact"><b>Mezzi pubblici</b><span>Sotto gli 11 anni gratis con un adulto. Adulti: una carta contactless a testa (tetto giornaliero ~£9 in zona 1–2).</span></div>
+      <div class="fact"><b>Mezzi pubblici</b><span>Adulti con la propria carta contactless o il telefono. 9 e 10 anni gratis con un adulto. 12 e 14 anni con la Oyster a metà prezzo (vedi checklist).</span></div>
       <div class="fact"><b>Domenica</b><span>Negozi aperti 12–18, molti teatri chiusi.</span></div>
     </div>
   </section>
@@ -381,6 +385,12 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="acts" id="acts"></div>
   </section>
 
+  <section id="mangiare">
+    <h2>Dove mangiare</h2>
+    <p class="lead">Posti semplici e non cari, scelti evitando la cucina italiana fatta male. Tocca ♥ su quelli che ti ispirano. Prezzi indicativi a persona.</p>
+    <div class="acts" id="food"></div>
+  </section>
+
   <section id="mappa">
     <h2>Mappa</h2>
     <p class="lead">La casa e tutte le proposte, con lo stesso numero delle schede. Scegliendo un giorno si vede il percorso di quel giorno.</p>
@@ -388,7 +398,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapNote"></p>
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
-    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span></div>
+    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante</span></div>
   </section>
 
   <section id="classifica">
@@ -518,9 +528,6 @@ const ACTS = [
   {id:"skygarden", wp:"20_Fenchurch_Street", ll:[51.5113,-0.0836], cat:"esperienze", prio:"media", free:true, n:"Sky Garden",
    d:"Giardino panoramico al 35° piano, gratis con prenotazione (si apre circa 3 settimane prima). Vicino a Liverpool Street: comodo per la famiglia Brindisi lunedì mattina.",
    z:"City", t:"1h", pa:"Gratis", pc:"Gratis", book:true},
-  {id:"fishchips", wp:"Fish_and_chips", cat:"cibo", prio:"media", n:"Fish & chips in un pub",
-   d:"Cena tradizionale inglese in un pub, per esempio a Notting Hill o Covent Garden.",
-   z:"Da scegliere", t:"1,5h", pa:"~£15–20", pc:"~£12", book:true, note:"Per 8 persone meglio prenotare"},
   {id:"greenwich", wp:"Cutty_Sark", ll:[51.4826,-0.0077], far:true, cat:"classici", prio:"bassa", n:"Greenwich",
    d:"La nave Cutty Sark, il meridiano zero all'Osservatorio Reale, il mercato coperto. Ci si arriva in battello.",
    z:"Greenwich (~45 min)", t:"Mezza giornata", pa:"Osservatorio ~£24", pc:"~£12"},
@@ -547,18 +554,51 @@ const ACTS = [
    z:"South Bank", t:"1,5h", pa:"~£30", pc:"~£25", book:true}
 ];
 
+const FOOD = [
+  {id:"r_churchill", ll:[51.5069,-0.1946], near:true, book:true, n:"The Churchill Arms", k:"Pub con cucina thai",
+   d:"Pub storico coperto di fiori, con cucina thai autentica nella veranda delle farfalle. Economico e adatto ai gruppi, spesso pieno: meglio prenotare.",
+   z:"Kensington, 5 min da casa", pr:"~£15–20"},
+  {id:"r_honest", ll:[51.5159,-0.2051], near:true, book:true, n:"Honest Burgers Portobello", k:"Hamburger",
+   d:"Hamburger di carne britannica e patatine al rosmarino fatte da loro. Prenotano per gruppi da 6 in su.",
+   z:"Portobello Road, a piedi da casa", pr:"~£15–20"},
+  {id:"r_windsor", ll:[51.5053,-0.1990], near:true, book:true, n:"The Windsor Castle", k:"Pub · Sunday roast",
+   d:"Pub del 1835 tra Notting Hill e Kensington, famoso per il Sunday roast, l'arrosto della domenica con patate e verdure. Accetta prenotazioni.",
+   z:"Campden Hill, 10 min da casa", pr:"~£20–25"},
+  {id:"r_poppies", ll:[51.5131,-0.1316], book:true, n:"Poppies Fish & Chips Soho", k:"Fish & chips",
+   d:"Fish & chips tradizionale in un locale in stile anni '50, prenotabile. Comodo prima o dopo le luci di Natale.",
+   z:"Soho", pr:"~£15–20"},
+  {id:"r_flatiron", ll:[51.5114,-0.1233], n:"Flat Iron Covent Garden", k:"Bistecca",
+   d:"Bistecca semplice e buona a circa £15, contorni a parte. Di solito senza prenotazione: meglio andare presto.",
+   z:"Covent Garden", pr:"~£20–25"},
+  {id:"r_chinatown", ll:[51.5113,-0.1318], n:"Chinatown (Gerrard Street)", k:"Ravioli e dim sum",
+   d:"Tanti locali economici: per esempio Dumplings' Legend, dove si vedono preparare i ravioli, o Gerrard's Corner con i grandi tavoli rotondi.",
+   z:"Soho", pr:"~£15–20"},
+  {id:"r_pizza", ll:[51.5115,-0.1877], near:true, n:"Pizza Pilgrims Queensway", k:"Pizza napoletana",
+   d:"Catena londinese di pizza napoletana fatta bene, per quando vi manca casa. Ci sono locali anche a Covent Garden, Soho e Camden.",
+   z:"Queensway, 10 min da casa", pr:"~£15–20"},
+  {id:"r_dishoom", ll:[51.5015,-0.1917], book:true, n:"Dishoom Kensington", k:"Indiano",
+   d:"Cucina indiana in stile caffè di Bombay, amatissima a Londra, con menu bambini poco piccante. Dopo le 17:45 prenotano solo gruppi da 6 in su (noi siamo 8). Un po' più caro.",
+   z:"Kensington High Street", pr:"~£25–30"},
+  {id:"r_street", n:"Street food ai mercati", k:"Pranzo veloce",
+   d:"Borough, Camden e Portobello: si sceglie ognuno quello che vuole, si mangia in piedi o ai tavoli comuni.",
+   z:"Mercati", pr:"~£10–15"},
+  {id:"r_quick", n:"Pret, Leon, Wagamama", k:"Catene veloci",
+   d:"Ovunque in centro, economiche e veloci. Wagamama (noodle e riso giapponesi) di solito piace molto ai ragazzi.",
+   z:"Ovunque", pr:"~£8–18"}
+];
+
 const CHECK = [
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
     {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
-    {id:"d_team", fam:true, t:"Tessera sanitaria di tutti (consigliata)", n:"Non serve per entrare. Sul retro c'è la TEAM, che copre le cure necessarie nel Regno Unito: basta averla nel portafoglio."},
+    {id:"d_team", fam:true, t:"Tessera sanitaria italiana di tutti (consigliata)", n:"Non c'è niente da comprare: è la tessera che avete già. Il retro (TEAM) vale per le cure necessarie nel Regno Unito."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
     {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."},
     {id:"b_orari", t:"Chiedere all'host orari di check-in, check-out e istruzioni d'ingresso"}
   ]},
   {g:"Soldi e trasporti", items:[
-    {id:"s_card", fam:true, t:"Una carta contactless per ogni adulto", n:"Sui mezzi ognuno deve avere la sua carta, anche nella stessa famiglia."},
-    {id:"s_oyster", t:"Oyster con sconto Young Visitor per i ragazzi di 12 e 14 anni", n:"Si fa attivare in stazione, circa metà prezzo. Sotto gli 11 anni si viaggia gratis."},
+    {id:"s_card", fam:true, t:"Adulti: carta contactless o telefono per metro e bus", n:"Nessuna carta speciale: va bene la normale carta di credito, debito o prepagata contactless, oppure Apple Pay / Google Pay. Si appoggia al lettore giallo all'entrata e all'uscita, come a Milano. Ognuno la sua, perché una carta paga per una sola persona. Tetto di spesa giornaliero ~£9 in zona 1–2."},
+    {id:"s_oyster", t:"Ragazzi di 12 e 14 anni: Oyster con sconto Young Visitor", n:"La Oyster è la tessera ricaricabile dei trasporti di Londra. Si compra in stazione all'arrivo (~£7 più il credito) e allo sportello, con il ragazzo presente, si chiede lo sconto Young Visitor: metà prezzo per 14 giorni. Per gli adulti non conviene: stesse tariffe della carta contactless, ma costa la tessera. I bambini di 9 e 10 anni viaggiano gratis con un adulto, senza tessera."},
     {id:"s_bank", fam:true, t:"Carta senza commissioni sull'estero", n:"In Inghilterra si paga quasi tutto con carta, poche sterline in contanti bastano."},
     {id:"s_transfer", fam:true, t:"Trasferimento aeroporto deciso (ed eventualmente comprato)", n:"Stansted Express online costa meno."}
   ]},
@@ -573,7 +613,7 @@ const CHECK = [
     {id:"b_hp", t:"Warner Bros Studio Tour (se lo scegliamo)", n:"A dicembre si esaurisce con mesi di anticipo: se è tra i più votati va prenotato subito."},
     {id:"b_musical", t:"Musical (se lo scegliamo)", n:"Verificare i giorni di spettacolo, la domenica molti sono chiusi."},
     {id:"b_ww", t:"Winter Wonderland: fascia oraria d'ingresso (se lo scegliamo)", n:"Nel weekend l'ingresso è a pagamento e a orario."},
-    {id:"b_ristorante", t:"Una cena prenotata per 8 (sabato sera)"}
+    {id:"b_ristorante", t:"Decidere le cene (fuori o a casa) e prenotare dove serve", n:"Soprattutto venerdì e sabato sera: per 8 persone senza prenotazione è difficile. Idee nella sezione Dove mangiare."}
   ]}
 ];
 
@@ -709,8 +749,15 @@ function renderWho(){
 }
 
 function renderChecklist(){
-  let total = 0, done = 0;
-  $("#checklistBody").innerHTML = CHECK.map(gr => {
+  let total = 1, done = 0;
+  const VP = votes().people, voted = ALL_PEOPLE.filter(p => VP.has(p)), missing = ALL_PEOPLE.filter(p => !VP.has(p));
+  const allVoted = !missing.length; if (allVoted) done++;
+  const voteRow = `<div class="group"><h3>Votazioni</h3><div class="items"><div class="item ${allVoted?"done":""}"><div class="txt">
+    <div>Ognuno vota le cose da vedere: ♥ quante vuole, ★ una sola irrinunciabile a persona</div>
+    <div class="note">Si spunta da sola quando hanno votato tutti e 8. <a href="#vedere">Vai alle proposte</a></div>
+    <div class="by" style="color:${allVoted?"var(--green)":"var(--muted)"}">${voted.length} su 8 hanno votato${missing.length ? " · mancano " + esc(missing.join(", ")) : " ✓"}</div>
+  </div><div class="checks"><span class="chk ${allVoted?"on":""}" aria-hidden="true">${allVoted?ICON.check:voted.length+"/8"}</span></div></div></div></div>`;
+  $("#checklistBody").innerHTML = voteRow + CHECK.map(gr => {
     const rows = gr.items.map(it => {
       const slots = it.fam ? [["M","Milano","MI"],["B","Brindisi","BR"]] : [["", "", ""]];
       let allOn = true; const whoDid = [];
@@ -732,7 +779,7 @@ function votes(){
   const likes = {}, musts = {}, people = new Set();
   for (const k in state) {
     const v = state[k].v, parts = k.split("|");
-    if (parts[0] === "like" && v === "1") { (likes[parts[1]] = likes[parts[1]] || []).push(parts[2]); people.add(parts[2]); }
+    if (parts[0] === "like" && v === "1") { (likes[parts[1]] = likes[parts[1]] || []).push(parts[2]); if (!parts[1].startsWith("r_")) people.add(parts[2]); }
     if (parts[0] === "must" && v) { (musts[v] = musts[v] || []).push(parts[1]); people.add(parts[1]); }
   }
   return {likes, musts, people};
@@ -805,7 +852,22 @@ function renderDays(){
   </div>`).join("");
 }
 
-function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderRank(); renderMap(); }
+function renderFood(){
+  const V = votes();
+  $("#food").innerHTML = FOOD.map(r => {
+    const liked = me && val("like|" + r.id + "|" + me) === "1", L = V.likes[r.id] || [];
+    return `<article class="card act food" id="act-${r.id}">
+      <div class="act-top"><div><div class="kind">${esc(r.k)}</div><h3>${esc(r.n)}</h3></div><span class="pill">${esc(r.pr)}</span></div>
+      <div class="tags">${r.near?'<span class="pill green">Vicino a casa</span>':""}${r.book?'<span class="pill red">Prenotare</span>':""}<span class="pill">${esc(r.z)}</span></div>
+      <p>${esc(r.d)}</p>
+      ${r.ll?`<button type="button" class="maplink" data-mapfood="${r.id}">📍 Vedi sulla mappa</button>`:""}
+      <div class="voters">${L.length ? "♥ " + esc(L.join(", ")) : "Nessun voto ancora"}</div>
+      <div class="act-btns"><button type="button" class="vbtn like ${liked?"on":""}" data-likefood="${r.id}" aria-pressed="${!!liked}">${ICON.heart}Mi ispira</button></div>
+    </article>`;
+  }).join("");
+}
+
+function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
 
 // ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
 const LS_IMG = "londra26_img_v2";
@@ -853,8 +915,9 @@ const AIRPORTS = [
   {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35"},
   {code:"STN", n:"Stansted", fam:"Brindisi", ll:[51.8860,0.2389], col:"#9a7210", info:"Arrivo ven 12:15 · ripartenza lun 16:15"}
 ];
+const FORK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff" style="margin-top:4px"><path d="M7 2v7a2 2 0 0 0 1.5 1.9V22h2V10.9A2 2 0 0 0 12 9V2h-1.2v6h-1V2H8.6v6h-1V2zm9 0c-1.7 0-3 2.2-3 5v5h2v10h2V2z"/></svg>';
 const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
-let map = null, mapLayer = null, mapMode = "all";
+let map = null, mapLayer = null, mapMode = "all", fitted = false;
 const markers = {};
 const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>';
 
@@ -875,7 +938,6 @@ function initMap(){
   mapLayer = L.layerGroup().addTo(map);
   renderMap(true);
   // riallinea quando la mappa diventa visibile (dimensioni definitive)
-  let fitted = false;
   const refit = () => { map.invalidateSize(); renderMap(true); };
   window.addEventListener("load", refit);
   if ("IntersectionObserver" in window) new IntersectionObserver(es => {
@@ -884,7 +946,7 @@ function initMap(){
 }
 
 function renderMapTools(){
-  const opts = [["all","Tutte"],["voted","Solo votate"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
+  const opts = [["all","Tutte"],["voted","Solo votate"],["food","Ristoranti"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
 }
 
@@ -917,6 +979,15 @@ function renderMap(fit){
     list = day.stops.map(id => ACTS.find(a => a.id === id)).filter(a => a && a.ll);
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
+  } else if (mapMode === "food") {
+    list = [];
+    note = "Ristoranti proposti: tocca un punto per il nome.";
+    FOOD.filter(r => r.ll).forEach(r => {
+      const l = (V.likes[r.id] || []).length;
+      markers[r.id] = L.marker(r.ll, {icon:L.divIcon({className:"", html:`<div class="pin f">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]})})
+        .bindPopup(`<b>${esc(r.n)}</b><br>${esc(r.k)} · ${esc(r.pr)}<br>♥ ${l}<br><a href="#act-${r.id}">Apri la scheda</a>`).addTo(mapLayer);
+      pts.push(r.ll);
+    });
   } else {
     list = ACTS.filter(a => a.ll && (mapMode === "all" || score(V, a.id) > 0));
     if (mapMode === "voted" && !list.length) note = "Nessuna proposta votata per ora.";
@@ -937,12 +1008,13 @@ function renderMap(fit){
   if (fit && pts.length > 1) map.fitBounds(pts, withApt ? {paddingTopLeft:[50,40], paddingBottomRight:[50,70], maxZoom:15} : {padding:[24,24], maxZoom:15});
 }
 
-function showOnMap(id){
-  if (mapMode !== "all") { mapMode = "all"; renderMap(false); }
+function showOnMap(id, keepMode){
+  if (!keepMode && mapMode !== "all") { mapMode = "all"; renderMap(false); }
   $("#mappa").scrollIntoView();
   if (!map || !markers[id]) return;
-  const a = ACTS.find(x => x.id === id);
-  setTimeout(() => { map.setView(a.ll, 15); markers[id].openPopup(); }, 350);
+  fitted = true; map.invalidateSize();
+  const ll = markers[id].getLatLng();
+  setTimeout(() => { map.setView(ll, 15); markers[id].openPopup(); }, 350);
 }
 
 function renderCountdown(){
@@ -965,6 +1037,11 @@ document.addEventListener("click", e => {
   if (el.id === "whoBtn") return openWho();
   if (el.id === "whoCancel") { afterWho = null; $("#whoModal").classList.remove("open"); return; }
   if (el.dataset.mapto) return showOnMap(el.dataset.mapto);
+  if (el.dataset.mapfood) { mapMode = "food"; renderMap(false); return showOnMap(el.dataset.mapfood, true); }
+  if (el.dataset.likefood) {
+    const id = el.dataset.likefood, r = FOOD.find(x => x.id === id);
+    return needMe(() => { const k = "like|" + id + "|" + me; setKey(k, val(k) === "1" ? "" : "1", "Ristorante: " + r.n); });
+  }
   if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; renderMap(true); return; }
   if (el.dataset.pick) return setMe(el.dataset.pick);
   if (el.dataset.filter) { filter = el.dataset.filter; renderFilters(); renderActs(); return; }

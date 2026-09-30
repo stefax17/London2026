@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta property="og:title" content="Londra 2026 · 4–7 dicembre">
 <meta property="og:description" content="Checklist, cose da vedere da votare e programma del viaggio">
-<meta name="theme-color" content="#1d2b4f">
+<meta name="theme-color" content="#7fb3dc">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2b4f'/%3E%3Cpath d='M32 10l14 24H18z' fill='%232f7a4d'/%3E%3Cpath d='M32 22l16 26H16z' fill='%232f7a4d'/%3E%3Crect x='28' y='48' width='8' height='8' fill='%23b98a1e'/%3E%3Ccircle cx='32' cy='10' r='4' fill='%23e4b64f'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,18 +49,20 @@ button{font:inherit;color:inherit;cursor:pointer}
 .small{font-size:13px}
 
 /* hero */
-.hero{background:var(--hero-bg);color:var(--hero-text);padding:28px 0 22px;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
-  background-image:radial-gradient(circle at 12% 30%,#fff 1px,transparent 1.5px),radial-gradient(circle at 70% 20%,#fff 1px,transparent 1.5px),radial-gradient(circle at 40% 80%,#fff 1px,transparent 1.5px),radial-gradient(circle at 88% 65%,#fff 1px,transparent 1.5px);
-  background-size:120px 90px,150px 110px,95px 130px,170px 120px}
+.hero{position:relative;overflow:hidden;color:#13213f;padding-top:28px;
+  background:linear-gradient(180deg,#7fb3dc 0%,#b9d5ec 30%,#f3dccb 62%,#f6bf9b 88%,#f2a987 100%)}
+.hero::before{content:"";position:absolute;right:14%;top:58%;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,#fff4d6 0%,#ffd9a0 45%,rgba(255,217,160,0) 70%);pointer-events:none}
 .hero .wrap{position:relative;z-index:1}
-.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-muted);font-weight:600}
-.hero h1{font-size:40px;margin:6px 0 4px}
-.hero p{margin:0;color:var(--hero-muted)}
+.eyebrow{font-size:17px;font-weight:600;color:#2c3a5c}
+.hero h1{font-size:42px;margin:4px 0 4px;color:#13213f}
+.hero p{margin:0;color:#34436a;font-weight:500}
+.skyline{position:relative;display:block;width:100%;max-width:1000px;height:auto;margin:10px auto 0}
+.ground{height:10px;background:#1d2b4f;margin-top:-1px}
 .hero-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}
-.count{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:8px 12px;font-weight:600}
+.count{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:12px;padding:8px 12px;font-weight:600}
 .count b{font-family:Fraunces,Georgia,serif;font-size:22px;margin-right:4px}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--hero-text);border-radius:999px;padding:8px 14px;font-weight:600}
+.btn-ghost{background:#1d2b4f;border:1px solid #1d2b4f;color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
 
 /* sticky bar */
 .bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -186,7 +188,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .maplink{background:none;border:0;padding:0;font-size:13px;font-weight:600;color:var(--red);text-align:left}
 
 /* mappa */
-#mapBox{height:440px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--surface-2);z-index:0}
+#mapBox{height:400px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--surface-2);z-index:0}
 .maptools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
 .maptools::-webkit-scrollbar{display:none}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:8px}
@@ -198,6 +200,8 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .pin.d{background:#1d2b4f}
 .home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .home svg{width:18px;height:18px;fill:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}}
+:root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}
 .leaflet-popup-content{font:13px/1.4 Inter,sans-serif;margin:10px 12px}
 .leaflet-popup-content b{font-size:14px}
 
@@ -208,14 +212,14 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .known button{padding:12px 0}
 .linkbtn{background:none;border:0;color:var(--muted);font-weight:600;margin-top:14px;padding:6px 0;width:100%}
 
-@media (min-width:640px){.hero h1{font-size:52px}.modal{align-items:center}#mapBox{height:520px}}
+@media (min-width:640px){.hero h1{font-size:56px}.modal{align-items:center}#mapBox{height:520px}}
 </style>
 </head>
 <body>
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Viaggio di famiglia</div>
+    <div class="eyebrow">Le vacanze... Quelle belle 😎</div>
     <h1>Londra 2026</h1>
     <p>4–7 dicembre · 2 famiglie · 8 viaggiatori · base a Notting Hill</p>
     <div class="hero-row">
@@ -223,6 +227,61 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
       <button class="btn-ghost" id="shareBtn" type="button">Condividi link</button>
     </div>
   </div>
+  <svg class="skyline" viewBox="0 0 800 210" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <g fill="#5b6c96" opacity=".45">
+      <path d="M0 210V168h24v-14h20v22h18v-30h26v26h20v-18h30v24h16V150h22v30h40v-20h26v28h30v-36h22v40h26v-24h30v18h24v-30h20v32h34v-22h26v26h22v-40h24v36h30v-18h26v24h24v-28h22v30h28v-20h24v28h30v-16h18v34z"/>
+    </g>
+    <g fill="#1d2b4f" stroke="#1d2b4f">
+      <!-- Big Ben e Parlamento -->
+      <rect x="44" y="104" width="28" height="106" stroke="none"/>
+      <rect x="40" y="70" width="36" height="36" stroke="none"/>
+      <rect x="45" y="50" width="26" height="20" stroke="none"/>
+      <path d="M43 50L58 8l15 42z" stroke="none"/>
+      <line x1="58" y1="8" x2="58" y2="0" stroke-width="2"/>
+      <circle cx="58" cy="88" r="11" fill="#f6e3c4" stroke="none"/>
+      <path d="M58 88V80M58 88l6 3" stroke="#1d2b4f" stroke-width="1.6" fill="none"/>
+      <path d="M72 210v-50l5-8 5 8 8-10 8 10 8-10 8 10 8-10 8 10 8-10 8 10 8-10 8 10 5-8 5 8v50z" stroke="none"/>
+      <rect x="162" y="118" width="24" height="92" stroke="none"/>
+      <path d="M160 118l4-10h20l4 10z" stroke="none"/>
+      <!-- London Eye -->
+      <g fill="none" stroke-width="2.6"><circle cx="250" cy="112" r="78"/><circle cx="250" cy="112" r="72" stroke-width="1"/></g>
+      <g stroke-width=".9" opacity=".8">
+        <line x1="250" y1="34" x2="250" y2="190"/><line x1="172" y1="112" x2="328" y2="112"/>
+        <line x1="195" y1="57" x2="305" y2="167"/><line x1="195" y1="167" x2="305" y2="57"/>
+        <line x1="221" y1="40" x2="279" y2="184"/><line x1="221" y1="184" x2="279" y2="40"/>
+        <line x1="178" y1="83" x2="322" y2="141"/><line x1="178" y1="141" x2="322" y2="83"/>
+      </g>
+      <g stroke="none"><circle cx="250" cy="31" r="4"/><circle cx="307" cy="55" r="4"/><circle cx="331" cy="112" r="4"/><circle cx="307" cy="169" r="4"/><circle cx="193" cy="55" r="4"/><circle cx="169" cy="112" r="4"/><circle cx="193" cy="169" r="4"/><circle cx="290" cy="41" r="4"/><circle cx="210" cy="41" r="4"/><circle cx="321" cy="80" r="4"/><circle cx="179" cy="80" r="4"/><circle cx="321" cy="144" r="4"/><circle cx="179" cy="144" r="4"/><circle cx="250" cy="112" r="7"/></g>
+      <path d="M250 112l-22 98M250 112l22 98" stroke-width="3.5" fill="none"/>
+      <!-- St Paul -->
+      <path d="M340 210v-44h12v-10h58v10h12v44z" stroke="none"/>
+      <rect x="356" y="136" width="50" height="22" stroke="none"/>
+      <path d="M356 137c2-30 48-30 50 0z" stroke="none"/>
+      <rect x="377" y="94" width="8" height="16" stroke="none"/>
+      <line x1="381" y1="94" x2="381" y2="80" stroke-width="2"/><line x1="376" y1="85" x2="386" y2="85" stroke-width="2"/>
+      <rect x="342" y="140" width="10" height="26" stroke="none"/><rect x="410" y="140" width="10" height="26" stroke="none"/>
+      <!-- Gherkin e Shard -->
+      <path d="M452 210c-4-50 4-92 16-104 12 12 20 54 16 104z" stroke="none"/>
+      <path d="M512 210l24-172 4-8 3 10 24 170z" stroke="none"/>
+      <!-- Tower Bridge -->
+      <path d="M588 150q22 30 44-44M756 106q22 74 44 44" fill="none" stroke-width="2.4"/>
+      <rect x="586" y="172" width="214" height="7" stroke="none"/>
+      <rect x="632" y="100" width="28" height="110" stroke="none"/>
+      <rect x="728" y="100" width="28" height="110" stroke="none"/>
+      <path d="M630 100l16-34 16 34zM726 100l16-34 16 34z" stroke="none"/>
+      <path d="M628 100l3-14 3 14zM658 100l3-14 3 14zM724 100l3-14 3 14zM754 100l3-14 3 14z" stroke="none"/>
+      <rect x="660" y="106" width="68" height="8" stroke="none"/>
+      <g fill="#f6e3c4" stroke="none" opacity=".85"><rect x="642" y="124" width="8" height="12" rx="4"/><rect x="738" y="124" width="8" height="12" rx="4"/><rect x="642" y="148" width="8" height="12" rx="4"/><rect x="738" y="148" width="8" height="12" rx="4"/></g>
+    </g>
+    <!-- bus rosso -->
+    <g>
+      <rect x="560" y="176" width="64" height="30" rx="4" fill="#c8102e"/>
+      <rect x="560" y="189" width="64" height="2" fill="#8e0b20"/>
+      <g fill="#f6e3c4"><rect x="566" y="180" width="10" height="7" rx="1"/><rect x="580" y="180" width="10" height="7" rx="1"/><rect x="594" y="180" width="10" height="7" rx="1"/><rect x="608" y="180" width="10" height="7" rx="1"/><rect x="566" y="194" width="10" height="7" rx="1"/><rect x="580" y="194" width="10" height="7" rx="1"/><rect x="594" y="194" width="10" height="7" rx="1"/><rect x="613" y="193" width="7" height="11" rx="1"/></g>
+      <circle cx="574" cy="206" r="5" fill="#13213f"/><circle cx="610" cy="206" r="5" fill="#13213f"/>
+    </g>
+  </svg>
+  <div class="ground"></div>
 </header>
 
 <div class="bar">
@@ -321,6 +380,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="lead">La casa e tutte le proposte, con lo stesso numero delle schede. Scegliendo un giorno si vede il percorso di quel giorno.</p>
     <div class="maptools" id="mapTools"></div>
     <p class="mapnote" id="mapNote"></p>
+    <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
     <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span></div>
   </section>
@@ -492,7 +552,7 @@ const CHECK = [
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
     {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
-    {id:"d_team", fam:true, t:"Tessera sanitaria (TEAM) di tutti", n:"Copre le cure necessarie nel Regno Unito."},
+    {id:"d_team", fam:true, t:"Tessera sanitaria di tutti (consigliata)", n:"Non serve per entrare. Sul retro c'è la TEAM, che copre le cure necessarie nel Regno Unito: basta averla nel portafoglio."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
     {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."}
   ]},
@@ -708,7 +768,7 @@ function renderActs(){
     ].filter(Boolean).join(" · ");
     const img = imgs[a.wp];
     return `<article class="card act ${must?"mine":""}" id="act-${a.id}">
-      <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikipedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
+      <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy" onerror="this.remove()">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikipedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
       <div class="act-top"><h3>${esc(a.n)}</h3><span class="pill ${pr[1]}">${pr[0]}</span></div>
       <div class="tags"><span class="pill">${esc(CATS[a.cat])}</span>${a.near?'<span class="pill green">Vicino a casa</span>':""}${a.book?'<span class="pill red">Prenotare</span>':""}</div>
       <p>${esc(a.d)}</p>
@@ -752,23 +812,29 @@ function renderDays(){
 function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderRank(); renderMap(); }
 
 // ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
-const LS_IMG = "londra26_img_v1";
+const LS_IMG = "londra26_img_v2";
 let imgs = {};
 try { imgs = JSON.parse(lsGet(LS_IMG) || "{}") || {}; } catch(e){ imgs = {}; }
 function loadImages(){
   const todo = [...new Set(ACTS.map(a => a.wp).filter(w => w && !(w in imgs)))];
   if (!todo.length) return;
-  Promise.all(todo.map(w =>
-    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(w))
-      .then(r => r.ok ? r.json() : null)
-      .then(j => {
-        if (!j || !j.thumbnail) { imgs[w] = null; return; }
-        let src = j.thumbnail.source;
-        if (j.originalimage && j.originalimage.width >= 640) src = src.replace(/\/\d+px-/, "/640px-");
-        imgs[w] = {src, page: j.content_urls && j.content_urls.desktop ? j.content_urls.desktop.page : ""};
-      })
-      .catch(() => {})
-  )).then(() => { lsSet(LS_IMG, JSON.stringify(imgs)); renderActs(); });
+  const titles = todo.map(w => w.replace(/_/g, " "));
+  const url = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1&prop=pageimages&piprop=thumbnail&pithumbsize=500&pilimit=50&titles=" + encodeURIComponent(titles.join("|"));
+  fetch(url).then(r => r.json()).then(j => {
+    const q = j.query || {}, pages = {};
+    Object.values(q.pages || {}).forEach(p => { pages[p.title] = p; });
+    const follow = t => {
+      (q.normalized || []).forEach(n => { if (n.from === t) t = n.to; });
+      (q.redirects || []).forEach(n => { if (n.from === t) t = n.to; });
+      return t;
+    };
+    todo.forEach((w, i) => {
+      const p = pages[follow(titles[i])];
+      imgs[w] = p && p.thumbnail ? {src:p.thumbnail.source, page:"https://en.wikipedia.org/wiki/" + encodeURIComponent(p.title.replace(/ /g, "_"))} : null;
+    });
+    lsSet(LS_IMG, JSON.stringify(imgs));
+    renderActs();
+  }).catch(() => {});
 }
 
 // ---------- MAPPA ----------
@@ -779,14 +845,27 @@ const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v
 
 function initMap(){
   if (!window.L) { $("#mapBox").innerHTML = '<div class="empty" style="padding-top:180px">Mappa non disponibile senza connessione.</div>'; return; }
-  const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
-  map = L.map("mapBox", {scrollWheelZoom:false, zoomControl:true, zoomSnap:0.25}).setView(HOME, 13);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/" + (dark ? "dark_all" : "voyager") + "/{z}/{x}/{y}{r}.png", {
-    subdomains:"abcd", maxZoom:19,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  const touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+  map = L.map("mapBox", {scrollWheelZoom:false, zoomControl:true, zoomSnap:0.25, dragging:!touch, tap:false}).setView(HOME, 13);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
+  if (touch) {
+    $("#mapHint").hidden = false;
+    map.on("click", () => { map.dragging.enable(); $("#mapHint").textContent = "Mappa sbloccata: trascina per spostarti."; });
+    document.addEventListener("touchstart", e => {
+      if (!e.target.closest("#mapBox") && map.dragging.enabled()) { map.dragging.disable(); $("#mapHint").textContent = "Tocca la mappa per spostarla con un dito, due dita per lo zoom."; }
+    }, {passive:true});
+  }
   mapLayer = L.layerGroup().addTo(map);
   renderMap(true);
+  // riallinea quando la mappa diventa visibile (dimensioni definitive)
+  let fitted = false;
+  const refit = () => { map.invalidateSize(); renderMap(true); };
+  window.addEventListener("load", refit);
+  if ("IntersectionObserver" in window) new IntersectionObserver(es => {
+    if (!fitted && es[0].isIntersecting) { fitted = true; refit(); }
+  }).observe($("#mapBox"));
 }
 
 function renderMapTools(){
@@ -883,7 +962,8 @@ if ("IntersectionObserver" in window) {
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => { if (en.isIntersecting) {
       tabLinks.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
-      const on = tabLinks.find(a => a.classList.contains("on")); if (on) on.scrollIntoView({block:"nearest", inline:"nearest"});
+      const on = tabLinks.find(a => a.classList.contains("on")), bar = $("#tabs");
+      if (on) bar.scrollLeft = on.offsetLeft - (bar.clientWidth - on.offsetWidth) / 2;
     }});
   }, {rootMargin:"-40% 0px -55% 0px"});
   document.querySelectorAll("main section").forEach(s => io.observe(s));

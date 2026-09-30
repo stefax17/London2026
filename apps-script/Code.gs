@@ -1,6 +1,6 @@
 // Archivio condiviso per la pagina "Londra 2026".
 // Da incollare in un Google Sheet: Estensioni > Apps Script.
-// Ogni riga del foglio "dati" è una spunta o un voto.
+// Ogni riga del foglio "dati" è una spunta, un voto o una proposta per la checklist.
 
 const SHEET_NAME = 'dati';
 const HEADER = ['chiave', 'valore', 'persona', 'descrizione', 'aggiornato'];
@@ -46,7 +46,7 @@ function doGet(e) {
 
   if (p.action === 'set') {
     const key = String(p.key || '');
-    if (key.length > 100 || !/^(chk|like|must)\|[A-Za-z0-9|_-]+$/.test(key)) {
+    if (key.length > 100 || !/^(chk|like|must|sug)\|[A-Za-z0-9|_-]+$/.test(key)) {
       return json_({ ok: false, error: 'chiave non valida' });
     }
     const person = String(p.person || '');
@@ -56,7 +56,8 @@ function doGet(e) {
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
-      const rec = [key, clean_(p.value, 40), person, clean_(p.desc, 200), new Date()];
+      const max = key.indexOf('sug|') === 0 ? 200 : 40;
+      const rec = [key, clean_(p.value, max), person, clean_(p.desc, 200), new Date()];
       const last = sh.getLastRow();
       const keys = last > 1 ? sh.getRange(2, 1, last - 1, 1).getValues() : [];
       let row = -1;

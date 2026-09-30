@@ -102,6 +102,27 @@ section{padding:30px 0 6px}
 .fact span{font-size:13px;color:var(--muted)}
 
 /* checklist */
+.votebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-radius:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--line)}
+.votebox .vb-t{flex:1;min-width:190px}
+.votebox b{display:block;font-size:15px}
+.votebox span{font-size:13px;color:var(--muted)}
+.votebox .vb-bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:6px}
+.votebox .vb-bar i{display:block;height:100%;background:var(--red);border-radius:99px}
+.votebox a{flex:none;text-decoration:none;background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px}
+.votebox.ok{background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+.votebox.ok .vb-bar i{background:var(--green)}
+.hero-vote{margin-top:16px;background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.9);color:#13213f;max-width:520px}
+.hero-vote span{color:#3d4a6b}.hero-vote .vb-bar{background:rgba(29,43,79,.12)}
+.hero-vote a{background:#b3262e}
+.hero-vote.ok{background:#e1f1e6;border-color:#9fd0b0}.hero-vote.ok .vb-bar i{background:#2f7a4d}
+.sugform{display:flex;gap:8px;margin-top:10px}
+.sugform input{flex:1;min-width:0;font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--text)}
+.sugs{margin-top:10px}
+.sug{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border-top:1px solid var(--line)}
+.sug:first-child{border-top:0}
+.sug .txt{flex:1;min-width:0;font-size:14px}
+.sug .txt small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.sug button{flex:none;background:none;border:0;color:var(--muted);font-size:12px;font-weight:600;text-decoration:underline;padding:2px 0}
 .tips{display:grid;gap:10px}
 .tip{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
 .tip b{display:block;font-size:15px}
@@ -239,6 +260,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="eyebrow">Le vacanze... Quelle belle 😎</div>
     <h1>Londra 2026</h1>
     <p>4–7 dicembre · 2 famiglie · 8 viaggiatori · base a Notting Hill</p>
+    <div class="votebox hero-vote" id="voteHero"></div>
     <div class="hero-row">
       <div class="count" id="countdown"></div>
       <button class="btn-ghost" id="shareBtn" type="button">Condividi link</button>
@@ -387,6 +409,12 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="small muted" id="chkProgressTxt"></div>
     <div class="progress"><i id="chkProgress" style="width:0"></i></div>
     <div id="checklistBody"></div>
+    <div class="group">
+      <h3>Proposte</h3>
+      <p class="small muted" style="margin:0">Manca qualcosa? Proponilo qui: lo valutiamo e, se va bene, entra nella checklist.</p>
+      <div class="sugform"><input id="sugInput" maxlength="200" placeholder="Es. portare le cuffie per l'aereo" aria-label="Voce da proporre"><button type="button" class="btn" id="sugBtn">Invia</button></div>
+      <div class="sugs" id="sugList"></div>
+    </div>
   </section>
 
   <section id="vedere">
@@ -433,6 +461,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
   <section id="programma">
     <h2>Programma</h2>
     <p class="lead">I punti fissi ci sono già, il resto si riempie dopo le votazioni.</p>
+    <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div id="days"></div>
   </section>
 </main>
@@ -719,6 +748,7 @@ function send(key){
     if (pending[key] === p) delete pending[key];
     lastWrite = Date.now();
     if (j && j.ok && j.data) applyRemote(j.data);
+    else { toast("Salvataggio non riuscito" + (key.startsWith("sug|") ? ": va aggiornato lo script del foglio" : "")); poll(); }
     setSync(Object.values(pending).some(x => x.failed) ? "error" : "ok");
   }).catch(() => { p.failed = true; p.inflight = false; setSync("error"); });
 }
@@ -887,7 +917,41 @@ function renderFood(){
   }).join("");
 }
 
-function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
+function renderVoteBoxes(){
+  const VP = votes().people, n = ALL_PEOPLE.filter(p => VP.has(p)).length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
+  const done = !missing.length;
+  const html = done
+    ? `<div class="vb-t"><b>Votazioni chiuse ✓</b><span>Hanno votato tutti e 8: ora prepariamo il programma.</span><div class="vb-bar"><i style="width:100%"></i></div></div>`
+    : `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>Mancano ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
+  ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
+}
+
+// ---------- PROPOSTE PER LA CHECKLIST ----------
+// Esito delle proposte già valutate insieme: id -> "aggiunta" | "scartata"
+const SUG_CLOSED = {};
+function renderSugs(){
+  const list = Object.keys(state).filter(k => k.startsWith("sug|") && state[k].v)
+    .map(k => ({id:k.slice(4), key:k, t:state[k].v.replace(/^'/, ""), p:state[k].p}))
+    .sort((a, b) => a.id < b.id ? -1 : 1);
+  $("#sugList").innerHTML = list.length
+    ? `<div class="items">${list.map(x => {
+        const st = SUG_CLOSED[x.id];
+        return `<div class="sug"><div class="txt">${esc(x.t)}<small>Proposta da ${esc(x.p)} · ${st ? esc(st) : "da valutare"}</small></div>${x.p === me && !st ? `<button type="button" data-unsug="${esc(x.key)}">ritira</button>` : ""}</div>`;
+      }).join("")}</div>`
+    : "";
+}
+function sendSug(){
+  const inp = $("#sugInput"), t = inp.value.trim().replace(/\s+/g, " ");
+  if (t.length < 3) { toast("Scrivi la voce da proporre"); return; }
+  needMe(() => {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+    setKey("sug|" + id, t.slice(0, 200), "Proposta checklist: " + t.slice(0, 150));
+    inp.value = "";
+    toast("Proposta inviata, grazie!");
+  });
+}
+
+function renderAll(){ renderWho(); renderVoteBoxes(); renderChecklist(); renderSugs(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
 
 // ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
 const LS_IMG = "londra26_img_v2";
@@ -1056,6 +1120,8 @@ document.addEventListener("click", e => {
   const el = e.target.closest("button,[data-filter]"); if (!el) return;
   if (el.id === "whoBtn") return openWho();
   if (el.id === "whoCancel") { afterWho = null; $("#whoModal").classList.remove("open"); return; }
+  if (el.id === "sugBtn") return sendSug();
+  if (el.dataset.unsug) { const k = el.dataset.unsug; return setKey(k, "", "Proposta ritirata"); }
   if (el.dataset.mapto) return showOnMap(el.dataset.mapto);
   if (el.dataset.mapfood) { mapMode = "food"; renderMap(false); return showOnMap(el.dataset.mapfood, true); }
   if (el.dataset.likefood) {
@@ -1086,6 +1152,7 @@ document.addEventListener("click", e => {
   }
 });
 $("#whoModal").addEventListener("click", e => { if (e.target.id === "whoModal") { afterWho = null; e.currentTarget.classList.remove("open"); } });
+$("#sugInput").addEventListener("keydown", e => { if (e.key === "Enter") sendSug(); });
 $("#sortSel").addEventListener("change", e => { sortBy = e.target.value; renderActs(); });
 
 // tab attivo

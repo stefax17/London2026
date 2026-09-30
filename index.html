@@ -183,6 +183,8 @@ section{padding:30px 0 6px}
 .rank .nm{font-weight:600}
 .rank .bar2{height:6px;background:var(--surface-2);border-radius:99px;margin-top:5px;overflow:hidden}
 .rank .bar2 i{display:block;height:100%;background:var(--red);border-radius:99px}
+.rank .who2{font-size:12px;color:var(--muted);margin-top:4px}
+.rank .who2 b{color:var(--gold)}
 .rank .sc{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
 .empty{padding:14px;text-align:center;color:var(--muted);font-size:14px}
 
@@ -897,7 +899,11 @@ function renderRank(){
   const people = [...V.people].sort();
   const missing = ALL_PEOPLE.filter(p => !V.people.has(p));
   $("#votersTxt").textContent = (people.length ? `Hanno votato ${people.length} su 8: ${people.join(", ")}.` : "Nessuno ha ancora votato.") + (missing.length && people.length ? ` Mancano: ${missing.join(", ")}.` : "");
-  $("#rank").innerHTML = ranked.length ? ranked.map((x, i) => `<li><span class="n">${i+1}</span><div><div class="nm">${esc(x.a.n)}</div><div class="bar2"><i style="width:${Math.round(x.s/max*100)}%"></i></div></div><span class="sc">${x.m?"★"+x.m+" ":""}♥${x.l}</span></li>`).join("")
+  $("#rank").innerHTML = ranked.length ? ranked.map((x, i) => {
+      const M = V.musts[x.a.id] || [], L = V.likes[x.a.id] || [];
+      const who = [M.length ? `★ <b>${esc(M.join(", "))}</b>` : "", L.length ? `♥ ${esc(L.join(", "))}` : ""].filter(Boolean).join(" · ");
+      return `<li><span class="n">${i+1}</span><div><div class="nm">${esc(x.a.n)}</div><div class="bar2"><i style="width:${Math.round(x.s/max*100)}%"></i></div><div class="who2">${who}</div></div><span class="sc">${x.m?"★"+x.m+" ":""}♥${x.l}</span></li>`;
+    }).join("")
     : `<li class="empty" style="display:block">Appena arrivano i voti qui compare la classifica.</li>`;
 }
 

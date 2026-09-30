@@ -61,7 +61,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ground{height:10px;background:#1d2b4f;margin-top:-1px}
 .hero-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}
 .count{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:12px;padding:8px 12px;font-weight:600}
-.count b{font-family:Fraunces,Georgia,serif;font-size:22px;margin-right:4px}
+.count{font-size:14px;padding:6px 12px}
+.count b{font-weight:700}
 .btn-ghost{background:#1d2b4f;border:1px solid #1d2b4f;color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
 
 /* sticky bar */
@@ -200,6 +201,11 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .pin.d{background:#1d2b4f}
 .home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .home svg{width:18px;height:18px;fill:#fff}
+.apt{position:relative;width:46px;height:46px}
+.apt-i{width:46px;height:46px;border-radius:50%;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.45);flex:none}
+.apt-i svg{width:24px;height:24px;fill:#fff}
+.apt-l{position:absolute;top:50px;left:50%;transform:translateX(-50%);text-align:center;background:#fff;color:#13213f;font:700 13px/1.15 Inter,sans-serif;padding:4px 8px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.3);white-space:nowrap}
+.apt-l small{display:block;font-weight:600;font-size:11px;color:#5d6472}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}}
 :root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}
 .leaflet-popup-content{font:13px/1.4 Inter,sans-serif;margin:10px 12px}
@@ -382,7 +388,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapNote"></p>
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
-    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span></div>
+    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span></div>
   </section>
 
   <section id="classifica">
@@ -473,7 +479,7 @@ const ACTS = [
   {id:"eye", wp:"London_Eye", ll:[51.5033,-0.1196], cat:"classici", prio:"media", n:"London Eye",
    d:"La ruota panoramica sul Tamigi: 30 minuti con vista su tutta la città.",
    z:"South Bank", t:"1h con la coda", pa:"~£35", pc:"~£30", book:true, note:"Online costa meno"},
-  {id:"kx", wp:"King's_Cross_railway_station", ll:[51.532,-0.1233], cat:"hp", prio:"media", free:true, n:"Binario 9¾ a King's Cross",
+  {id:"kx", cs:"Platform 9 3/4 King's Cross trolley", ll:[51.532,-0.1233], cat:"hp", prio:"media", free:true, n:"Binario 9¾ a King's Cross",
    d:"Il carrello nel muro per la foto e il negozio Harry Potter. Foto libera con coda, quella professionale è a pagamento.",
    z:"King's Cross", t:"30–60 min", pa:"Gratis", pc:"Gratis"},
   {id:"hpwalk", wp:"Leadenhall_Market", ll:[51.5128,-0.0835], cat:"hp", prio:"media", free:true, n:"Passeggiata luoghi Harry Potter",
@@ -536,25 +542,19 @@ const ACTS = [
   {id:"tussauds", wp:"Madame_Tussauds", ll:[51.5229,-0.1551], cat:"esperienze", prio:"bassa", n:"Madame Tussauds",
    d:"Le statue di cera di star e personaggi famosi. Caro e con code lunghe.",
    z:"Baker Street", t:"2h", pa:"~£40", pc:"~£35", book:true},
-  {id:"sealife", wp:"Sea_Life_London_Aquarium", ll:[51.502,-0.119], cat:"esperienze", prio:"bassa", n:"SEA LIFE London Aquarium",
+  {id:"sealife", cs:"Sea Life London Aquarium", ll:[51.502,-0.119], cat:"esperienze", prio:"bassa", n:"SEA LIFE London Aquarium",
    d:"Acquario con squali e pinguini, accanto al London Eye.",
    z:"South Bank", t:"1,5h", pa:"~£30", pc:"~£25", book:true}
 ];
 
 const CHECK = [
-  {g:"Da prenotare subito", items:[
-    {id:"b_hp", t:"Warner Bros Studio Tour (se lo scegliamo)", n:"A dicembre si esaurisce con mesi di anticipo, per 8 persone muoversi subito."},
-    {id:"b_musical", t:"Musical (se lo scegliamo)", n:"Verificare i giorni di spettacolo, la domenica molti sono chiusi."},
-    {id:"b_ww", t:"Winter Wonderland: fascia oraria d'ingresso", n:"Nel weekend l'ingresso è a pagamento e a orario."},
-    {id:"b_ristorante", t:"Una cena prenotata per 8 (sabato sera)"},
-    {id:"b_orari", t:"Chiedere all'host orari di check-in, check-out e istruzioni d'ingresso"}
-  ]},
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
     {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
     {id:"d_team", fam:true, t:"Tessera sanitaria di tutti (consigliata)", n:"Non serve per entrare. Sul retro c'è la TEAM, che copre le cure necessarie nel Regno Unito: basta averla nel portafoglio."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
-    {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."}
+    {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."},
+    {id:"b_orari", t:"Chiedere all'host orari di check-in, check-out e istruzioni d'ingresso"}
   ]},
   {g:"Soldi e trasporti", items:[
     {id:"s_card", fam:true, t:"Una carta contactless per ogni adulto", n:"Sui mezzi ognuno deve avere la sua carta, anche nella stessa famiglia."},
@@ -569,15 +569,11 @@ const CHECK = [
     {id:"v_power", fam:true, t:"Powerbank e cavi"},
     {id:"v_liquid", fam:true, t:"Liquidi max 100 ml in bustina trasparente"}
   ]},
-  {g:"App utili", items:[
-    {id:"a_maps", fam:true, t:"Citymapper o TfL Go per i mezzi"},
-    {id:"a_taxi", fam:true, t:"Uber o Bolt"},
-    {id:"a_eta", fam:true, t:"UK ETA (serve solo per la richiesta)"}
-  ]},
-  {g:"Arrivo e partenza", items:[
-    {id:"p_spesa", t:"Spesa per colazioni e merende (3 mattine)"},
-    {id:"p_pos", t:"Condividere la posizione su WhatsApp il giorno dell'arrivo"},
-    {id:"p_deposito", t:"Deposito bagagli lunedì per la famiglia Brindisi", n:"Solo se il check-out è molto prima della partenza: servizi tipo Stasher o deposito a Liverpool Street."}
+  {g:"Da prenotare dopo la scelta", items:[
+    {id:"b_hp", t:"Warner Bros Studio Tour (se lo scegliamo)", n:"A dicembre si esaurisce con mesi di anticipo: se è tra i più votati va prenotato subito."},
+    {id:"b_musical", t:"Musical (se lo scegliamo)", n:"Verificare i giorni di spettacolo, la domenica molti sono chiusi."},
+    {id:"b_ww", t:"Winter Wonderland: fascia oraria d'ingresso (se lo scegliamo)", n:"Nel weekend l'ingresso è a pagamento e a orario."},
+    {id:"b_ristorante", t:"Una cena prenotata per 8 (sabato sera)"}
   ]}
 ];
 
@@ -766,9 +762,9 @@ function renderActs(){
       M.length ? `★ <b>${esc(M.join(", "))}</b>` : "",
       L.length ? `♥ ${esc(L.join(", "))}` : ""
     ].filter(Boolean).join(" · ");
-    const img = imgs[a.wp];
+    const img = imgs[imgKey(a)];
     return `<article class="card act ${must?"mine":""}" id="act-${a.id}">
-      <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy" onerror="this.remove()">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikipedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
+      <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy" onerror="this.remove()">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikimedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
       <div class="act-top"><h3>${esc(a.n)}</h3><span class="pill ${pr[1]}">${pr[0]}</span></div>
       <div class="tags"><span class="pill">${esc(CATS[a.cat])}</span>${a.near?'<span class="pill green">Vicino a casa</span>':""}${a.book?'<span class="pill red">Prenotare</span>':""}</div>
       <p>${esc(a.d)}</p>
@@ -815,7 +811,21 @@ function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderAct
 const LS_IMG = "londra26_img_v2";
 let imgs = {};
 try { imgs = JSON.parse(lsGet(LS_IMG) || "{}") || {}; } catch(e){ imgs = {}; }
+const imgKey = a => a.wp || (a.cs ? "cs:" + a.cs : "");
+function loadCommons(){
+  ACTS.filter(a => a.cs && !(imgKey(a) in imgs)).forEach(a => {
+    const url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=1&prop=imageinfo&iiprop=url&iiurlwidth=500&gsrsearch=" + encodeURIComponent(a.cs + " filetype:bitmap");
+    fetch(url).then(r => r.json()).then(j => {
+      const p = Object.values((j.query && j.query.pages) || {})[0];
+      const ii = p && p.imageinfo && p.imageinfo[0];
+      imgs[imgKey(a)] = ii ? {src:ii.thumburl || ii.url, page:ii.descriptionurl || ""} : null;
+      lsSet(LS_IMG, JSON.stringify(imgs));
+      renderActs();
+    }).catch(() => {});
+  });
+}
 function loadImages(){
+  loadCommons();
   const todo = [...new Set(ACTS.map(a => a.wp).filter(w => w && !(w in imgs)))];
   if (!todo.length) return;
   const titles = todo.map(w => w.replace(/_/g, " "));
@@ -839,6 +849,11 @@ function loadImages(){
 
 // ---------- MAPPA ----------
 const actNum = a => ACTS.indexOf(a) + 1;
+const AIRPORTS = [
+  {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35"},
+  {code:"STN", n:"Stansted", fam:"Brindisi", ll:[51.8860,0.2389], col:"#9a7210", info:"Arrivo ven 12:15 · ripartenza lun 16:15"}
+];
+const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
 let map = null, mapLayer = null, mapMode = "all";
 const markers = {};
 const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>';
@@ -869,7 +884,7 @@ function initMap(){
 }
 
 function renderMapTools(){
-  const opts = [["all","Tutte"],["voted","Solo votate"], ...DAYS.map((d, i) => ["d"+i, d.short])];
+  const opts = [["all","Tutte"],["voted","Solo votate"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
 }
 
@@ -882,11 +897,25 @@ function renderMap(fit){
   L.marker(HOME, {icon:L.divIcon({className:"", html:`<div class="home">${HOME_SVG}</div>`, iconSize:[34,34], iconAnchor:[17,17]}), zIndexOffset:1000})
     .bindPopup("<b>Casa</b><br>Notting Hill").addTo(mapLayer);
   const pts = [HOME];
+  AIRPORTS.forEach(ap => {
+    L.marker(ap.ll, {icon:L.divIcon({className:"", html:`<div class="apt"><span class="apt-i" style="background:${ap.col}">${PLANE_SVG}</span><span class="apt-l">${ap.n}<small>${ap.fam}</small></span></div>`, iconSize:[46,46], iconAnchor:[23,23]}), zIndexOffset:900})
+      .bindPopup(`<b>${ap.n} (${ap.code})</b><br>Famiglia ${ap.fam}<br>${ap.info}`).addTo(mapLayer);
+  });
+  const dayIdx = mapMode.startsWith("d") ? +mapMode.slice(1) : -1;
+  if (mapMode === "apt" || dayIdx === 0 || dayIdx === DAYS.length - 1) {
+    AIRPORTS.forEach(ap => {
+      L.polyline([ap.ll, HOME], {color:ap.col, weight:4, dashArray:"2 8", lineCap:"round", opacity:.9}).addTo(mapLayer);
+      pts.push(ap.ll);
+    });
+  }
   let list, note = "";
-  if (mapMode.startsWith("d")) {
-    const day = DAYS[+mapMode.slice(1)];
+  if (mapMode === "apt") {
+    list = [];
+    note = "Heathrow (famiglia Milano) e Stansted (famiglia Brindisi): collegamento indicativo fino a casa.";
+  } else if (dayIdx >= 0) {
+    const day = DAYS[dayIdx];
     list = day.stops.map(id => ACTS.find(a => a.id === id)).filter(a => a && a.ll);
-    if (!list.length) note = `${day.d}: il percorso comparirà quando il programma sarà deciso.`;
+    if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else {
     list = ACTS.filter(a => a.ll && (mapMode === "all" || score(V, a.id) > 0));
@@ -904,7 +933,8 @@ function renderMap(fit){
     markers[a.id] = mk;
     if (!a.far || isDay) pts.push(a.ll);
   });
-  if (fit && pts.length > 1) map.fitBounds(pts, {padding:[24,24], maxZoom:15});
+  const withApt = pts.some(p => AIRPORTS.some(ap => ap.ll === p));
+  if (fit && pts.length > 1) map.fitBounds(pts, withApt ? {paddingTopLeft:[50,40], paddingBottomRight:[50,70], maxZoom:15} : {padding:[24,24], maxZoom:15});
 }
 
 function showOnMap(id){
@@ -918,7 +948,12 @@ function showOnMap(id){
 function renderCountdown(){
   const start = new Date("2026-12-04T00:00:00");
   const days = Math.ceil((start - new Date()) / 86400000);
-  $("#countdown").innerHTML = days > 1 ? `<b>${days}</b> giorni alla partenza` : days === 1 ? "<b>Domani</b> si parte!" : days > -4 ? "<b>Siamo a Londra!</b>" : "Viaggio concluso";
+  const w = Math.round(days / 7);
+  $("#countdown").innerHTML =
+    days > 30 ? `Partenza tra circa <b>${w} settimane</b>`
+    : days > 1 ? `Partenza tra <b>${days} giorni</b>`
+    : days === 1 ? "<b>Domani si parte!</b>"
+    : days > -4 ? "<b>Siamo a Londra!</b>" : "Viaggio concluso";
 }
 
 let tt;

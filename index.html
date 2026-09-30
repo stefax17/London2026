@@ -102,6 +102,14 @@ section{padding:30px 0 6px}
 .fact span{font-size:13px;color:var(--muted)}
 
 /* checklist */
+.tips{display:grid;gap:10px}
+.tip{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tip b{display:block;font-size:15px}
+.tip span span,.tip div>span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.tip div>span b{display:inline;font-size:inherit;color:var(--text)}
+.tip-n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--surface-2);color:var(--navy);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.tip.key{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+.tip.key .tip-n{background:var(--gold);color:#fff}
 .progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
 .progress i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .3s}
 .group{margin-top:18px}
@@ -296,6 +304,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 <div class="bar">
   <nav class="tabs" id="tabs">
     <a href="#logistica">Logistica</a>
+    <a href="#consigli">Consigli</a>
     <a href="#checklist">Checklist</a>
     <a href="#vedere">Da vedere</a>
     <a href="#mangiare">Mangiare</a>
@@ -358,6 +367,17 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
       <div class="fact"><b>Meteo 3–9 °C</b><span>Spesso pioggia: strati, giacca impermeabile, scarpe comode.</span></div>
       <div class="fact"><b>Mezzi pubblici</b><span>Adulti con la propria carta contactless o il telefono. 9 e 10 anni gratis con un adulto. 12 e 14 anni con la Oyster a metà prezzo (vedi checklist).</span></div>
       <div class="fact"><b>Domenica</b><span>Negozi aperti 12–18, molti teatri chiusi.</span></div>
+    </div>
+  </section>
+
+  <section id="consigli">
+    <h2>Consigli utili</h2>
+    <p class="lead">Soldi e pagamenti: poche regole che fanno risparmiare.</p>
+    <div class="tips">
+      <div class="tip key"><span class="tip-n">!</span><div><b>Paga sempre in sterline (GBP)</b><span>Quando il POS o il bancomat chiede "pagare in EUR o in GBP?", scegli sempre <b>GBP</b>. Se scegli EUR il cambio lo fa il negozio, con un ricarico del 3–5%.</span></div></div>
+      <div class="tip"><span class="tip-n">1</span><div><b>Non serve cambiare euro in sterline</b><span>A Londra si paga quasi tutto con carta contactless, anche cifre piccole come un caffè, i bagni pubblici o i banchi dei mercati. Sui bus il contante non è proprio accettato.</span></div></div>
+      <div class="tip"><span class="tip-n">2</span><div><b>Se serve contante, preleva al bancomat</b><span>Meglio prelevare a Londra da un bancomat di una banca (Barclays, HSBC, Lloyds, NatWest): 20–50 £ a famiglia bastano. Evita gli uffici di cambio in aeroporto e Travelex, e i bancomat indipendenti "Euronet" o "cash machine", che hanno commissioni alte.</span></div></div>
+      <div class="tip"><span class="tip-n">3</span><div><b>Usa la carta con meno commissioni</b><span>Molte carte italiane applicano una percentuale su ogni pagamento in sterline: per esempio le carte di credito American Express il 2,5%, alcune carte di debito circa lo 0,5%. Controlla le tue e usa quella più conveniente, anche per metro e bus.</span></div></div>
     </div>
   </section>
 
@@ -599,7 +619,7 @@ const CHECK = [
   {g:"Soldi e trasporti", items:[
     {id:"s_card", fam:true, t:"Adulti: carta contactless o telefono per metro e bus", n:"Nessuna carta speciale: va bene la normale carta di credito, debito o prepagata contactless, oppure Apple Pay / Google Pay. Si appoggia al lettore giallo all'entrata e all'uscita, come a Milano. Ognuno la sua, perché una carta paga per una sola persona. Tetto di spesa giornaliero ~£9 in zona 1–2."},
     {id:"s_oyster", t:"Ragazzi di 12 e 14 anni: Oyster con sconto Young Visitor", n:"La Oyster è la tessera ricaricabile dei trasporti di Londra. Si compra in stazione all'arrivo (~£7 più il credito) e allo sportello, con il ragazzo presente, si chiede lo sconto Young Visitor: metà prezzo per 14 giorni. Per gli adulti non conviene: stesse tariffe della carta contactless, ma costa la tessera. I bambini di 9 e 10 anni viaggiano gratis con un adulto, senza tessera."},
-    {id:"s_bank", fam:true, t:"Carta senza commissioni sull'estero", n:"In Inghilterra si paga quasi tutto con carta, poche sterline in contanti bastano."},
+    {id:"s_bank", fam:true, t:"Scegliere la carta con meno commissioni sulle sterline", n:"Vedi Consigli utili: pagare sempre in GBP, contante solo se serve e dal bancomat di una banca."},
     {id:"s_transfer", fam:true, t:"Trasferimento aeroporto deciso (ed eventualmente comprato)", n:"Stansted Express online costa meno."}
   ]},
   {g:"Valigia", items:[

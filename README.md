@@ -26,6 +26,8 @@ Nel foglio "dati" compare una riga per ogni spunta o voto, con iniziali e data.
 3. Dopo un minuto la pagina è su `https://stefax17.github.io/London2026/`: quello è il link da mandare su WhatsApp.
 
 ## Note
-- Chi apre il link non deve registrarsi: la prima volta che vota inserisce le proprie iniziali. Sullo stesso telefono si cambia persona con "cambia".
+- Chi apre il link non deve registrarsi: la prima volta che vota tocca le proprie iniziali tra le 8 della lista. Sullo stesso telefono si cambia persona con "cambia".
+- Le foto delle attrazioni arrivano da Wikipedia, la mappa da OpenStreetMap: entrambe si caricano dal telefono di chi apre la pagina.
+- Per il percorso di un giorno sulla mappa basta compilare `stops` nella lista `DAYS` di `index.html`.
 - Chiunque abbia il link può spuntare e votare: non girarlo fuori dal gruppo.
 - Nella pagina non ci sono nomi, codici di prenotazione o indirizzo dell'alloggio.

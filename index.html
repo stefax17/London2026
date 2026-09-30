@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="config.js"></script>
 <style>
 :root{
@@ -176,7 +178,37 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--navy);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;transition:.25s;z-index:60;pointer-events:none;max-width:calc(100% - 32px)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-@media (min-width:640px){.hero h1{font-size:52px}.modal{align-items:center}}
+/* foto */
+.ph{position:relative;margin:-16px -16px 4px;aspect-ratio:2/1;border-radius:13px 13px 0 0;overflow:hidden;background:linear-gradient(135deg,var(--surface-2),color-mix(in srgb,var(--navy) 18%,var(--surface-2)))}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .num{position:absolute;top:10px;left:10px;background:var(--navy);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:0 8px}
+.ph .cr{position:absolute;right:6px;bottom:5px;font-size:10px;color:#fff;background:rgba(0,0,0,.45);padding:1px 6px;border-radius:6px;text-decoration:none}
+.maplink{background:none;border:0;padding:0;font-size:13px;font-weight:600;color:var(--red);text-align:left}
+
+/* mappa */
+#mapBox{height:440px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--surface-2);z-index:0}
+.maptools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
+.maptools::-webkit-scrollbar{display:none}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:4px}
+.mapnote{font-size:13px;color:var(--muted);margin:0 0 8px;min-height:18px}
+.pin{width:26px;height:26px;border-radius:50%;background:#7b8190;color:#fff;border:2px solid #fff;font:700 11px/22px Inter,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.pin.v{background:#b3262e}
+.pin.m{background:#b3262e;box-shadow:0 0 0 3px #e4b64f,0 1px 4px rgba(0,0,0,.4)}
+.pin.d{background:#1d2b4f}
+.home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+.home svg{width:18px;height:18px;fill:#fff}
+.leaflet-popup-content{font:13px/1.4 Inter,sans-serif;margin:10px 12px}
+.leaflet-popup-content b{font-size:14px}
+
+/* scelta persona */
+.famgrp{margin-top:14px}
+.famgrp div{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.known{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0}
+.known button{padding:12px 0}
+.linkbtn{background:none;border:0;color:var(--muted);font-weight:600;margin-top:14px;padding:6px 0;width:100%}
+
+@media (min-width:640px){.hero h1{font-size:52px}.modal{align-items:center}#mapBox{height:520px}}
 </style>
 </head>
 <body>
@@ -198,6 +230,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <a href="#logistica">Logistica</a>
     <a href="#checklist">Checklist</a>
     <a href="#vedere">Da vedere</a>
+    <a href="#mappa">Mappa</a>
     <a href="#classifica">Classifica</a>
     <a href="#programma">Programma</a>
   </nav>
@@ -283,6 +316,15 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="acts" id="acts"></div>
   </section>
 
+  <section id="mappa">
+    <h2>Mappa</h2>
+    <p class="lead">La casa e tutte le proposte, con lo stesso numero delle schede. Scegliendo un giorno si vede il percorso di quel giorno.</p>
+    <div class="maptools" id="mapTools"></div>
+    <p class="mapnote" id="mapNote"></p>
+    <div id="mapBox"></div>
+    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span></div>
+  </section>
+
   <section id="classifica">
     <h2>Classifica</h2>
     <p class="lead">Punteggio: ♥ vale 1, ★ vale 3. Serve per costruire il programma.</p>
@@ -304,13 +346,9 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 <div class="modal" id="whoModal" role="dialog" aria-modal="true" aria-labelledby="whoTitle">
   <div class="sheet">
     <h3 id="whoTitle">Chi sta votando?</h3>
-    <p class="small muted" style="margin:0">Iniziali di nome e cognome (es. MR). Se usate lo stesso telefono, cambiate persona prima di votare.</p>
-    <div class="known" id="knownList"></div>
-    <div class="inrow">
-      <input id="whoInput" maxlength="3" autocomplete="off" autocapitalize="characters" placeholder="Iniziali" aria-label="Iniziali">
-      <button class="btn" id="whoOk" type="button">Conferma</button>
-    </div>
-    <div class="err" id="whoErr"></div>
+    <p class="small muted" style="margin:0">Tocca le tue iniziali. Se usate lo stesso telefono, cambiate persona prima di votare.</p>
+    <div id="knownList"></div>
+    <button type="button" class="linkbtn" id="whoCancel">Annulla</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -327,94 +365,118 @@ const CATS = {
 const PRIO = {alta:["Alta","red"], media:["Media","gold"], bassa:["Bassa",""]};
 
 const ACTS = [
-  {id:"hpstudio", cat:"hp", prio:"alta", n:"Warner Bros Studio Tour: Harry Potter",
+  {id:"hpstudio", wp:"Warner_Bros._Studio_Tour_London", ll:[51.6904,-0.4181], far:true, cat:"hp", prio:"alta", n:"Warner Bros Studio Tour: Harry Potter",
    d:"I set originali dei film: Sala Grande, Diagon Alley, Hogwarts Express. A dicembre c'è l'allestimento \"Hogwarts in the Snow\".",
    z:"Leavesden, fuori Londra (~1h: treno da Euston + navetta)", t:"Mezza giornata abbondante (6–7h con il viaggio)", pa:"~£55", pc:"~£45", book:true},
-  {id:"ww", cat:"natale", prio:"alta", near:true, n:"Hyde Park Winter Wonderland",
+  {id:"ww", wp:"Hyde_Park_Winter_Wonderland", ll:[51.5066,-0.157], cat:"natale", prio:"alta", near:true, n:"Hyde Park Winter Wonderland",
    d:"Il grande parco di Natale: giostre, mercatini, pista di pattinaggio, spettacoli. Il più bello di sera.",
    z:"Hyde Park, 15–20 min da casa", t:"3h", pa:"Ingresso £0–10, giostre £5–12 l'una", pc:"idem", book:true},
-  {id:"lights", cat:"natale", prio:"alta", free:true, n:"Luci di Natale in centro",
+  {id:"lights", wp:"Regent_Street", ll:[51.5115,-0.141], cat:"natale", prio:"alta", free:true, n:"Luci di Natale in centro",
    d:"Passeggiata serale tra Oxford Street, Regent Street, Carnaby Street e Covent Garden con il grande albero.",
    z:"West End", t:"2h, dopo le 16", pa:"Gratis", pc:"Gratis"},
-  {id:"nhm", cat:"musei", prio:"alta", free:true, n:"Natural History Museum",
+  {id:"nhm", wp:"Natural_History_Museum,_London", ll:[51.4967,-0.1764], cat:"musei", prio:"alta", free:true, n:"Natural History Museum",
    d:"Dinosauri, la balena blu, la stanza del terremoto. In inverno c'è una pista di pattinaggio davanti al museo.",
    z:"South Kensington, ~15 min da casa", t:"2–3h", pa:"Gratis (pista ~£15–20)", pc:"Gratis", book:true, note:"Prenotazione gratuita consigliata"},
-  {id:"westm", cat:"classici", prio:"alta", free:true, n:"Westminster a piedi",
-   d:"Big Ben, Parlamento, Abbazia di Westminster (esterno), Downing Street, Horse Guards e Trafalgar Square.",
+  {id:"westm", wp:"Trafalgar_Square", ll:[51.505,-0.1275], cat:"classici", prio:"alta", free:true, n:"Westminster a piedi",
+   d:"Abbazia di Westminster (esterno), Downing Street, le guardie a cavallo di Horse Guards e Trafalgar Square con la National Gallery. Si abbina al Big Ben.",
    z:"Westminster", t:"2–3h", pa:"Gratis", pc:"Gratis"},
-  {id:"tower", cat:"classici", prio:"alta", n:"Torre di Londra",
+  {id:"tower", wp:"Tower_of_London", ll:[51.5081,-0.0759], cat:"classici", prio:"alta", n:"Torre di Londra",
    d:"Il castello dei gioielli della Corona, con i Beefeaters e i corvi. Visita molto adatta ai ragazzi.",
    z:"Tower Hill (City)", t:"3h", pa:"~£35", pc:"~£17", book:true},
-  {id:"portobello", cat:"mercati", prio:"alta", near:true, free:true, n:"Portobello Road Market",
+  {id:"portobello", wp:"Portobello_Road", ll:[51.5155,-0.205], cat:"mercati", prio:"alta", near:true, free:true, n:"Portobello Road Market",
    d:"Il mercato di Notting Hill: antiquariato, bancarelle, street food e case colorate. Il sabato è il giorno migliore.",
    z:"A piedi da casa", t:"1,5–2h", pa:"Gratis", pc:"Gratis"},
-  {id:"eye", cat:"classici", prio:"media", n:"London Eye",
+  {id:"bigben", wp:"Big_Ben", ll:[51.5007,-0.1246], cat:"classici", prio:"alta", free:true, n:"Big Ben e Parlamento",
+   d:"La torre dell'orologio più famosa del mondo, sul Tamigi. La foto classica si fa dal Westminster Bridge.",
+   z:"Westminster", t:"30 min", pa:"Gratis", pc:"Gratis"},
+  {id:"towerwalk", wp:"Tower_Bridge", ll:[51.5052,-0.0760], cat:"classici", prio:"alta", free:true, n:"Tower Bridge a piedi",
+   d:"Il ponte famoso con le due torri: si attraversa a piedi gratis ed è bellissimo illuminato la sera. Accanto alla Torre di Londra.",
+   z:"Tower Hill", t:"30–45 min", pa:"Gratis", pc:"Gratis"},
+  {id:"cruise", wp:"River_Thames", ll:[51.5022,-0.1228], cat:"esperienze", prio:"alta", n:"Crociera turistica sul Tamigi",
+   d:"Giro in battello con commento o audioguida da Westminster verso Tower Bridge e Greenwich: Big Ben, London Eye, St Paul's e la Torre visti dal fiume.",
+   z:"Partenza da Westminster Pier", t:"40–60 min", pa:"~£20", pc:"~£12", book:true, note:"Online costa meno"},
+  {id:"piccadilly", wp:"Piccadilly_Circus", ll:[51.5100,-0.1345], cat:"classici", prio:"alta", free:true, n:"Piccadilly Circus e Covent Garden",
+   d:"I maxischermi luminosi di Piccadilly, poi Covent Garden con artisti di strada, mercato coperto e il grande albero di Natale.",
+   z:"West End", t:"1,5–2h", pa:"Gratis", pc:"Gratis"},
+  {id:"paddington", wp:"Paddington_Bear", ll:[51.5163,-0.1771], cat:"classici", prio:"media", near:true, free:true, n:"Statua dell'orso Paddington",
+   d:"L'orsetto più famoso di Londra seduto sulla sua valigia dentro la stazione di Paddington, con negozio a tema. Di passaggio all'arrivo da Heathrow.",
+   z:"Stazione di Paddington, vicino a casa", t:"15–30 min", pa:"Gratis", pc:"Gratis"},
+  {id:"nhwalk", wp:"Notting_Hill", ll:[51.5135,-0.2030], cat:"classici", prio:"media", near:true, free:true, n:"Case colorate di Notting Hill",
+   d:"Passeggiata sotto casa tra villette color pastello e le strade del film Notting Hill. Si abbina a Portobello Road.",
+   z:"A piedi da casa", t:"1h", pa:"Gratis", pc:"Gratis"},
+  {id:"churchill", wp:"Churchill_War_Rooms", ll:[51.5022,-0.1290], cat:"musei", prio:"media", n:"Churchill War Rooms",
+   d:"I bunker segreti da cui Churchill guidava la Seconda guerra mondiale, rimasti intatti. Molto coinvolgente per i ragazzi più grandi.",
+   z:"Westminster", t:"1,5–2h", pa:"~£33", pc:"~£16", book:true},
+  {id:"ltm", wp:"London_Transport_Museum", ll:[51.5119,-0.1215], cat:"musei", prio:"bassa", n:"London Transport Museum",
+   d:"Bus a due piani, vecchie carrozze della metro e simulatori di guida, a Covent Garden.",
+   z:"Covent Garden", t:"1,5h", pa:"~£24", pc:"Gratis sotto i 18 anni"},
+  {id:"eye", wp:"London_Eye", ll:[51.5033,-0.1196], cat:"classici", prio:"media", n:"London Eye",
    d:"La ruota panoramica sul Tamigi: 30 minuti con vista su tutta la città.",
    z:"South Bank", t:"1h con la coda", pa:"~£35", pc:"~£30", book:true, note:"Online costa meno"},
-  {id:"kx", cat:"hp", prio:"media", free:true, n:"Binario 9¾ a King's Cross",
+  {id:"kx", wp:"King's_Cross_railway_station", ll:[51.532,-0.1233], cat:"hp", prio:"media", free:true, n:"Binario 9¾ a King's Cross",
    d:"Il carrello nel muro per la foto e il negozio Harry Potter. Foto libera con coda, quella professionale è a pagamento.",
    z:"King's Cross", t:"30–60 min", pa:"Gratis", pc:"Gratis"},
-  {id:"hpwalk", cat:"hp", prio:"media", free:true, n:"Passeggiata luoghi Harry Potter",
+  {id:"hpwalk", wp:"Leadenhall_Market", ll:[51.5128,-0.0835], cat:"hp", prio:"media", free:true, n:"Passeggiata luoghi Harry Potter",
    d:"Leadenhall Market (il Paiolo Magico), Millennium Bridge e St Paul's: tutti set dei film.",
    z:"City", t:"2h", pa:"Gratis", pc:"Gratis"},
-  {id:"sci", cat:"musei", prio:"media", free:true, n:"Science Museum",
+  {id:"sci", wp:"Science_Museum,_London", ll:[51.4978,-0.1745], cat:"musei", prio:"media", free:true, n:"Science Museum",
    d:"Accanto al Natural History Museum: razzi, macchine, e il Wonderlab con esperimenti interattivi.",
    z:"South Kensington", t:"2h", pa:"Gratis (Wonderlab ~£12)", pc:"Gratis (Wonderlab ~£10)"},
-  {id:"british", cat:"musei", prio:"media", free:true, n:"British Museum",
+  {id:"british", wp:"British_Museum", ll:[51.5194,-0.127], cat:"musei", prio:"media", free:true, n:"British Museum",
    d:"Mummie egizie, la Stele di Rosetta, i tesori greci e romani.",
    z:"Bloomsbury", t:"2h", pa:"Gratis", pc:"Gratis"},
-  {id:"guard", cat:"classici", prio:"media", free:true, n:"Cambio della Guardia a Buckingham Palace",
+  {id:"guard", wp:"Buckingham_Palace", ll:[51.5014,-0.1419], cat:"classici", prio:"media", free:true, n:"Cambio della Guardia a Buckingham Palace",
    d:"La cerimonia delle guardie con la banda, alle 11. A dicembre non si svolge tutti i giorni: verificare il calendario.",
    z:"Buckingham Palace", t:"1h (arrivare 30 min prima)", pa:"Gratis", pc:"Gratis"},
-  {id:"tbridge", cat:"classici", prio:"media", n:"Tower Bridge Exhibition",
+  {id:"tbridge", wp:"Tower_Bridge", ll:[51.5058,-0.0746], cat:"classici", prio:"media", n:"Tower Bridge Exhibition",
    d:"Le passerelle in alto con il pavimento di vetro e la sala macchine storica. Si abbina alla Torre di Londra.",
    z:"Tower Hill", t:"1h", pa:"~£13", pc:"~£7"},
-  {id:"boat", cat:"esperienze", prio:"media", n:"Battello sul Tamigi",
-   d:"Uber Boat da Westminster alla Torre o fino a Greenwich: Londra vista dal fiume, si paga con contactless.",
+  {id:"boat", wp:"Thames_Clippers", ll:[51.5016,-0.1232], cat:"esperienze", prio:"media", n:"Battello di linea sul Tamigi (Uber Boat)",
+   d:"Il battello-autobus da Westminster alla Torre o a Greenwich: più economico della crociera, si paga con contactless.",
    z:"Westminster ⇄ Tower ⇄ Greenwich", t:"30–60 min", pa:"~£11", pc:"~£6"},
-  {id:"southbank", cat:"natale", prio:"media", free:true, n:"Southbank Winter Market e passeggiata sul Tamigi",
+  {id:"southbank", wp:"Southbank_Centre", ll:[51.5063,-0.116], cat:"natale", prio:"media", free:true, n:"Southbank Winter Market e passeggiata sul Tamigi",
    d:"Mercatino di Natale sul fiume, poi a piedi dal London Eye fino a Tower Bridge.",
    z:"South Bank", t:"2h", pa:"Gratis", pc:"Gratis"},
-  {id:"hamleys", cat:"mercati", prio:"media", free:true, n:"Hamleys, LEGO Store e M&M's World",
+  {id:"hamleys", wp:"Hamleys", ll:[51.5128,-0.14], cat:"mercati", prio:"media", free:true, n:"Hamleys, LEGO Store e M&M's World",
    d:"Il negozio di giocattoli di 7 piani su Regent Street e i due mega store di Leicester Square.",
    z:"Regent Street e Leicester Square", t:"1,5h", pa:"Gratis", pc:"Gratis"},
-  {id:"camden", cat:"mercati", prio:"media", free:true, n:"Camden Market",
+  {id:"camden", wp:"Camden_Market", ll:[51.5413,-0.1463], cat:"mercati", prio:"media", free:true, n:"Camden Market",
    d:"Mercato alternativo con negozi originali e tantissimo street food. Piace molto ai ragazzi.",
    z:"Camden Town", t:"2–3h", pa:"Gratis", pc:"Gratis"},
-  {id:"borough", cat:"cibo", prio:"media", free:true, n:"Borough Market",
+  {id:"borough", wp:"Borough_Market", ll:[51.5055,-0.091], cat:"cibo", prio:"media", free:true, n:"Borough Market",
    d:"Il mercato gastronomico più famoso di Londra: pranzo in piedi tra bancarelle. Lunedì orario ridotto.",
    z:"London Bridge", t:"1,5h", pa:"Ingresso gratis, pranzo ~£10–15", pc:"idem"},
-  {id:"musical", cat:"esperienze", prio:"media", n:"Musical nel West End",
+  {id:"musical", wp:"West_End_theatre", ll:[51.5115,-0.1199], cat:"esperienze", prio:"media", n:"Musical nel West End",
    d:"Per esempio Il Re Leone, Matilda o Back to the Future. Molti teatri la domenica sono chiusi.",
    z:"West End", t:"2,5–3h, sera o pomeriggio del sabato", pa:"£40–120", pc:"£40–120", book:true},
-  {id:"skygarden", cat:"esperienze", prio:"media", free:true, n:"Sky Garden",
+  {id:"skygarden", wp:"20_Fenchurch_Street", ll:[51.5113,-0.0836], cat:"esperienze", prio:"media", free:true, n:"Sky Garden",
    d:"Giardino panoramico al 35° piano, gratis con prenotazione (si apre circa 3 settimane prima). Vicino a Liverpool Street: comodo per la famiglia Brindisi lunedì mattina.",
    z:"City", t:"1h", pa:"Gratis", pc:"Gratis", book:true},
-  {id:"fishchips", cat:"cibo", prio:"media", n:"Fish & chips in un pub",
+  {id:"fishchips", wp:"Fish_and_chips", cat:"cibo", prio:"media", n:"Fish & chips in un pub",
    d:"Cena tradizionale inglese in un pub, per esempio a Notting Hill o Covent Garden.",
    z:"Da scegliere", t:"1,5h", pa:"~£15–20", pc:"~£12", book:true, note:"Per 8 persone meglio prenotare"},
-  {id:"greenwich", cat:"classici", prio:"bassa", n:"Greenwich",
+  {id:"greenwich", wp:"Cutty_Sark", ll:[51.4826,-0.0077], far:true, cat:"classici", prio:"bassa", n:"Greenwich",
    d:"La nave Cutty Sark, il meridiano zero all'Osservatorio Reale, il mercato coperto. Ci si arriva in battello.",
    z:"Greenwich (~45 min)", t:"Mezza giornata", pa:"Osservatorio ~£24", pc:"~£12"},
-  {id:"kew", cat:"natale", prio:"bassa", n:"Christmas at Kew",
+  {id:"kew", wp:"Kew_Gardens", ll:[51.4787,-0.2956], far:true, cat:"natale", prio:"bassa", n:"Christmas at Kew",
    d:"Percorso serale di luci e installazioni nei giardini botanici di Kew.",
    z:"Kew, ovest (~40 min)", t:"2h di sera", pa:"~£30", pc:"~£20", book:true},
-  {id:"stadium", cat:"esperienze", prio:"bassa", n:"Tour di uno stadio",
+  {id:"stadium", wp:"Emirates_Stadium", ll:[51.5549,-0.1084], cat:"esperienze", prio:"bassa", n:"Tour di uno stadio",
    d:"Spogliatoi, tunnel e campo: Emirates (Arsenal), Stamford Bridge (Chelsea) o Wembley.",
    z:"Dipende dallo stadio", t:"1,5–2h", pa:"~£30", pc:"~£20", book:true},
-  {id:"busTea", cat:"cibo", prio:"bassa", n:"Afternoon tea sul bus rosso",
+  {id:"busTea", wp:"AEC_Routemaster", cat:"cibo", prio:"bassa", n:"Afternoon tea sul bus rosso",
    d:"Tè, scones e dolcetti a bordo di un bus vintage che gira per i monumenti.",
    z:"Partenza dal centro", t:"1,5h", pa:"~£50", pc:"~£40", book:true},
-  {id:"harrods", cat:"mercati", prio:"bassa", free:true, n:"Harrods a Natale",
+  {id:"harrods", wp:"Harrods", ll:[51.4994,-0.1633], cat:"mercati", prio:"bassa", free:true, n:"Harrods a Natale",
    d:"I grandi magazzini più famosi, con le vetrine di Natale e il reparto giocattoli.",
    z:"Knightsbridge", t:"1h", pa:"Gratis", pc:"Gratis"},
-  {id:"kensington", cat:"classici", prio:"bassa", near:true, n:"Kensington Palace e Gardens",
+  {id:"kensington", wp:"Kensington_Palace", ll:[51.5058,-0.1877], cat:"classici", prio:"bassa", near:true, n:"Kensington Palace e Gardens",
    d:"La residenza reale nei giardini accanto a Hyde Park, a pochi minuti da casa.",
    z:"Kensington, vicino a casa", t:"1,5h", pa:"~£25", pc:"~£12"},
-  {id:"tussauds", cat:"esperienze", prio:"bassa", n:"Madame Tussauds",
+  {id:"tussauds", wp:"Madame_Tussauds", ll:[51.5229,-0.1551], cat:"esperienze", prio:"bassa", n:"Madame Tussauds",
    d:"Le statue di cera di star e personaggi famosi. Caro e con code lunghe.",
    z:"Baker Street", t:"2h", pa:"~£40", pc:"~£35", book:true},
-  {id:"sealife", cat:"esperienze", prio:"bassa", n:"SEA LIFE London Aquarium",
+  {id:"sealife", wp:"Sea_Life_London_Aquarium", ll:[51.502,-0.119], cat:"esperienze", prio:"bassa", n:"SEA LIFE London Aquarium",
    d:"Acquario con squali e pinguini, accanto al London Eye.",
    z:"South Bank", t:"1,5h", pa:"~£30", pc:"~£25", book:true}
 ];
@@ -460,7 +522,7 @@ const CHECK = [
 ];
 
 const DAYS = [
-  {d:"Venerdì 4 dicembre", tag:"Arrivo", rows:[
+  {d:"Venerdì 4 dicembre", short:"Ven 4", tag:"Arrivo", stops:[], rows:[
     ["12:15","Famiglia Brindisi atterra a Stansted"],
     ["13:40","Famiglia Milano atterra a Heathrow"],
     ["~14:15","Brindisi a casa (stima)"],
@@ -468,19 +530,27 @@ const DAYS = [
     ["15:50","Tramonto"],
     ["Sera",null]
   ]},
-  {d:"Sabato 5 dicembre", tag:"Giornata intera", note:"Portobello Market è al meglio il sabato.", rows:[
+  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Portobello Market è al meglio il sabato.", rows:[
     ["Mattina",null],["Pranzo",null],["Pomeriggio",null],["Sera",null]
   ]},
-  {d:"Domenica 6 dicembre", tag:"Giornata intera", note:"Negozi 12–18, molti teatri chiusi.", rows:[
+  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Negozi 12–18, molti teatri chiusi.", rows:[
     ["Mattina",null],["Pranzo",null],["Pomeriggio",null],["Sera",null]
   ]},
-  {d:"Lunedì 7 dicembre", tag:"Partenza", rows:[
+  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:[], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
     ["Mattina",null],
     ["13:15","Famiglia Brindisi prende lo Stansted Express da Liverpool Street"],
     ["16:15","Volo Stansted → Brindisi"]
   ]}
 ];
+
+const PEOPLE = [
+  {fam:"Milano", ids:["BG","BE","BR","BM"]},
+  {fam:"Brindisi", ids:["DDS","DDA","DDN","DDE"]}
+];
+const ALL_PEOPLE = PEOPLE.flatMap(f => f.ids);
+// Casa: indicativa, alla fermata di Notting Hill Gate
+const HOME = [51.5090, -0.1967];
 
 // ---------- STATO ----------
 const API = ((window.LONDRA_CONFIG || {}).apiUrl || "").trim();
@@ -489,6 +559,7 @@ function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null
 function lsSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 
 let me = lsGet(LS_ME) || "";
+if (!ALL_PEOPLE.includes(me)) me = "";
 let state = {};          // chiave -> {v, p}
 const pending = {};      // chiave -> {rec, desc, failed}
 let filter = "tutte", sortBy = "prio";
@@ -513,9 +584,13 @@ function setSync(s){
   txt.textContent = !API ? "solo su questo telefono" : s === "saving" ? "salvataggio…" : s === "error" ? "offline, riprovo" : "sincronizzato";
 }
 
+let lastSig = "";
 function applyRemote(data){
-  state = data || {};
-  for (const k in pending) state[k] = pending[k].rec;
+  const next = Object.assign({}, data || {});
+  for (const k in pending) next[k] = pending[k].rec;
+  const sig = JSON.stringify(next);
+  if (sig === lastSig) return;
+  lastSig = sig; state = next;
   renderAll();
 }
 
@@ -554,25 +629,12 @@ function poll(){
 }
 
 // ---------- IDENTITÀ ----------
-function knownPeople(){
-  const s = new Set();
-  for (const k in state) {
-    const p = state[k].p;
-    if (p && /^[A-Z]{2,3}$/.test(p)) s.add(p);
-  }
-  if (me) s.add(me);
-  return [...s].sort();
-}
-
 let afterWho = null;
 function openWho(cb){
   afterWho = cb || null;
-  const list = knownPeople();
-  $("#knownList").innerHTML = list.map(p => `<button type="button" data-pick="${esc(p)}" class="${p===me?"on":""}">${esc(p)}</button>`).join("");
-  $("#whoInput").value = "";
-  $("#whoErr").textContent = "";
+  $("#knownList").innerHTML = PEOPLE.map(f => `<div class="famgrp"><div>Famiglia ${esc(f.fam)}</div><div class="known">${
+    f.ids.map(p => `<button type="button" data-pick="${p}" class="${p===me?"on":""}">${p}</button>`).join("")}</div></div>`).join("");
   $("#whoModal").classList.add("open");
-  setTimeout(() => $("#whoInput").focus(), 50);
 }
 function setMe(p){
   me = p; lsSet(LS_ME, p);
@@ -581,18 +643,13 @@ function setMe(p){
   toast("Ora voti come " + p);
   if (afterWho) { const f = afterWho; afterWho = null; f(); }
 }
-function confirmWho(){
-  const v = $("#whoInput").value.trim().toUpperCase();
-  if (!/^[A-Z]{2,3}$/.test(v)) { $("#whoErr").textContent = "Scrivi 2 o 3 lettere, senza spazi."; return; }
-  setMe(v);
-}
 function needMe(fn){ if (me) fn(); else openWho(fn); }
 
 // ---------- RENDER ----------
 function renderWho(){
   $("#whoTxt").innerHTML = me
     ? `Voti come <b style="color:var(--text)">${esc(me)}</b> · <button type="button" id="whoBtn">cambia</button>`
-    : `<button type="button" id="whoBtn">Chi sei? Inserisci le iniziali</button>`;
+    : `<button type="button" id="whoBtn">Chi sei? Tocca qui per scegliere</button>`;
 }
 
 function renderChecklist(){
@@ -649,7 +706,9 @@ function renderActs(){
       M.length ? `★ <b>${esc(M.join(", "))}</b>` : "",
       L.length ? `♥ ${esc(L.join(", "))}` : ""
     ].filter(Boolean).join(" · ");
-    return `<article class="card act ${must?"mine":""}">
+    const img = imgs[a.wp];
+    return `<article class="card act ${must?"mine":""}" id="act-${a.id}">
+      <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikipedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
       <div class="act-top"><h3>${esc(a.n)}</h3><span class="pill ${pr[1]}">${pr[0]}</span></div>
       <div class="tags"><span class="pill">${esc(CATS[a.cat])}</span>${a.near?'<span class="pill green">Vicino a casa</span>':""}${a.book?'<span class="pill red">Prenotare</span>':""}</div>
       <p>${esc(a.d)}</p>
@@ -660,6 +719,7 @@ function renderActs(){
         <dt>Bambino</dt><dd>${esc(a.pc)}</dd>
         ${a.note?`<dt>Nota</dt><dd>${esc(a.note)}</dd>`:""}
       </dl>
+      ${a.ll?`<button type="button" class="maplink" data-mapto="${a.id}">📍 Vedi sulla mappa</button>`:""}
       <div class="voters">${voters || "Nessun voto ancora"}</div>
       <div class="act-btns">
         <button type="button" class="vbtn like ${liked?"on":""}" data-like="${a.id}" aria-pressed="${!!liked}">${ICON.heart}Mi interessa</button>
@@ -675,7 +735,8 @@ function renderRank(){
     .filter(x => x.s > 0).sort((x, y) => y.s - x.s || y.m - x.m || prioN(x.a.prio) - prioN(y.a.prio));
   const max = ranked.length ? ranked[0].s : 1;
   const people = [...V.people].sort();
-  $("#votersTxt").textContent = people.length ? `Hanno votato ${people.length} su 8: ${people.join(", ")}` : "Nessuno ha ancora votato.";
+  const missing = ALL_PEOPLE.filter(p => !V.people.has(p));
+  $("#votersTxt").textContent = (people.length ? `Hanno votato ${people.length} su 8: ${people.join(", ")}.` : "Nessuno ha ancora votato.") + (missing.length && people.length ? ` Mancano: ${missing.join(", ")}.` : "");
   $("#rank").innerHTML = ranked.length ? ranked.map((x, i) => `<li><span class="n">${i+1}</span><div><div class="nm">${esc(x.a.n)}</div><div class="bar2"><i style="width:${Math.round(x.s/max*100)}%"></i></div></div><span class="sc">${x.m?"★"+x.m+" ":""}♥${x.l}</span></li>`).join("")
     : `<li class="empty" style="display:block">Appena arrivano i voti qui compare la classifica.</li>`;
 }
@@ -688,7 +749,92 @@ function renderDays(){
   </div>`).join("");
 }
 
-function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderRank(); }
+function renderAll(){ renderWho(); renderChecklist(); renderFilters(); renderActs(); renderRank(); renderMap(); }
+
+// ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
+const LS_IMG = "londra26_img_v1";
+let imgs = {};
+try { imgs = JSON.parse(lsGet(LS_IMG) || "{}") || {}; } catch(e){ imgs = {}; }
+function loadImages(){
+  const todo = [...new Set(ACTS.map(a => a.wp).filter(w => w && !(w in imgs)))];
+  if (!todo.length) return;
+  Promise.all(todo.map(w =>
+    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(w))
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (!j || !j.thumbnail) { imgs[w] = null; return; }
+        let src = j.thumbnail.source;
+        if (j.originalimage && j.originalimage.width >= 640) src = src.replace(/\/\d+px-/, "/640px-");
+        imgs[w] = {src, page: j.content_urls && j.content_urls.desktop ? j.content_urls.desktop.page : ""};
+      })
+      .catch(() => {})
+  )).then(() => { lsSet(LS_IMG, JSON.stringify(imgs)); renderActs(); });
+}
+
+// ---------- MAPPA ----------
+const actNum = a => ACTS.indexOf(a) + 1;
+let map = null, mapLayer = null, mapMode = "all";
+const markers = {};
+const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>';
+
+function initMap(){
+  if (!window.L) { $("#mapBox").innerHTML = '<div class="empty" style="padding-top:180px">Mappa non disponibile senza connessione.</div>'; return; }
+  const dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+  map = L.map("mapBox", {scrollWheelZoom:false, zoomControl:true, zoomSnap:0.25}).setView(HOME, 13);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/" + (dark ? "dark_all" : "voyager") + "/{z}/{x}/{y}{r}.png", {
+    subdomains:"abcd", maxZoom:19,
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  }).addTo(map);
+  mapLayer = L.layerGroup().addTo(map);
+  renderMap(true);
+}
+
+function renderMapTools(){
+  const opts = [["all","Tutte"],["voted","Solo votate"], ...DAYS.map((d, i) => ["d"+i, d.short])];
+  $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
+}
+
+function renderMap(fit){
+  renderMapTools();
+  if (!map) return;
+  mapLayer.clearLayers();
+  for (const k in markers) delete markers[k];
+  const V = votes();
+  L.marker(HOME, {icon:L.divIcon({className:"", html:`<div class="home">${HOME_SVG}</div>`, iconSize:[34,34], iconAnchor:[17,17]}), zIndexOffset:1000})
+    .bindPopup("<b>Casa</b><br>Notting Hill").addTo(mapLayer);
+  const pts = [HOME];
+  let list, note = "";
+  if (mapMode.startsWith("d")) {
+    const day = DAYS[+mapMode.slice(1)];
+    list = day.stops.map(id => ACTS.find(a => a.id === id)).filter(a => a && a.ll);
+    if (!list.length) note = `${day.d}: il percorso comparirà quando il programma sarà deciso.`;
+    else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
+  } else {
+    list = ACTS.filter(a => a.ll && (mapMode === "all" || score(V, a.id) > 0));
+    if (mapMode === "voted" && !list.length) note = "Nessuna proposta votata per ora.";
+  }
+  $("#mapNote").textContent = note;
+  list.forEach((a, i) => {
+    const s = score(V, a.id), m = (V.musts[a.id] || []).length, l = (V.likes[a.id] || []).length;
+    const isDay = mapMode.startsWith("d");
+    const cls = isDay ? "d" : m ? "m" : s ? "v" : "";
+    const label = isDay ? i + 1 : actNum(a);
+    const mk = L.marker(a.ll, {icon:L.divIcon({className:"", html:`<div class="pin ${cls}">${label}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset: s * 10})
+      .bindPopup(`<b>${actNum(a)}. ${esc(a.n)}</b><br>${esc(a.z)}<br>${m?"★ "+m+" · ":""}♥ ${l}<br><a href="#act-${a.id}" data-goto="${a.id}">Apri la scheda</a>`)
+      .addTo(mapLayer);
+    markers[a.id] = mk;
+    if (!a.far || isDay) pts.push(a.ll);
+  });
+  if (fit && pts.length > 1) map.fitBounds(pts, {padding:[24,24], maxZoom:15});
+}
+
+function showOnMap(id){
+  if (mapMode !== "all") { mapMode = "all"; renderMap(false); }
+  $("#mappa").scrollIntoView();
+  if (!map || !markers[id]) return;
+  const a = ACTS.find(x => x.id === id);
+  setTimeout(() => { map.setView(a.ll, 15); markers[id].openPopup(); }, 350);
+}
 
 function renderCountdown(){
   const start = new Date("2026-12-04T00:00:00");
@@ -703,7 +849,9 @@ function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add
 document.addEventListener("click", e => {
   const el = e.target.closest("button,[data-filter]"); if (!el) return;
   if (el.id === "whoBtn") return openWho();
-  if (el.id === "whoOk") return confirmWho();
+  if (el.id === "whoCancel") { afterWho = null; $("#whoModal").classList.remove("open"); return; }
+  if (el.dataset.mapto) return showOnMap(el.dataset.mapto);
+  if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; renderMap(true); return; }
   if (el.dataset.pick) return setMe(el.dataset.pick);
   if (el.dataset.filter) { filter = el.dataset.filter; renderFilters(); renderActs(); return; }
   if (el.dataset.chk) { const k = el.dataset.chk, d = el.dataset.desc; return needMe(() => setKey(k, val(k) === "1" ? "" : "1", d)); }
@@ -726,7 +874,6 @@ document.addEventListener("click", e => {
     else toast(url);
   }
 });
-$("#whoInput").addEventListener("keydown", e => { if (e.key === "Enter") confirmWho(); });
 $("#whoModal").addEventListener("click", e => { if (e.target.id === "whoModal") { afterWho = null; e.currentTarget.classList.remove("open"); } });
 $("#sortSel").addEventListener("change", e => { sortBy = e.target.value; renderActs(); });
 
@@ -744,7 +891,8 @@ if ("IntersectionObserver" in window) {
 
 // ---------- AVVIO ----------
 $("#localBanner").hidden = !!API;
-renderCountdown(); renderDays(); renderAll(); setSync(API ? "saving" : "ok");
+renderCountdown(); renderDays(); initMap(); renderAll(); setSync(API ? "saving" : "ok");
+loadImages();
 if (API) {
   poll();
   setInterval(() => { if (!document.hidden) poll(); }, 20000);

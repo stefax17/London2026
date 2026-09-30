@@ -1,6 +1,6 @@
 // Archivio condiviso per la pagina "Londra 2026".
 // Da incollare in un Google Sheet: Estensioni > Apps Script.
-// Ogni riga del foglio "dati" è una spunta, un voto o una proposta per la checklist.
+// Ogni riga del foglio "dati" è una spunta, un voto o una proposta di cosa da vedere.
 
 const SHEET_NAME = 'dati';
 const HEADER = ['chiave', 'valore', 'persona', 'descrizione', 'aggiornato'];

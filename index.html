@@ -406,12 +406,6 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
   <section id="checklist">
     <h2>Checklist</h2>
     <p class="lead">Le spunte le vedono tutti. Dove ci sono due caselle, ogni famiglia spunta la sua.</p>
-    <div class="group" style="margin:0 0 22px">
-      <h3>Proposte</h3>
-      <p class="small muted" style="margin:0">Manca qualcosa? Proponilo qui: lo valutiamo e, se va bene, entra nella checklist.</p>
-      <div class="sugform"><input id="sugInput" maxlength="200" placeholder="Es. portare le cuffie per l'aereo" aria-label="Voce da proporre"><button type="button" class="btn" id="sugBtn">Invia</button></div>
-      <div class="sugs" id="sugList"></div>
-    </div>
     <div class="small muted" id="chkProgressTxt"></div>
     <div class="progress"><i id="chkProgress" style="width:0"></i></div>
     <div id="checklistBody"></div>
@@ -420,6 +414,11 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
   <section id="vedere">
     <h2>Cose da vedere</h2>
     <p class="lead">Tocca <b>♥ Mi interessa</b> su tutto quello che ti piace e <b>★ Irrinunciabile</b> su una sola cosa. Prezzi indicativi a persona, da verificare.</p>
+    <div class="card" style="margin-bottom:16px">
+      <b>Manca qualcosa?</b>
+      <p class="small muted" style="margin:2px 0 0">Proponi un posto o un'attività da vedere: diventa subito una scheda votabile, i dettagli li completiamo dopo.</p>
+      <div class="sugform"><input id="sugInput" maxlength="80" placeholder="Es. Sherlock Holmes Museum" aria-label="Posto o attività da proporre"><button type="button" class="btn" id="sugBtn">Proponi</button></div>
+    </div>
     <div class="filters" id="filters"></div>
     <div class="sortrow">
       <label for="sortSel">Ordina per</label>
@@ -485,7 +484,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 // ---------- DATI ----------
 const CATS = {
   natale:"Natale", hp:"Harry Potter", classici:"Classici", musei:"Musei",
-  mercati:"Mercati e shopping", esperienze:"Spettacoli ed esperienze", cibo:"Cibo"
+  mercati:"Mercati e shopping", esperienze:"Spettacoli ed esperienze", cibo:"Cibo", vostre:"Proposte vostre"
 };
 const PRIO = {alta:["Alta","red"], media:["Media","gold"], bassa:["Bassa",""]};
 
@@ -845,7 +844,7 @@ function renderFilters(){
 
 function renderActs(){
   const V = votes(), myMust = val("must|" + me);
-  let list = ACTS.filter(a => filter === "tutte" || a.cat === filter || (filter === "near" && a.near) || (filter === "free" && a.free));
+  let list = allActs().filter(a => filter === "tutte" || a.cat === filter || (filter === "near" && a.near) || (filter === "free" && a.free));
   list = list.slice().sort((a, b) =>
     sortBy === "votes" ? score(V, b.id) - score(V, a.id) || prioN(a.prio) - prioN(b.prio)
     : sortBy === "cat" ? Object.keys(CATS).indexOf(a.cat) - Object.keys(CATS).indexOf(b.cat) || prioN(a.prio) - prioN(b.prio)
@@ -864,7 +863,7 @@ function renderActs(){
     return `<article class="card act ${must?"mine":""}" id="act-${a.id}">
       <div class="ph">${img ? `<img src="${esc(img.src)}" alt="${esc(a.n)}" loading="lazy" onerror="this.remove()">${img.page?`<a class="cr" href="${esc(img.page)}" target="_blank" rel="noopener">Foto Wikimedia</a>`:""}` : ""}<span class="num">${actNum(a)}</span></div>
       <div class="act-top"><h3>${esc(a.n)}</h3><span class="pill ${pr[1]}">${pr[0]}</span></div>
-      <div class="tags"><span class="pill">${esc(CATS[a.cat])}</span>${a.near?'<span class="pill green">Vicino a casa</span>':""}${a.book?'<span class="pill red">Prenotare</span>':""}</div>
+      <div class="tags"><span class="pill">${esc(CATS[a.cat])}</span>${a.user?`<span class="pill gold">Proposta da ${esc(a.user)}</span>`:""}${a.near?'<span class="pill green">Vicino a casa</span>':""}${a.book?'<span class="pill red">Prenotare</span>':""}</div>
       <p>${esc(a.d)}</p>
       <dl class="meta">
         <dt>Dove</dt><dd>${esc(a.z)}</dd>
@@ -874,6 +873,7 @@ function renderActs(){
         ${a.note?`<dt>Nota</dt><dd>${esc(a.note)}</dd>`:""}
       </dl>
       ${a.ll?`<button type="button" class="maplink" data-mapto="${a.id}">📍 Vedi sulla mappa</button>`:""}
+      ${a.user && a.user === me ? `<button type="button" class="maplink" style="color:var(--muted)" data-unsug="${esc(a.key)}">Ritira la mia proposta</button>` : ""}
       <div class="voters">${voters || "Nessun voto ancora"}</div>
       <div class="act-btns">
         <button type="button" class="vbtn like ${liked?"on":""}" data-like="${a.id}" aria-pressed="${!!liked}">${ICON.heart}Mi interessa</button>
@@ -885,7 +885,7 @@ function renderActs(){
 
 function renderRank(){
   const V = votes();
-  const ranked = ACTS.map(a => ({a, s:score(V, a.id), l:(V.likes[a.id]||[]).length, m:(V.musts[a.id]||[]).length}))
+  const ranked = allActs().map(a => ({a, s:score(V, a.id), l:(V.likes[a.id]||[]).length, m:(V.musts[a.id]||[]).length}))
     .filter(x => x.s > 0).sort((x, y) => y.s - x.s || y.m - x.m || prioN(x.a.prio) - prioN(y.a.prio));
   const max = ranked.length ? ranked[0].s : 1;
   const people = [...V.people].sort();
@@ -927,32 +927,30 @@ function renderVoteBoxes(){
   ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
 }
 
-// ---------- PROPOSTE PER LA CHECKLIST ----------
-// Esito delle proposte già valutate insieme: id -> "aggiunta" | "scartata"
-const SUG_CLOSED = {};
-function renderSugs(){
-  const list = Object.keys(state).filter(k => k.startsWith("sug|") && state[k].v)
-    .map(k => ({id:k.slice(4), key:k, t:state[k].v.replace(/^'/, ""), p:state[k].p}))
-    .sort((a, b) => a.id < b.id ? -1 : 1);
-  $("#sugList").innerHTML = list.length
-    ? `<div class="items">${list.map(x => {
-        const st = SUG_CLOSED[x.id];
-        return `<div class="sug"><div class="txt">${esc(x.t)}<small>Proposta da ${esc(x.p)} · ${st ? esc(st) : "da valutare"}</small></div>${x.p === me && !st ? `<button type="button" data-unsug="${esc(x.key)}">ritira</button>` : ""}</div>`;
-      }).join("")}</div>`
-    : "";
+// ---------- PROPOSTE DI COSE DA VEDERE ----------
+// Ogni proposta (chiave sug|<id> nel foglio) diventa una scheda votabile con id "u<id>".
+// Quando la completiamo, la scheda va in ACTS con lo stesso id e qui la proposta viene nascosta.
+function userActs(){
+  return Object.keys(state).filter(k => k.startsWith("sug|") && state[k].v)
+    .sort()
+    .map(k => ({id:"u" + k.slice(4), key:k, user:state[k].p, cat:"vostre", prio:"media",
+      n:state[k].v.replace(/^'/, ""), d:"Proposta da " + state[k].p + ": dettagli, prezzi e posizione li completiamo insieme.",
+      z:"Da definire", t:"Da definire", pa:"Da definire", pc:"Da definire"}))
+    .filter(a => !ACTS.some(x => x.id === a.id));
 }
+const allActs = () => ACTS.concat(userActs());
 function sendSug(){
   const inp = $("#sugInput"), t = inp.value.trim().replace(/\s+/g, " ");
-  if (t.length < 3) { toast("Scrivi la voce da proporre"); return; }
+  if (t.length < 3) { toast("Scrivi cosa vuoi proporre"); return; }
   needMe(() => {
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
-    setKey("sug|" + id, t.slice(0, 200), "Proposta checklist: " + t.slice(0, 150));
+    setKey("sug|" + id, t.slice(0, 80), "Proposta da vedere: " + t.slice(0, 80));
     inp.value = "";
-    toast("Proposta inviata, grazie!");
+    toast("Proposta aggiunta alle cose da vedere!");
   });
 }
 
-function renderAll(){ renderWho(); renderVoteBoxes(); renderChecklist(); renderSugs(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
+function renderAll(){ renderWho(); renderVoteBoxes(); renderChecklist(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
 
 // ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
 const LS_IMG = "londra26_img_v2";
@@ -995,7 +993,7 @@ function loadImages(){
 }
 
 // ---------- MAPPA ----------
-const actNum = a => ACTS.indexOf(a) + 1;
+const actNum = a => allActs().findIndex(x => x.id === a.id) + 1;
 const AIRPORTS = [
   {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35"},
   {code:"STN", n:"Stansted", fam:"Brindisi", ll:[51.8860,0.2389], col:"#9a7210", info:"Arrivo ven 12:15 · ripartenza lun 16:15"}
@@ -1061,7 +1059,7 @@ function renderMap(fit){
     note = "Heathrow (famiglia Milano) e Stansted (famiglia Brindisi): collegamento indicativo fino a casa.";
   } else if (dayIdx >= 0) {
     const day = DAYS[dayIdx];
-    list = day.stops.map(id => ACTS.find(a => a.id === id)).filter(a => a && a.ll);
+    list = day.stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food") {
@@ -1134,11 +1132,11 @@ document.addEventListener("click", e => {
   if (el.dataset.filter) { filter = el.dataset.filter; renderFilters(); renderActs(); return; }
   if (el.dataset.chk) { const k = el.dataset.chk, d = el.dataset.desc; return needMe(() => setKey(k, val(k) === "1" ? "" : "1", d)); }
   if (el.dataset.like) {
-    const id = el.dataset.like, a = ACTS.find(x => x.id === id);
+    const id = el.dataset.like, a = allActs().find(x => x.id === id);
     return needMe(() => { const k = "like|" + id + "|" + me; setKey(k, val(k) === "1" ? "" : "1", "Mi interessa: " + a.n); });
   }
   if (el.dataset.must) {
-    const id = el.dataset.must, a = ACTS.find(x => x.id === id);
+    const id = el.dataset.must, a = allActs().find(x => x.id === id);
     return needMe(() => {
       const k = "must|" + me, was = val(k);
       setKey(k, was === id ? "" : id, "Irrinunciabile: " + (was === id ? "(nessuna)" : a.n));

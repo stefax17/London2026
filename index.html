@@ -925,11 +925,11 @@ function renderFood(){
 }
 
 function renderVoteBoxes(){
-  const VP = votes().people, n = ALL_PEOPLE.filter(p => VP.has(p)).length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
+  const VP = votes().people, voted = ALL_PEOPLE.filter(p => VP.has(p)), n = voted.length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
   const done = !missing.length;
   const html = done
     ? `<div class="vb-t"><b>Votazioni chiuse ✓</b><span>Hanno votato tutti e 8: ora prepariamo il programma.</span><div class="vb-bar"><i style="width:100%"></i></div></div>`
-    : `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>Mancano ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
+    : `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>${n ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
   ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
 }
 

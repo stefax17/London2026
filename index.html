@@ -1041,7 +1041,7 @@ function initMap(){
 }
 
 function renderMapTools(){
-  const opts = [["all","Tutte"],["voted","Solo votate"],["food","Ristoranti"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
+  const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
 }
 
@@ -1084,8 +1084,9 @@ function renderMap(fit){
       pts.push(r.ll);
     });
   } else {
-    list = ACTS.filter(a => a.ll && (mapMode === "all" || score(V, a.id) > 0));
+    list = ACTS.filter(a => a.ll && (mapMode === "all" || (mapMode === "must" ? (V.musts[a.id] || []).length > 0 : score(V, a.id) > 0)));
     if (mapMode === "voted" && !list.length) note = "Nessuna proposta votata per ora.";
+    if (mapMode === "must") note = list.length ? "Le irrinunciabili di ognuno: tocca un punto per vedere di chi è." : "Nessuna irrinunciabile scelta per ora.";
   }
   $("#mapNote").textContent = note;
   list.forEach((a, i) => {
@@ -1094,7 +1095,7 @@ function renderMap(fit){
     const cls = isDay ? "d" : m ? "m" : s ? "v" : "";
     const label = isDay ? i + 1 : actNum(a);
     const mk = L.marker(a.ll, {icon:L.divIcon({className:"", html:`<div class="pin ${cls}">${label}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset: s * 10})
-      .bindPopup(`<b>${actNum(a)}. ${esc(a.n)}</b><br>${esc(a.z)}<br>${m?"★ "+m+" · ":""}♥ ${l}<br><a href="#act-${a.id}" data-goto="${a.id}">Apri la scheda</a>`)
+      .bindPopup(`<b>${actNum(a)}. ${esc(a.n)}</b><br>${esc(a.z)}<br>${m?"★ "+esc(V.musts[a.id].join(", "))+"<br>":""}${l?"♥ "+esc(V.likes[a.id].join(", "))+"<br>":""}<a href="#act-${a.id}" data-goto="${a.id}">Apri la scheda</a>`)
       .addTo(mapLayer);
     markers[a.id] = mk;
     if (!a.far || isDay) pts.push(a.ll);

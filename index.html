@@ -233,6 +233,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .pin.m{background:#b3262e;box-shadow:0 0 0 3px #e4b64f,0 1px 4px rgba(0,0,0,.4)}
 .pin.d{background:#1d2b4f}
 .pin.f{background:#6b4fa0}
+.pin.fo{background:#9aa0ab;opacity:.85}
 .home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .home svg{width:18px;height:18px;fill:#fff}
 .apt{position:relative;width:46px;height:46px}
@@ -447,7 +448,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapNote"></p>
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
-    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante</span></div>
+    <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante votato</span><span><i style="background:#9aa0ab"></i>Ristorante non votato</span></div>
   </section>
 
   <section id="classifica">
@@ -1041,7 +1042,7 @@ function initMap(){
 }
 
 function renderMapTools(){
-  const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
+  const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
 }
 
@@ -1074,13 +1075,14 @@ function renderMap(fit){
     list = day.stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
-  } else if (mapMode === "food") {
+  } else if (mapMode === "food" || mapMode === "foodv") {
     list = [];
-    note = "Ristoranti proposti: tocca un punto per il nome.";
-    FOOD.filter(r => r.ll).forEach(r => {
-      const l = (V.likes[r.id] || []).length;
-      markers[r.id] = L.marker(r.ll, {icon:L.divIcon({className:"", html:`<div class="pin f">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]})})
-        .bindPopup(`<b>${esc(r.n)}</b><br>${esc(r.k)} · ${esc(r.pr)}<br>♥ ${l}<br><a href="#act-${r.id}">Apri la scheda</a>`).addTo(mapLayer);
+    const rs = FOOD.filter(r => r.ll && (mapMode === "food" || (V.likes[r.id] || []).length));
+    note = mapMode === "food" ? "Viola: votati con ♥ · grigio: proposti ma non ancora votati." : rs.length ? "Solo i ristoranti che hanno ricevuto almeno un ♥." : "Nessun ristorante votato per ora.";
+    rs.forEach(r => {
+      const L2 = V.likes[r.id] || [];
+      markers[r.id] = L.marker(r.ll, {icon:L.divIcon({className:"", html:`<div class="pin ${L2.length ? "f" : "fo"}">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset:L2.length * 10})
+        .bindPopup(`<b>${esc(r.n)}</b><br>${esc(r.k)} · ${esc(r.pr)}<br>${L2.length ? "♥ " + esc(L2.join(", ")) : "Nessun voto ancora"}<br><a href="#act-${r.id}">Apri la scheda</a>`).addTo(mapLayer);
       pts.push(r.ll);
     });
   } else {

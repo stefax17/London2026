@@ -467,7 +467,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono cinque proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div class="plans" id="plans"></div>
     <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
@@ -722,6 +722,11 @@ const PLANS = [
    mon:[["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (lunedì mattina ingresso gratuito e poca gente)"],["11:30","Rientro a casa per i bagagli"]],
    satStops:["nhm","sci","busTea"], sunStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], monStops:["ww"],
    out:"Cambio della guardia, Harrods, Portobello, Piccadilly e Covent Garden, Hamleys"},
+  {id:"C", cost:"~£195 a famiglia (≈ €230)", must:"Tutte le ★ (2 in versione economica)", n:"C · Low budget", sub:"Come A1 ma spendendo meno: museo delle cere tenuto, al posto di crociera, bus del tè e London Eye ci sono le alternative economiche. Pranzi al sacco.",
+   sat:[["10:00","Museo delle cere ★ (Baker Street): biglietti online in anticipo, primo ingresso"],["12:30","Pranzo al sacco (meal deal da supermercato, ~£4–5 a testa)"],["13:30","Big Ben ★ e Westminster a piedi"],["15:00","Battello di linea ★ (Uber Boat) da Westminster alla Torre al tramonto: stessa vista della crociera, senza guida, si paga con contactless"],["16:15","Tower Bridge illuminato a piedi"],["17:00","Sky Garden al posto del London Eye: vista dal 35° piano, gratis con prenotazione (si apre circa 3 settimane prima)"],["Sera","Cena economica"]],
+   sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, picnic"],["15:00","Harrods, solo da guardare"],["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],["Sera","Cena economica"]],
+   satStops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], sunStops:["guard","nhm","harrods","lights"],
+   out:"London Eye, crociera con guida e bus del tè veri e propri (sostituiti dalle versioni economiche), Portobello, Winter Wonderland"},
   {id:"B", cost:"~£825–850 a famiglia (≈ €965–1.000)", n:"B · Con Warner Bros", sub:"Sabato agli studi di Harry Potter, domenica le irrinunciabili in centro.",
    sat:[["9:00","Partenza: metro fino a Euston, treno per Watford Junction, navetta"],["10:30","Warner Bros Studio Tour (3–4 ore, pranzo dentro)"],["15:30","Rientro a Londra"],["17:30","Winter Wonderland o passeggiata a Notting Hill"],["Sera","Cena vicino a casa"]],
    sun:[["10:00","Museo delle cere ★ (da prenotare)"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (da prenotare)"],["15:15","Crociera ★ da Westminster alla Torre"],["16:40","Bus del tè ★ delle 17:00 con le luci (partenza Trafalgar Square)"],["Sera","Cena"]],
@@ -1002,7 +1007,7 @@ function renderPlans(){
   $("#plans").innerHTML = PLANS.map(p => `<article class="card plan ${mine === p.id ? "mine" : ""}" id="plan-${p.id}">
       <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}</span></div>
       <p class="small muted" style="margin:4px 0 6px">${esc(p.sub)}</p>
-      <div class="tags" style="margin-bottom:6px"><span class="pill ${hearts[p.id] === best && best ? "green" : ""}">Raccoglie ${hearts[p.id]} ♥ dei voti</span>${hearts[p.id] === best && best ? '<span class="pill green">La più vicina ai voti</span>' : ""}<span class="pill gold">Tutte le ★</span></div>
+      <div class="tags" style="margin-bottom:6px"><span class="pill ${hearts[p.id] === best && best ? "green" : ""}">Raccoglie ${hearts[p.id]} ♥ dei voti</span>${hearts[p.id] === best && best ? '<span class="pill green">La più vicina ai voti</span>' : ""}<span class="pill gold">${esc(p.must || "Tutte le ★")}</span></div>
       <p class="small" style="margin:0 0 6px"><b>Costo biglietti:</b> ${esc(p.cost)}</p>
       <div class="plan-day">Sabato 5</div>${tl(p.sat)}
       <div class="plan-day">Domenica 6</div>${tl(p.sun)}

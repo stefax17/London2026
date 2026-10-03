@@ -359,7 +359,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono cinque proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili; A1, A2 e A3 si possono scegliere anche in versione low budget: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div class="plans" id="plans"></div>
     <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
@@ -714,22 +714,17 @@ const DAYS = [
 
 // Proposte di itinerario per sabato e domenica (le ★ sono le irrinunciabili)
 const PLANS = [
-  {id:"A1", cost:"~£525 a famiglia (≈ €615)", n:"A1 · Westminster e il fiume", sub:"Senza Warner Bros. Classici di Londra, crociera al tramonto e Tower Bridge illuminato.",
+  {id:"A1", cost:"~£525 a famiglia (≈ €615)", lowCost:"~£195 a famiglia (≈ €230)", n:"A1 · Westminster e il fiume", sub:"Senza Warner Bros. Classici di Londra, crociera al tramonto e Tower Bridge illuminato.",
    sat:[["10:00","Museo delle cere ★ (Baker Street): da prenotare, meglio il primo ingresso delle 10:00"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:45","London Eye (da prenotare)"],["15:45","Crociera ★ da Westminster alla Torre, al tramonto"],["16:45","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
    sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, pranzo al museo"],["15:00","Harrods (domenica 11:30–18)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
    satStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], sunStops:["guard","nhm","harrods","busTea"],
    out:"Portobello, Winter Wonderland, Piccadilly e Covent Garden, Hamleys"},
-  {id:"C", cost:"~£195 a famiglia (≈ €230)", must:"Tutte le ★ (2 in versione economica)", short:"A1 Low", n:"A1 Low budget · Westminster e il fiume spendendo poco", sub:"Stesse tappe di A1 ma spendendo meno: museo delle cere tenuto, al posto di crociera, bus del tè e London Eye ci sono le alternative economiche. Pranzi al sacco.",
-   sat:[["10:00","Museo delle cere ★ (Baker Street): biglietti online in anticipo, primo ingresso"],["12:30","Pranzo al sacco (meal deal da supermercato, ~£4–5 a testa)"],["13:30","Big Ben ★ e Westminster a piedi"],["15:00","Battello di linea ★ (Uber Boat) da Westminster alla Torre al tramonto: stessa vista della crociera, senza guida, si paga con contactless"],["16:15","Tower Bridge illuminato a piedi"],["17:00","Sky Garden al posto del London Eye: vista dal 35° piano, gratis con prenotazione (si apre circa 3 settimane prima)"],["Sera","Cena economica"]],
-   sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, picnic"],["15:00","Harrods, solo da guardare"],["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],["Sera","Cena economica"]],
-   satStops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], sunStops:["guard","nhm","harrods","lights"],
-   out:"London Eye, crociera con guida e bus del tè veri e propri (sostituiti dalle versioni economiche), Portobello, Winter Wonderland"},
-  {id:"A2", cost:"~£600–650 a famiglia (≈ €700–760)", n:"A2 · Musei e Natale", sub:"Senza Warner Bros. Mercato di Portobello, negozi di Natale e Winter Wonderland la sera.",
+  {id:"A2", cost:"~£600–650 a famiglia (≈ €700–760)", lowCost:"~£270–320 a famiglia (≈ €315–375), il Winter Wonderland resta", n:"A2 · Musei e Natale", sub:"Senza Warner Bros. Mercato di Portobello, negozi di Natale e Winter Wonderland la sera.",
    sat:[["9:30","Portobello Market e case colorate di Notting Hill, sotto casa"],["12:00","Museo delle cere ★ (da prenotare)"],["14:30","Hamleys e Regent Street"],["15:30","Piccadilly Circus e Covent Garden"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena a Soho o Covent Garden"]],
    sun:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (da prenotare)"],["15:15","Crociera ★ andata e ritorno da Westminster"],["17:30","Winter Wonderland a Hyde Park, vicino a casa, e cena lì"]],
    satStops:["portobello","nhwalk","tussauds","hamleys","piccadilly","busTea"], sunStops:["nhm","bigben","eye","cruise","ww"],
    out:"Cambio della guardia, Westminster a piedi, Tower Bridge, Harrods"},
-  {id:"A3", cost:"~£525–600 a famiglia (≈ €615–700)", n:"A3 · Musei di South Kensington", sub:"Senza Warner Bros. Natural History e Science Museum per tutti, domenica i classici sul fiume.",
+  {id:"A3", cost:"~£525–600 a famiglia (≈ €615–700)", lowCost:"~£195–215 a famiglia (≈ €230–250)", n:"A3 · Musei di South Kensington", sub:"Senza Warner Bros. Natural History e Science Museum per tutti, domenica i classici sul fiume.",
    sat:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Science Museum (accanto)"],["16:00","Da South Kensington a Victoria (10 min)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
    sun:[["10:00","Museo delle cere ★ (da prenotare)"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:30","London Eye (da prenotare)"],["15:30","Crociera ★ da Westminster alla Torre, al tramonto"],["16:30","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
    mon:[["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (lunedì mattina ingresso gratuito e poca gente)"],["11:30","Rientro a casa per i bagagli"]],
@@ -975,14 +970,23 @@ function renderFood(){
   }).join("");
 }
 
-// Voto dell'itinerario: chiave chk|plan|<iniziali>, valore = id della proposta
+// Voto dell'itinerario: chiave chk|plan|<iniziali>, valore = id della proposta, con "L" finale per la versione low budget.
+// Il vecchio valore "C" (scheda A1 Low budget, poi tolta) vale come "A1L".
+const LOW_NOTE = "battello di linea al posto della crociera con guida, Sky Garden (gratis) al posto del London Eye, tè in sala da tè e bus di linea lungo Regent Street al posto del bus del tè, pranzi al sacco. Il museo delle cere resta.";
+function parsePlanVote(v){
+  if (v === "C") v = "A1L";
+  const low = /L$/.test(v), id = low ? v.slice(0, -1) : v;
+  const p = PLANS.find(x => x.id === id);
+  return p && (!low || p.lowCost) ? {id, low} : null;
+}
 function planVotes(){
-  const by = {}; PLANS.forEach(p => by[p.id] = []);
-  ALL_PEOPLE.forEach(p => { const v = val("chk|plan|" + p); if (by[v]) by[v].push(p); });
+  const by = {}; PLANS.forEach(p => { by[p.id] = []; by[p.id].low = []; });
+  ALL_PEOPLE.forEach(p => { const pv = parsePlanVote(val("chk|plan|" + p)); if (pv) { by[pv.id].push(p); if (pv.low) by[pv.id].low.push(p); } });
   return by;
 }
 const planLabel = p => p.short || p.id;
 const leadingPlan = () => { const pv = planVotes(); return PLANS.slice().sort((a, b) => pv[b.id].length - pv[a.id].length)[0]; };
+const planCount = (pv, p) => `${pv[p.id].length}${pv[p.id].low.length ? ` (${pv[p.id].low.length} low budget)` : ""}`;
 
 function renderVoteBoxes(){
   const VP = votes().people, attrDone = ALL_PEOPLE.every(p => VP.has(p));
@@ -991,9 +995,11 @@ function renderVoteBoxes(){
     // Attrazioni votate da tutti: ora si vota l'itinerario
     const pv = planVotes(), voted = ALL_PEOPLE.filter(p => PLANS.some(pl => pv[pl.id].includes(p))), missing = ALL_PEOPLE.filter(p => !voted.includes(p));
     done = !missing.length;
-    const score = PLANS.map(p => `${planLabel(p)}: ${pv[p.id].length}`).join(" · ");
+    const score = PLANS.map(p => `${planLabel(p)}: ${planCount(pv, p)}`).join(" · ");
+    const win = leadingPlan(), wl = pv[win.id].low.length, wn = pv[win.id].length - wl;
+    const version = !win.lowCost || !wl ? "" : wl > wn ? ", versione low budget" : wl === wn ? ", normale o low budget in parità: da decidere" : ", versione normale";
     html = done
-      ? `<div class="vb-t"><b>Itinerario scelto: ${esc(leadingPlan().n)} ✓</b><span>Hanno votato tutti e 8 (${score}).</span><div class="vb-bar"><i style="width:100%"></i></div></div><a href="#programma">Vedi</a>`
+      ? `<div class="vb-t"><b>Itinerario scelto: ${esc(win.n)}${esc(version)} ✓</b><span>Hanno votato tutti e 8 (${score}).</span><div class="vb-bar"><i style="width:100%"></i></div></div><a href="#programma">Vedi</a>`
       : `<div class="vb-t"><b>Scelta dell'itinerario: ${voted.length} su 8</b><span>${score}<br>${voted.length ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}.</span><div class="vb-bar"><i style="width:${Math.round(voted.length/8*100)}%"></i></div></div><a href="#programma">Scegli</a>`;
   } else {
     const voted = ALL_PEOPLE.filter(p => VP.has(p)), n = voted.length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
@@ -1009,23 +1015,28 @@ function planHearts(p, V){
 }
 
 function renderPlans(){
-  const pv = planVotes(), mine = me ? val("chk|plan|" + me) : "";
+  const pv = planVotes(), myv = me ? parsePlanVote(val("chk|plan|" + me)) : null;
   const V = votes(), hearts = {}; PLANS.forEach(p => hearts[p.id] = planHearts(p, V));
   const best = Math.max(...Object.values(hearts));
   const tl = rows => `<ul class="tl">${rows.map(r => `<li><span class="h">${esc(r[0])}</span><span>${esc(r[1])}</span></li>`).join("")}</ul>`;
-  $("#plans").innerHTML = PLANS.map(p => `<article class="card plan ${mine === p.id ? "mine" : ""}" id="plan-${p.id}">
-      <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}</span></div>
+  $("#plans").innerHTML = PLANS.map(p => `<article class="card plan ${myv && myv.id === p.id ? "mine" : ""}" id="plan-${p.id}">
+      <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}${pv[p.id].low.length ? ` · ${pv[p.id].low.length} low` : ""}</span></div>
       <p class="small muted" style="margin:4px 0 6px">${esc(p.sub)}</p>
       <div class="tags" style="margin-bottom:6px"><span class="pill ${hearts[p.id] === best && best ? "green" : ""}">Raccoglie ${hearts[p.id]} ♥ dei voti</span>${hearts[p.id] === best && best ? '<span class="pill green">La più vicina ai voti</span>' : ""}<span class="pill gold">${esc(p.must || "Tutte le ★")}</span></div>
-      <p class="small" style="margin:0 0 6px"><b>Costo biglietti:</b> ${esc(p.cost)}</p>
+      <p class="small" style="margin:0 0 6px"><b>Costo biglietti:</b> ${esc(p.cost)}${p.lowCost ? `<br><b>Versione low budget:</b> ${esc(p.lowCost)}` : ""}</p>
+      ${p.lowCost ? `<p class="small muted" style="margin:0 0 6px">Low budget = ${esc(LOW_NOTE)}</p>` : ""}
       <div class="plan-day">Sabato 5</div>${tl(p.sat)}
       <div class="plan-day">Domenica 6</div>${tl(p.sun)}
       ${p.mon ? `<div class="plan-day">Lunedì 7</div>${tl(p.mon)}` : ""}
       <p class="small" style="margin:10px 0 0"><b>Resta fuori:</b> <span class="muted">${esc(p.out)}</span></p>
-      <div class="voters" style="margin-top:8px">${pv[p.id].length ? "Scelto da " + esc(pv[p.id].join(", ")) : "Nessun voto ancora"}</div>
+      <div class="voters" style="margin-top:8px">${(() => {
+        const n = pv[p.id].filter(x => !pv[p.id].low.includes(x)), l = pv[p.id].low;
+        return !pv[p.id].length ? "Nessun voto ancora" : [n.length ? "Scelto da " + esc(n.join(", ")) : "", l.length ? "Low budget: " + esc(l.join(", ")) : ""].filter(Boolean).join(" · ");
+      })()}</div>
+      <button type="button" class="maplink" data-planmap="${p.id}" style="margin-top:6px">📍 Percorsi sulla mappa</button>
       <div class="act-btns">
-        <button type="button" class="vbtn must ${mine === p.id ? "on" : ""}" data-plan="${p.id}" aria-pressed="${mine === p.id}">${ICON.star}${mine === p.id ? "La mia scelta" : "Scelgo questa"}</button>
-        <button type="button" class="vbtn" data-planmap="${p.id}">📍 Percorsi</button>
+        ${(() => { const on = myv && myv.id === p.id && !myv.low; return `<button type="button" class="vbtn must ${on ? "on" : ""}" data-plan="${p.id}" aria-pressed="${on}">${ICON.star}${on ? "La mia scelta" : "Scelgo questa"}</button>`; })()}
+        ${p.lowCost ? (() => { const on = myv && myv.id === p.id && myv.low; return `<button type="button" class="vbtn must ${on ? "on" : ""}" data-plan="${p.id}L" aria-pressed="${on}">${ICON.star}${on ? "La mia: low budget" : "Questa, low budget"}</button>`; })() : ""}
       </div>
     </article>`).join("");
 }
@@ -1104,7 +1115,7 @@ const AIRPORTS = [
 const FORK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff" style="margin-top:4px"><path d="M7 2v7a2 2 0 0 0 1.5 1.9V22h2V10.9A2 2 0 0 0 12 9V2h-1.2v6h-1V2H8.6v6h-1V2zm9 0c-1.7 0-3 2.2-3 5v5h2v10h2V2z"/></svg>';
 const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
 let map = null, mapLayer = null, mapMode = "all", fitted = false, mapPlan = "";
-const mapPlanId = () => mapPlan || leadingPlan().id;
+const mapPlanId = () => PLANS.some(p => p.id === mapPlan) ? mapPlan : leadingPlan().id;
 const markers = {};
 const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>';
 
@@ -1247,11 +1258,12 @@ document.addEventListener("click", e => {
     return;
   }
   if (el.dataset.plan) {
-    const id = el.dataset.plan, p = PLANS.find(x => x.id === id);
+    const id = el.dataset.plan, low = /L$/.test(id), p = PLANS.find(x => x.id === (low ? id.slice(0, -1) : id));
+    const label = planLabel(p) + (low ? " low budget" : "");
     return needMe(() => {
-      const k = "chk|plan|" + me, was = val(k);
-      setKey(k, was === id ? "" : id, "Itinerario: " + (was === id ? "(nessuno)" : p.n));
-      if (was && was !== id) toast("Scelta spostata su " + planLabel(p));
+      const k = "chk|plan|" + me, was = val(k) === "C" ? "A1L" : val(k);
+      setKey(k, was === id ? "" : id, "Itinerario: " + (was === id ? "(nessuno)" : p.n + (low ? " (low budget)" : "")));
+      if (was && was !== id) toast("Scelta spostata su " + label);
     });
   }
   if (el.dataset.pick) return setMe(el.dataset.pick);

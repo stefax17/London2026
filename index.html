@@ -693,8 +693,8 @@ const DAYS = [
     ["17:30","British Museum ★: il venerdì è aperto fino alle 20:30. Da Paddington Elizabeth line fino a Tottenham Court Road (8 min). Prenotare lo slot gratuito"],
     ["19:45","Cena a Chinatown o Soho, 10 min a piedi"]
   ]},
-  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta (A1, A2 o B).", rows:[]},
-  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta (A1, A2 o B). Negozi 12–18.", rows:[]},
+  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta.", rows:[]},
+  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta. Negozi 12–18.", rows:[]},
   {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
     ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30. Con la proposta A3 invece Winter Wonderland a Hyde Park"],
@@ -722,7 +722,7 @@ const PLANS = [
    mon:[["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (lunedì mattina ingresso gratuito e poca gente)"],["11:30","Rientro a casa per i bagagli"]],
    satStops:["nhm","sci","busTea"], sunStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], monStops:["ww"],
    out:"Cambio della guardia, Harrods, Portobello, Piccadilly e Covent Garden, Hamleys"},
-  {id:"C", cost:"~£195 a famiglia (≈ €230)", must:"Tutte le ★ (2 in versione economica)", n:"C · Low budget", sub:"Come A1 ma spendendo meno: museo delle cere tenuto, al posto di crociera, bus del tè e London Eye ci sono le alternative economiche. Pranzi al sacco.",
+  {id:"C", cost:"~£195 a famiglia (≈ €230)", must:"Tutte le ★ (2 in versione economica)", short:"A1 Low", n:"A1 Low budget · Westminster e il fiume spendendo poco", sub:"Stesse tappe di A1 ma spendendo meno: museo delle cere tenuto, al posto di crociera, bus del tè e London Eye ci sono le alternative economiche. Pranzi al sacco.",
    sat:[["10:00","Museo delle cere ★ (Baker Street): biglietti online in anticipo, primo ingresso"],["12:30","Pranzo al sacco (meal deal da supermercato, ~£4–5 a testa)"],["13:30","Big Ben ★ e Westminster a piedi"],["15:00","Battello di linea ★ (Uber Boat) da Westminster alla Torre al tramonto: stessa vista della crociera, senza guida, si paga con contactless"],["16:15","Tower Bridge illuminato a piedi"],["17:00","Sky Garden al posto del London Eye: vista dal 35° piano, gratis con prenotazione (si apre circa 3 settimane prima)"],["Sera","Cena economica"]],
    sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, picnic"],["15:00","Harrods, solo da guardare"],["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],["Sera","Cena economica"]],
    satStops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], sunStops:["guard","nhm","harrods","lights"],
@@ -973,6 +973,7 @@ function planVotes(){
   ALL_PEOPLE.forEach(p => { const v = val("chk|plan|" + p); if (by[v]) by[v].push(p); });
   return by;
 }
+const planLabel = p => p.short || p.id;
 const leadingPlan = () => { const pv = planVotes(); return PLANS.slice().sort((a, b) => pv[b.id].length - pv[a.id].length)[0]; };
 
 function renderVoteBoxes(){
@@ -982,7 +983,7 @@ function renderVoteBoxes(){
     // Attrazioni votate da tutti: ora si vota l'itinerario
     const pv = planVotes(), voted = ALL_PEOPLE.filter(p => PLANS.some(pl => pv[pl.id].includes(p))), missing = ALL_PEOPLE.filter(p => !voted.includes(p));
     done = !missing.length;
-    const score = PLANS.map(p => `${p.id}: ${pv[p.id].length}`).join(" · ");
+    const score = PLANS.map(p => `${planLabel(p)}: ${pv[p.id].length}`).join(" · ");
     html = done
       ? `<div class="vb-t"><b>Itinerario scelto: ${esc(leadingPlan().n)} ✓</b><span>Hanno votato tutti e 8 (${score}).</span><div class="vb-bar"><i style="width:100%"></i></div></div><a href="#programma">Vedi</a>`
       : `<div class="vb-t"><b>Scelta dell'itinerario: ${voted.length} su 8</b><span>${score}<br>${voted.length ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}.</span><div class="vb-bar"><i style="width:${Math.round(voted.length/8*100)}%"></i></div></div><a href="#programma">Scegli</a>`;
@@ -1126,7 +1127,7 @@ function initMap(){
 function renderMapTools(){
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
-    + (mapMode === "d1" || mapMode === "d2" || mapMode === "d3" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${p.id}</button>`).join("") : "");
+    + (mapMode === "d1" || mapMode === "d2" || mapMode === "d3" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${esc(planLabel(p))}</button>`).join("") : "");
 }
 
 function renderMap(fit){
@@ -1159,7 +1160,7 @@ function renderMap(fit){
     const stops = dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : dayIdx === 3 && plan.monStops ? plan.monStops : day.stops;
     list = stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
     if (dayIdx === 1 || dayIdx === 2) note = `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
-    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi (proposta ${plan.id}): ${list[0].n} e rientro a casa per i bagagli.`;
+    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi (proposta ${planLabel(plan)}): ${list[0].n} e rientro a casa per i bagagli.`;
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {
@@ -1242,7 +1243,7 @@ document.addEventListener("click", e => {
     return needMe(() => {
       const k = "chk|plan|" + me, was = val(k);
       setKey(k, was === id ? "" : id, "Itinerario: " + (was === id ? "(nessuno)" : p.n));
-      if (was && was !== id) toast("Scelta spostata su " + p.id);
+      if (was && was !== id) toast("Scelta spostata su " + planLabel(p));
     });
   }
   if (el.dataset.pick) return setMe(el.dataset.pick);

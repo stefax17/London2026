@@ -467,7 +467,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono tre proposte: ognuno ne sceglie una, quella più votata diventa il programma.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte: ognuno ne sceglie una, quella più votata diventa il programma.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div class="plans" id="plans"></div>
     <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
@@ -697,7 +697,7 @@ const DAYS = [
   {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta (A1, A2 o B). Negozi 12–18.", rows:[]},
   {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
-    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30"],
+    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30. Con la proposta A3 invece Winter Wonderland a Hyde Park"],
     ["12:00","Famiglia Brindisi a casa: si prendono i bagagli, Central line fino a Liverpool Street"],
     ["13:15","Famiglia Brindisi prende lo Stansted Express da Liverpool Street"],
     ["16:15","Volo Stansted → Brindisi"]
@@ -716,6 +716,12 @@ const PLANS = [
    sun:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (prenotato)"],["15:15","Crociera ★ andata e ritorno da Westminster"],["17:30","Winter Wonderland a Hyde Park, vicino a casa, e cena lì"]],
    satStops:["portobello","nhwalk","tussauds","hamleys","piccadilly","busTea"], sunStops:["nhm","bigben","eye","cruise","ww"],
    out:"Cambio della guardia, Westminster a piedi, Tower Bridge, Harrods"},
+  {id:"A3", n:"A3 · Musei di South Kensington", sub:"Senza Warner Bros. Natural History e Science Museum per tutti, domenica i classici sul fiume.",
+   sat:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Science Museum (accanto)"],["16:00","Da South Kensington a Victoria (10 min)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
+   sun:[["10:00","Museo delle cere ★ (prenotato)"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:30","London Eye (prenotato)"],["15:30","Crociera ★ da Westminster alla Torre, al tramonto"],["16:30","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
+   mon:[["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (lunedì mattina ingresso gratuito e poca gente)"],["11:30","Rientro a casa per i bagagli"]],
+   satStops:["nhm","sci","busTea"], sunStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], monStops:["ww"],
+   out:"Cambio della guardia, Harrods, Portobello, Piccadilly e Covent Garden, Hamleys"},
   {id:"B", n:"B · Con Warner Bros", sub:"Sabato agli studi di Harry Potter, domenica le irrinunciabili in centro.",
    sat:[["9:00","Partenza: metro fino a Euston, treno per Watford Junction, navetta"],["10:30","Warner Bros Studio Tour (3–4 ore, pranzo dentro)"],["15:30","Rientro a Londra"],["17:30","Winter Wonderland o passeggiata a Notting Hill"],["Sera","Cena vicino a casa"]],
    sun:[["10:00","Museo delle cere ★ (prenotato)"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (prenotato)"],["15:15","Crociera ★ da Westminster alla Torre"],["16:40","Bus del tè ★ delle 17:00 con le luci (partenza Trafalgar Square)"],["Sera","Cena"]],
@@ -991,6 +997,7 @@ function renderPlans(){
       <p class="small muted" style="margin:4px 0 10px">${esc(p.sub)}</p>
       <div class="plan-day">Sabato 5</div>${tl(p.sat)}
       <div class="plan-day">Domenica 6</div>${tl(p.sun)}
+      ${p.mon ? `<div class="plan-day">Lunedì 7</div>${tl(p.mon)}` : ""}
       <p class="small" style="margin:10px 0 0"><b>Resta fuori:</b> <span class="muted">${esc(p.out)}</span></p>
       <div class="voters" style="margin-top:8px">${pv[p.id].length ? "Scelto da " + esc(pv[p.id].join(", ")) : "Nessun voto ancora"}</div>
       <div class="act-btns">
@@ -1105,7 +1112,7 @@ function initMap(){
 function renderMapTools(){
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
-    + (mapMode === "d1" || mapMode === "d2" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${p.id}</button>`).join("") : "");
+    + (mapMode === "d1" || mapMode === "d2" || mapMode === "d3" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${p.id}</button>`).join("") : "");
 }
 
 function renderMap(fit){
@@ -1135,10 +1142,10 @@ function renderMap(fit){
   } else if (dayIdx >= 0) {
     const day = DAYS[dayIdx];
     const plan = PLANS.find(p => p.id === mapPlanId());
-    const stops = dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : day.stops;
+    const stops = dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : dayIdx === 3 && plan.monStops ? plan.monStops : day.stops;
     list = stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
     if (dayIdx === 1 || dayIdx === 2) note = `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
-    if (dayIdx === 3 && list.length) note = "Lunedì mattina della famiglia Brindisi: Science Museum e rientro a casa per i bagagli.";
+    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi (proposta ${plan.id}): ${list[0].n} e rientro a casa per i bagagli.`;
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {

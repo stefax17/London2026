@@ -467,7 +467,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte: ognuno ne sceglie una, quella più votata diventa il programma.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div class="plans" id="plans"></div>
     <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
@@ -989,12 +989,20 @@ function renderVoteBoxes(){
   ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
 }
 
+// Quanti ♥ raccoglie una proposta: somma dei ♥ delle tappe di sabato e domenica (calcolata dai voti attuali)
+function planHearts(p, V){
+  return [...new Set(p.satStops.concat(p.sunStops))].reduce((n, id) => n + (V.likes[id] || []).length, 0);
+}
+
 function renderPlans(){
   const pv = planVotes(), mine = me ? val("chk|plan|" + me) : "";
+  const V = votes(), hearts = {}; PLANS.forEach(p => hearts[p.id] = planHearts(p, V));
+  const best = Math.max(...Object.values(hearts));
   const tl = rows => `<ul class="tl">${rows.map(r => `<li><span class="h">${esc(r[0])}</span><span>${esc(r[1])}</span></li>`).join("")}</ul>`;
   $("#plans").innerHTML = PLANS.map(p => `<article class="card plan ${mine === p.id ? "mine" : ""}" id="plan-${p.id}">
       <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}</span></div>
-      <p class="small muted" style="margin:4px 0 10px">${esc(p.sub)}</p>
+      <p class="small muted" style="margin:4px 0 6px">${esc(p.sub)}</p>
+      <div class="tags" style="margin-bottom:6px"><span class="pill ${hearts[p.id] === best && best ? "green" : ""}">Raccoglie ${hearts[p.id]} ♥ dei voti</span>${hearts[p.id] === best && best ? '<span class="pill green">La più vicina ai voti</span>' : ""}<span class="pill gold">Tutte le ★</span></div>
       <div class="plan-day">Sabato 5</div>${tl(p.sat)}
       <div class="plan-day">Domenica 6</div>${tl(p.sun)}
       ${p.mon ? `<div class="plan-day">Lunedì 7</div>${tl(p.mon)}` : ""}

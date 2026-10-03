@@ -123,6 +123,11 @@ section{padding:30px 0 6px}
 .sug .txt{flex:1;min-width:0;font-size:14px}
 .sug .txt small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .sug button{flex:none;background:none;border:0;color:var(--muted);font-size:12px;font-weight:600;text-decoration:underline;padding:2px 0}
+.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.plan.mine{outline:2px solid var(--gold);outline-offset:-1px}
+.plan h3{font-size:18px}
+.plan-day{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin:10px 0 2px}
+.plan .tl li{grid-template-columns:52px 1fr;font-size:13.5px}
 .tips{display:grid;gap:10px}
 .tip{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
 .tip b{display:block;font-size:15px}
@@ -462,8 +467,10 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">I punti fissi ci sono già, il resto si riempie dopo le votazioni.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono tre proposte: ognuno ne sceglie una, quella più votata diventa il programma.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
+    <div class="plans" id="plans"></div>
+    <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
     <div id="days"></div>
   </section>
 </main>
@@ -588,7 +595,7 @@ const ACTS = [
   {id:"stadium", wp:"Emirates_Stadium", ll:[51.5549,-0.1084], cat:"esperienze", prio:"bassa", n:"Tour di uno stadio",
    d:"Spogliatoi, tunnel e campo: Emirates (Arsenal), Stamford Bridge (Chelsea) o Wembley.",
    z:"Dipende dallo stadio", t:"1,5–2h", pa:"~£30", pc:"~£20", book:true},
-  {id:"busTea", wp:"AEC_Routemaster", cat:"cibo", prio:"bassa", n:"Afternoon tea sul bus rosso",
+  {id:"busTea", wp:"AEC_Routemaster", ll:[51.5080,-0.1281], cat:"cibo", prio:"bassa", n:"Afternoon tea sul bus rosso",
    d:"Tè, scones e dolcetti a bordo di un bus vintage che gira per i monumenti.",
    z:"Partenza dal centro", t:"1,5h", pa:"~£50", pc:"~£40", book:true},
   {id:"harrods", wp:"Harrods", ll:[51.4994,-0.1633], cat:"mercati", prio:"bassa", free:true, n:"Harrods a Natale",
@@ -676,26 +683,44 @@ const CHECK = [
 ];
 
 const DAYS = [
-  {d:"Venerdì 4 dicembre", short:"Ven 4", tag:"Arrivo", stops:[], rows:[
+  {d:"Venerdì 4 dicembre", short:"Ven 4", tag:"Arrivo", stops:["paddington","british"], rows:[
     ["12:15","Famiglia Brindisi atterra a Stansted"],
     ["13:40","Famiglia Milano atterra a Heathrow"],
     ["~14:15","Brindisi a casa (stima)"],
     ["~15:30","Milano a casa (stima), sistemazione e spesa"],
     ["15:50","Tramonto"],
-    ["Sera",null]
+    ["16:30","Statua dell'orso Paddington ★ (stazione di Paddington, 2 fermate da casa)"],
+    ["17:30","British Museum ★: il venerdì è aperto fino alle 20:30. Da Paddington Elizabeth line fino a Tottenham Court Road (8 min). Prenotare lo slot gratuito"],
+    ["19:45","Cena a Chinatown o Soho, 10 min a piedi"]
   ]},
-  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Portobello Market è al meglio il sabato.", rows:[
-    ["Mattina",null],["Pranzo",null],["Pomeriggio",null],["Sera",null]
-  ]},
-  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Negozi 12–18, molti teatri chiusi.", rows:[
-    ["Mattina",null],["Pranzo",null],["Pomeriggio",null],["Sera",null]
-  ]},
-  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:[], rows:[
+  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta (A1, A2 o B).", rows:[]},
+  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta (A1, A2 o B). Negozi 12–18.", rows:[]},
+  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
-    ["Mattina",null],
+    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30"],
+    ["12:00","Famiglia Brindisi a casa: si prendono i bagagli, Central line fino a Liverpool Street"],
     ["13:15","Famiglia Brindisi prende lo Stansted Express da Liverpool Street"],
     ["16:15","Volo Stansted → Brindisi"]
   ]}
+];
+
+// Proposte di itinerario per sabato e domenica (le ★ sono le irrinunciabili)
+const PLANS = [
+  {id:"A1", n:"A1 · Westminster e il fiume", sub:"Senza Warner Bros. Classici di Londra, crociera al tramonto e Tower Bridge illuminato.",
+   sat:[["10:00","Museo delle cere ★ (Baker Street, primo ingresso prenotato)"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:45","London Eye (prenotato)"],["15:45","Crociera ★ da Westminster alla Torre, al tramonto"],["16:45","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
+   sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, pranzo al museo"],["15:00","Harrods (domenica 11:30–18)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
+   satStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], sunStops:["guard","nhm","harrods","busTea"],
+   out:"Portobello, Winter Wonderland, Piccadilly e Covent Garden, Hamleys"},
+  {id:"A2", n:"A2 · Musei e Natale", sub:"Senza Warner Bros. Mercato di Portobello, negozi di Natale e Winter Wonderland la sera.",
+   sat:[["9:30","Portobello Market e case colorate di Notting Hill, sotto casa"],["12:00","Museo delle cere ★ (prenotato)"],["14:30","Hamleys e Regent Street"],["15:30","Piccadilly Circus e Covent Garden"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena a Soho o Covent Garden"]],
+   sun:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (prenotato)"],["15:15","Crociera ★ andata e ritorno da Westminster"],["17:30","Winter Wonderland a Hyde Park, vicino a casa, e cena lì"]],
+   satStops:["portobello","nhwalk","tussauds","hamleys","piccadilly","busTea"], sunStops:["nhm","bigben","eye","cruise","ww"],
+   out:"Cambio della guardia, Westminster a piedi, Tower Bridge, Harrods"},
+  {id:"B", n:"B · Con Warner Bros", sub:"Sabato agli studi di Harry Potter, domenica le irrinunciabili in centro.",
+   sat:[["9:00","Partenza: metro fino a Euston, treno per Watford Junction, navetta"],["10:30","Warner Bros Studio Tour (3–4 ore, pranzo dentro)"],["15:30","Rientro a Londra"],["17:30","Winter Wonderland o passeggiata a Notting Hill"],["Sera","Cena vicino a casa"]],
+   sun:[["10:00","Museo delle cere ★ (prenotato)"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (prenotato)"],["15:15","Crociera ★ da Westminster alla Torre"],["16:40","Bus del tè ★ delle 17:00 con le luci (partenza Trafalgar Square)"],["Sera","Cena"]],
+   satStops:["hpstudio","ww"], sunStops:["tussauds","bigben","eye","cruise","busTea"],
+   out:"Natural History Museum (♥7) e quasi tutto il resto. Lunedì la famiglia Brindisi può fare il Natural History Museum al posto dello Science Museum"}
 ];
 
 const PEOPLE = [
@@ -931,13 +956,48 @@ function renderFood(){
   }).join("");
 }
 
+// Voto dell'itinerario: chiave chk|plan|<iniziali>, valore = id della proposta
+function planVotes(){
+  const by = {}; PLANS.forEach(p => by[p.id] = []);
+  ALL_PEOPLE.forEach(p => { const v = val("chk|plan|" + p); if (by[v]) by[v].push(p); });
+  return by;
+}
+const leadingPlan = () => { const pv = planVotes(); return PLANS.slice().sort((a, b) => pv[b.id].length - pv[a.id].length)[0]; };
+
 function renderVoteBoxes(){
-  const VP = votes().people, voted = ALL_PEOPLE.filter(p => VP.has(p)), n = voted.length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
-  const done = !missing.length;
-  const html = done
-    ? `<div class="vb-t"><b>Votazioni chiuse ✓</b><span>Hanno votato tutti e 8: ora prepariamo il programma.</span><div class="vb-bar"><i style="width:100%"></i></div></div>`
-    : `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>${n ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
+  const VP = votes().people, attrDone = ALL_PEOPLE.every(p => VP.has(p));
+  let html, done;
+  if (attrDone) {
+    // Attrazioni votate da tutti: ora si vota l'itinerario
+    const pv = planVotes(), voted = ALL_PEOPLE.filter(p => PLANS.some(pl => pv[pl.id].includes(p))), missing = ALL_PEOPLE.filter(p => !voted.includes(p));
+    done = !missing.length;
+    const score = PLANS.map(p => `${p.id}: ${pv[p.id].length}`).join(" · ");
+    html = done
+      ? `<div class="vb-t"><b>Itinerario scelto: ${esc(leadingPlan().n)} ✓</b><span>Hanno votato tutti e 8 (${score}).</span><div class="vb-bar"><i style="width:100%"></i></div></div><a href="#programma">Vedi</a>`
+      : `<div class="vb-t"><b>Scelta dell'itinerario: ${voted.length} su 8</b><span>${score}<br>${voted.length ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}.</span><div class="vb-bar"><i style="width:${Math.round(voted.length/8*100)}%"></i></div></div><a href="#programma">Scegli</a>`;
+  } else {
+    const voted = ALL_PEOPLE.filter(p => VP.has(p)), n = voted.length, missing = ALL_PEOPLE.filter(p => !VP.has(p));
+    done = false;
+    html = `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>${n ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
+  }
   ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
+}
+
+function renderPlans(){
+  const pv = planVotes(), mine = me ? val("chk|plan|" + me) : "";
+  const tl = rows => `<ul class="tl">${rows.map(r => `<li><span class="h">${esc(r[0])}</span><span>${esc(r[1])}</span></li>`).join("")}</ul>`;
+  $("#plans").innerHTML = PLANS.map(p => `<article class="card plan ${mine === p.id ? "mine" : ""}" id="plan-${p.id}">
+      <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}</span></div>
+      <p class="small muted" style="margin:4px 0 10px">${esc(p.sub)}</p>
+      <div class="plan-day">Sabato 5</div>${tl(p.sat)}
+      <div class="plan-day">Domenica 6</div>${tl(p.sun)}
+      <p class="small" style="margin:10px 0 0"><b>Resta fuori:</b> <span class="muted">${esc(p.out)}</span></p>
+      <div class="voters" style="margin-top:8px">${pv[p.id].length ? "Scelto da " + esc(pv[p.id].join(", ")) : "Nessun voto ancora"}</div>
+      <div class="act-btns">
+        <button type="button" class="vbtn must ${mine === p.id ? "on" : ""}" data-plan="${p.id}" aria-pressed="${mine === p.id}">${ICON.star}${mine === p.id ? "La mia scelta" : "Scelgo questa"}</button>
+        <button type="button" class="vbtn" data-planmap="${p.id}">📍 Percorsi</button>
+      </div>
+    </article>`).join("");
 }
 
 // ---------- PROPOSTE DI COSE DA VEDERE ----------
@@ -963,7 +1023,7 @@ function sendSug(){
   });
 }
 
-function renderAll(){ renderWho(); renderVoteBoxes(); renderChecklist(); renderFilters(); renderActs(); renderFood(); renderRank(); renderMap(); }
+function renderAll(){ renderWho(); renderVoteBoxes(); renderChecklist(); renderFilters(); renderActs(); renderFood(); renderRank(); renderPlans(); renderMap(); }
 
 // ---------- FOTO (da Wikipedia, caricate dal telefono di chi apre la pagina) ----------
 const LS_IMG = "londra26_img_v2";
@@ -1013,7 +1073,8 @@ const AIRPORTS = [
 ];
 const FORK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff" style="margin-top:4px"><path d="M7 2v7a2 2 0 0 0 1.5 1.9V22h2V10.9A2 2 0 0 0 12 9V2h-1.2v6h-1V2H8.6v6h-1V2zm9 0c-1.7 0-3 2.2-3 5v5h2v10h2V2z"/></svg>';
 const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
-let map = null, mapLayer = null, mapMode = "all", fitted = false;
+let map = null, mapLayer = null, mapMode = "all", fitted = false, mapPlan = "";
+const mapPlanId = () => mapPlan || leadingPlan().id;
 const markers = {};
 const HOME_SVG = '<svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3z"/></svg>';
 
@@ -1043,7 +1104,8 @@ function initMap(){
 
 function renderMapTools(){
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
-  $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("");
+  $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
+    + (mapMode === "d1" || mapMode === "d2" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${p.id}</button>`).join("") : "");
 }
 
 function renderMap(fit){
@@ -1072,7 +1134,11 @@ function renderMap(fit){
     note = "Heathrow (famiglia Milano) e Stansted (famiglia Brindisi): collegamento indicativo fino a casa.";
   } else if (dayIdx >= 0) {
     const day = DAYS[dayIdx];
-    list = day.stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
+    const plan = PLANS.find(p => p.id === mapPlanId());
+    const stops = dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : day.stops;
+    list = stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
+    if (dayIdx === 1 || dayIdx === 2) note = `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
+    if (dayIdx === 3 && list.length) note = "Lunedì mattina della famiglia Brindisi: Science Museum e rientro a casa per i bagagli.";
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {
@@ -1143,6 +1209,21 @@ document.addEventListener("click", e => {
     return needMe(() => { const k = "like|" + id + "|" + me; setKey(k, val(k) === "1" ? "" : "1", "Ristorante: " + r.n); });
   }
   if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; renderMap(true); return; }
+  if (el.dataset.mapplan) { mapPlan = el.dataset.mapplan; renderMap(true); return; }
+  if (el.dataset.planmap) {
+    mapPlan = el.dataset.planmap; mapMode = "d1"; renderMap(true);
+    $("#mappa").scrollIntoView();
+    if (map) { fitted = true; setTimeout(() => { map.invalidateSize(); renderMap(true); }, 350); }
+    return;
+  }
+  if (el.dataset.plan) {
+    const id = el.dataset.plan, p = PLANS.find(x => x.id === id);
+    return needMe(() => {
+      const k = "chk|plan|" + me, was = val(k);
+      setKey(k, was === id ? "" : id, "Itinerario: " + (was === id ? "(nessuno)" : p.n));
+      if (was && was !== id) toast("Scelta spostata su " + p.id);
+    });
+  }
   if (el.dataset.pick) return setMe(el.dataset.pick);
   if (el.dataset.filter) { filter = el.dataset.filter; renderFilters(); renderActs(); return; }
   if (el.dataset.chk) { const k = el.dataset.chk, d = el.dataset.desc; return needMe(() => setKey(k, val(k) === "1" ? "" : "1", d)); }

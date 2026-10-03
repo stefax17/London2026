@@ -467,7 +467,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica.</p>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div class="plans" id="plans"></div>
     <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
@@ -706,23 +706,23 @@ const DAYS = [
 
 // Proposte di itinerario per sabato e domenica (le ★ sono le irrinunciabili)
 const PLANS = [
-  {id:"A1", n:"A1 · Westminster e il fiume", sub:"Senza Warner Bros. Classici di Londra, crociera al tramonto e Tower Bridge illuminato.",
+  {id:"A1", cost:"~£525 a famiglia (≈ €615)", n:"A1 · Westminster e il fiume", sub:"Senza Warner Bros. Classici di Londra, crociera al tramonto e Tower Bridge illuminato.",
    sat:[["10:00","Museo delle cere ★ (Baker Street): da prenotare, meglio il primo ingresso delle 10:00"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:45","London Eye (da prenotare)"],["15:45","Crociera ★ da Westminster alla Torre, al tramonto"],["16:45","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
    sun:[["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00"],["12:00","Natural History Museum, pranzo al museo"],["15:00","Harrods (domenica 11:30–18)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
    satStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], sunStops:["guard","nhm","harrods","busTea"],
    out:"Portobello, Winter Wonderland, Piccadilly e Covent Garden, Hamleys"},
-  {id:"A2", n:"A2 · Musei e Natale", sub:"Senza Warner Bros. Mercato di Portobello, negozi di Natale e Winter Wonderland la sera.",
+  {id:"A2", cost:"~£600–650 a famiglia (≈ €700–760)", n:"A2 · Musei e Natale", sub:"Senza Warner Bros. Mercato di Portobello, negozi di Natale e Winter Wonderland la sera.",
    sat:[["9:30","Portobello Market e case colorate di Notting Hill, sotto casa"],["12:00","Museo delle cere ★ (da prenotare)"],["14:30","Hamleys e Regent Street"],["15:30","Piccadilly Circus e Covent Garden"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena a Soho o Covent Garden"]],
    sun:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (da prenotare)"],["15:15","Crociera ★ andata e ritorno da Westminster"],["17:30","Winter Wonderland a Hyde Park, vicino a casa, e cena lì"]],
    satStops:["portobello","nhwalk","tussauds","hamleys","piccadilly","busTea"], sunStops:["nhm","bigben","eye","cruise","ww"],
    out:"Cambio della guardia, Westminster a piedi, Tower Bridge, Harrods"},
-  {id:"A3", n:"A3 · Musei di South Kensington", sub:"Senza Warner Bros. Natural History e Science Museum per tutti, domenica i classici sul fiume.",
+  {id:"A3", cost:"~£525–600 a famiglia (≈ €615–700)", n:"A3 · Musei di South Kensington", sub:"Senza Warner Bros. Natural History e Science Museum per tutti, domenica i classici sul fiume.",
    sat:[["10:00","Natural History Museum"],["12:30","Pranzo"],["13:30","Science Museum (accanto)"],["16:00","Da South Kensington a Victoria (10 min)"],["16:40","Bus del tè ★ delle 17:00 con le luci di Regent Street"],["Sera","Cena"]],
    sun:[["10:00","Museo delle cere ★ (da prenotare)"],["12:30","Pranzo"],["13:30","Big Ben ★ e Westminster a piedi"],["14:30","London Eye (da prenotare)"],["15:30","Crociera ★ da Westminster alla Torre, al tramonto"],["16:30","Tower Bridge illuminato a piedi"],["Sera","Cena"]],
    mon:[["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (lunedì mattina ingresso gratuito e poca gente)"],["11:30","Rientro a casa per i bagagli"]],
    satStops:["nhm","sci","busTea"], sunStops:["tussauds","bigben","westm","eye","cruise","towerwalk"], monStops:["ww"],
    out:"Cambio della guardia, Harrods, Portobello, Piccadilly e Covent Garden, Hamleys"},
-  {id:"B", n:"B · Con Warner Bros", sub:"Sabato agli studi di Harry Potter, domenica le irrinunciabili in centro.",
+  {id:"B", cost:"~£825–850 a famiglia (≈ €965–1.000)", n:"B · Con Warner Bros", sub:"Sabato agli studi di Harry Potter, domenica le irrinunciabili in centro.",
    sat:[["9:00","Partenza: metro fino a Euston, treno per Watford Junction, navetta"],["10:30","Warner Bros Studio Tour (3–4 ore, pranzo dentro)"],["15:30","Rientro a Londra"],["17:30","Winter Wonderland o passeggiata a Notting Hill"],["Sera","Cena vicino a casa"]],
    sun:[["10:00","Museo delle cere ★ (da prenotare)"],["12:30","Pranzo"],["13:30","Big Ben ★"],["14:00","London Eye (da prenotare)"],["15:15","Crociera ★ da Westminster alla Torre"],["16:40","Bus del tè ★ delle 17:00 con le luci (partenza Trafalgar Square)"],["Sera","Cena"]],
    satStops:["hpstudio","ww"], sunStops:["tussauds","bigben","eye","cruise","busTea"],
@@ -1003,6 +1003,7 @@ function renderPlans(){
       <div class="act-top"><h3>${esc(p.n)}</h3><span class="pill ${pv[p.id].length ? "red" : ""}">${pv[p.id].length} ${pv[p.id].length === 1 ? "voto" : "voti"}</span></div>
       <p class="small muted" style="margin:4px 0 6px">${esc(p.sub)}</p>
       <div class="tags" style="margin-bottom:6px"><span class="pill ${hearts[p.id] === best && best ? "green" : ""}">Raccoglie ${hearts[p.id]} ♥ dei voti</span>${hearts[p.id] === best && best ? '<span class="pill green">La più vicina ai voti</span>' : ""}<span class="pill gold">Tutte le ★</span></div>
+      <p class="small" style="margin:0 0 6px"><b>Costo biglietti:</b> ${esc(p.cost)}</p>
       <div class="plan-day">Sabato 5</div>${tl(p.sat)}
       <div class="plan-day">Domenica 6</div>${tl(p.sun)}
       ${p.mon ? `<div class="plan-day">Lunedì 7</div>${tl(p.mon)}` : ""}

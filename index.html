@@ -128,6 +128,12 @@ section{padding:30px 0 6px}
 .plan h3{font-size:18px}
 .plan-day{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin:10px 0 2px}
 .plan .tl li{grid-template-columns:52px 1fr;font-size:13.5px}
+.fold-h{cursor:pointer;display:flex;align-items:center;gap:8px}
+.fold-i{font-size:18px;color:var(--muted);transition:transform .2s}
+.fold.open .fold-i{transform:rotate(180deg)}
+.fold-hint{margin:0;color:var(--muted);font-size:14px;cursor:pointer}
+.fold.open .fold-hint{display:none}
+.fold:not(.open)>*:not(.fold-h):not(.fold-hint){display:none}
 .tips{display:grid;gap:10px}
 .tip{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
 .tip b{display:block;font-size:15px}
@@ -333,14 +339,14 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
 <div class="bar">
   <nav class="tabs" id="tabs">
+    <a href="#programma">Programma</a>
     <a href="#logistica">Logistica</a>
     <a href="#consigli">Consigli</a>
     <a href="#checklist">Checklist</a>
-    <a href="#vedere">Da vedere</a>
     <a href="#mangiare">Mangiare</a>
-    <a href="#mappa">Mappa</a>
+    <a href="#vedere">Da vedere</a>
     <a href="#classifica">Classifica</a>
-    <a href="#programma">Programma</a>
+    <a href="#mappa">Mappa</a>
   </nav>
   <div class="who">
     <span id="whoTxt"></span>
@@ -350,6 +356,15 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
 <main class="wrap">
   <div id="localBanner" class="banner" hidden>Salvataggio condiviso non ancora attivo: per ora le spunte restano solo su questo telefono.</div>
+
+  <section id="programma">
+    <h2>Programma</h2>
+    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono cinque proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
+    <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
+    <div class="plans" id="plans"></div>
+    <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
+    <div id="days"></div>
+  </section>
 
   <section id="logistica">
     <h2>Logistica</h2>
@@ -419,8 +434,15 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div id="checklistBody"></div>
   </section>
 
-  <section id="vedere">
-    <h2>Cose da vedere</h2>
+  <section id="mangiare">
+    <h2>Dove mangiare</h2>
+    <p class="lead">Posti semplici e non cari, scelti evitando la cucina italiana fatta male. Tocca ♥ su quelli che ti ispirano. Prezzi indicativi a persona.</p>
+    <div class="acts" id="food"></div>
+  </section>
+
+  <section id="vedere" class="fold">
+    <h2 class="fold-h" role="button" tabindex="0">Cose da vedere <span class="fold-i">▾</span></h2>
+    <p class="fold-hint">Votazioni chiuse: tocca per aprire le schede.</p>
     <p class="lead">Tocca <b>♥ Mi interessa</b> su tutto quello che ti piace e <b>★ Irrinunciabile</b> su una sola cosa. Prezzi indicativi a persona, da verificare.</p>
     <div class="card" style="margin-bottom:16px">
       <b>Manca qualcosa?</b>
@@ -440,10 +462,14 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="acts" id="acts"></div>
   </section>
 
-  <section id="mangiare">
-    <h2>Dove mangiare</h2>
-    <p class="lead">Posti semplici e non cari, scelti evitando la cucina italiana fatta male. Tocca ♥ su quelli che ti ispirano. Prezzi indicativi a persona.</p>
-    <div class="acts" id="food"></div>
+  <section id="classifica" class="fold">
+    <h2 class="fold-h" role="button" tabindex="0">Classifica <span class="fold-i">▾</span></h2>
+    <p class="fold-hint">Tocca per vedere la classifica dei voti.</p>
+    <p class="lead">Punteggio: ♥ vale 1, ★ vale 3. Serve per costruire il programma.</p>
+    <div class="card">
+      <div class="small muted" id="votersTxt" style="margin-bottom:6px"></div>
+      <ol class="rank" id="rank"></ol>
+    </div>
   </section>
 
   <section id="mappa">
@@ -454,24 +480,6 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
     <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante votato</span><span><i style="background:#9aa0ab"></i>Ristorante non votato</span></div>
-  </section>
-
-  <section id="classifica">
-    <h2>Classifica</h2>
-    <p class="lead">Punteggio: ♥ vale 1, ★ vale 3. Serve per costruire il programma.</p>
-    <div class="card">
-      <div class="small muted" id="votersTxt" style="margin-bottom:6px"></div>
-      <ol class="rank" id="rank"></ol>
-    </div>
-  </section>
-
-  <section id="programma">
-    <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono cinque proposte, tutte con le irrinunciabili: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
-    <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
-    <div class="plans" id="plans"></div>
-    <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
-    <div id="days"></div>
   </section>
 </main>
 
@@ -1271,6 +1279,25 @@ document.addEventListener("click", e => {
 $("#whoModal").addEventListener("click", e => { if (e.target.id === "whoModal") { afterWho = null; e.currentTarget.classList.remove("open"); } });
 $("#sugInput").addEventListener("keydown", e => { if (e.key === "Enter") sendSug(); });
 $("#sortSel").addEventListener("change", e => { sortBy = e.target.value; renderActs(); });
+
+// sezioni richiudibili: si aprono toccando il titolo o andando a un elemento al loro interno
+function openFoldFor(id){
+  const el = id && document.getElementById(id);
+  const sec = el && el.closest(".fold");
+  if (sec && !sec.classList.contains("open")) { sec.classList.add("open"); return true; }
+  return false;
+}
+document.addEventListener("click", e => {
+  const h = e.target.closest(".fold-h, .fold-hint");
+  if (h) { h.closest(".fold").classList.toggle("open"); return; }
+  const a = e.target.closest('a[href^="#"]');
+  if (a) {
+    const id = a.getAttribute("href").slice(1);
+    if (openFoldFor(id)) { e.preventDefault(); setTimeout(() => document.getElementById(id).scrollIntoView(), 30); }
+  }
+});
+document.addEventListener("keydown", e => { const h = e.target.closest && e.target.closest(".fold-h"); if (h && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); h.closest(".fold").classList.toggle("open"); } });
+if (location.hash) openFoldFor(location.hash.slice(1));
 
 // tab attivo
 const tabLinks = [...document.querySelectorAll("#tabs a")];

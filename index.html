@@ -847,14 +847,24 @@ function renderWho(){
 }
 
 function renderChecklist(){
-  let total = 1, done = 0;
-  const VP = votes().people, voted = ALL_PEOPLE.filter(p => VP.has(p)), missing = ALL_PEOPLE.filter(p => !VP.has(p));
-  const allVoted = !missing.length; if (allVoted) done++;
-  const voteRow = `<div class="group"><h3>Votazioni</h3><div class="items"><div class="item ${allVoted?"done":""}"><div class="txt">
-    <div>Ognuno vota le cose da vedere: ♥ quante vuole, ★ una sola irrinunciabile a persona</div>
-    <div class="note">Si spunta da sola quando hanno votato tutti e 8. <a href="#vedere">Vai alle proposte</a></div>
-    <div class="by" style="color:${allVoted?"var(--green)":"var(--muted)"}">${voted.length} su 8 hanno votato${missing.length ? " · mancano " + esc(missing.join(", ")) : " ✓"}</div>
-  </div><div class="checks"><span class="chk ${allVoted?"on":""}" aria-hidden="true">${allVoted?ICON.check:voted.length+"/8"}</span></div></div></div></div>`;
+  let total = 2, done = 0;
+  // Voci automatiche delle votazioni: 1) cose da vedere, 2) scelta del programma
+  const autoRow = (title, note, voted) => {
+    const missing = ALL_PEOPLE.filter(p => !voted.includes(p)), ok = !missing.length;
+    if (ok) done++;
+    return `<div class="item ${ok?"done":""}"><div class="txt">
+    <div>${title}</div>
+    <div class="note">${note}</div>
+    <div class="by" style="color:${ok?"var(--green)":"var(--muted)"}">${voted.length} su 8 hanno votato${missing.length ? " · mancano " + esc(missing.join(", ")) : " ✓"}</div>
+  </div><div class="checks"><span class="chk ${ok?"on":""}" aria-hidden="true">${ok?ICON.check:voted.length+"/8"}</span></div></div>`;
+  };
+  const VP = votes().people, pv = planVotes();
+  const attrVoted = ALL_PEOPLE.filter(p => VP.has(p)), planVoted = ALL_PEOPLE.filter(p => PLANS.some(pl => pv[pl.id].includes(p)));
+  const voteRow = `<div class="group"><h3>Votazioni</h3><div class="items">${
+    autoRow("1. Ognuno vota le cose da vedere: ♥ quante vuole, ★ una sola irrinunciabile a persona", 'Si spunta da sola quando hanno votato tutti e 8. <a href="#vedere">Vai alle cose da vedere</a>', attrVoted)
+  }${
+    autoRow("2. Ognuno sceglie il programma tra le proposte (anche in versione low budget)", 'Si spunta da sola quando hanno scelto tutti e 8: la proposta più votata diventa il programma. <a href="#programma">Vai al programma</a>', planVoted)
+  }</div></div>`;
   $("#checklistBody").innerHTML = voteRow + CHECK.map(gr => {
     const rows = gr.items.map(it => {
       const slots = it.fam ? [["M","Milano","MI"],["B","Brindisi","BR"]] : [["", "", ""]];

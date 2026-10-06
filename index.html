@@ -201,6 +201,11 @@ section{padding:30px 0 6px}
 
 /* programma */
 .day{margin-bottom:12px}
+.opts{margin-top:8px;padding-top:6px;border-top:1px dashed var(--line)}
+.optl{margin:4px 0 0;padding-left:20px;font-size:13.5px}
+.optl li{margin:6px 0}
+.optl b{display:block}
+.optl span{color:var(--muted)}
 .day.today{outline:2px solid var(--red);outline-offset:-1px}
 .day-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
 .tl{list-style:none;margin:0;padding:0}
@@ -726,13 +731,19 @@ const DAYS = [
     ["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],
     ["19:00","Cena: Poppies Fish & Chips a Soho o Chinatown, a due passi da Regent Street"]
   ]},
-  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci"], rows:[
+  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci","eye","ww","hamleys","nhwalk"], altStops:true, rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
-    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30"],
+    ["10:00","Famiglia Brindisi: mattina libera, una cosa a scelta tra quelle sotto (11:30 si riparte)"],
     ["12:00","Famiglia Brindisi a casa: si prendono i bagagli, Central line fino a Liverpool Street"],
     ["13:15","Famiglia Brindisi prende lo Stansted Express da Liverpool Street"],
     ["16:15","Volo Stansted → Brindisi"]
-  ]}
+  ], options:{title:"Lunedì mattina, famiglia Brindisi: una a scelta (votate da voi, rientro a casa entro le 12:00)", rows:[
+    ["Science Museum","DDS, DDA, DDN · South Kensington, 10 min da casa · gratis (Wonderlab a pagamento)"],
+    ["London Eye","DDS, DDA, DDN, DDE · l'unica votata da tutti e quattro, non è nel programma · ~30 min da casa · da prenotare (~£130 a famiglia), verificare l'orario di apertura del lunedì"],
+    ["Winter Wonderland","DDA, DDN, DDE · Hyde Park, 15 min da casa · il lunedì mattina ingresso gratuito, si pagano solo le giostre"],
+    ["Hamleys, LEGO Store e M&M's World","DDA, DDN, DDE · Central line fino a Oxford Circus, 8 min · gratis (salvo acquisti)"],
+    ["Case colorate di Notting Hill","DDA, DDE · a piedi da casa, zero mezzi: la più tranquilla"]
+  ]}}
 ];
 
 // Proposte di itinerario per sabato e domenica (le ★ sono le irrinunciabili)
@@ -986,6 +997,7 @@ function renderDays(){
     <div class="day-h"><h3>${esc(d.d)}</h3><span class="pill ${i === today ? "red" : ""}">${i === today ? "Oggi" : esc(d.tag)}</span></div>
     ${d.note?`<p class="small muted" style="margin:0 0 6px">${esc(d.note)}</p>`:""}
     <ul class="tl">${d.rows.map(r => `<li><span class="h">${esc(r[0])}</span><span class="${r[1]?"":"tbd"}">${r[1] ? esc(r[1]) : "Da decidere dopo i voti"}</span></li>`).join("")}</ul>
+    ${d.options ? `<div class="opts"><div class="plan-day">${esc(d.options.title)}</div><ol class="optl">${d.options.rows.map(o => `<li><b>${esc(o[0])}</b><span>${esc(o[1])}</span></li>`).join("")}</ol></div>` : ""}
   </div>`).join("");
 }
 
@@ -1219,9 +1231,9 @@ function renderMap(fit){
     const stops = CHOSEN && !mapPlan ? day.stops : dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : dayIdx === 3 && plan.monStops ? plan.monStops : day.stops;
     list = stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
     if (dayIdx === 1 || dayIdx === 2) note = CHOSEN && !mapPlan ? `${day.d}: numeri nell'ordine delle tappe.` : `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
-    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi: ${list[0].n} e rientro a casa per i bagagli.`;
+    if (dayIdx === 3 && list.length) note = day.altStops ? "Lunedì mattina della famiglia Brindisi: le alternative (una a scelta), poi rientro a casa per i bagagli." : `Lunedì mattina della famiglia Brindisi: ${list[0].n} e rientro a casa per i bagagli.`;
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
-    else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
+    else if (!(dayIdx === 3 && day.altStops && !mapPlan)) L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {
     list = [];
     const rs = FOOD.filter(r => r.ll && (mapMode === "food" || (V.likes[r.id] || []).length));

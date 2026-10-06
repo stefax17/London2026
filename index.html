@@ -201,6 +201,7 @@ section{padding:30px 0 6px}
 
 /* programma */
 .day{margin-bottom:12px}
+.day.today{outline:2px solid var(--red);outline-offset:-1px}
 .day-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
 .tl{list-style:none;margin:0;padding:0}
 .tl li{display:grid;grid-template-columns:60px 1fr;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
@@ -359,11 +360,14 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 
   <section id="programma">
     <h2>Programma</h2>
-    <p class="lead">Venerdì e lunedì sono uguali per tutti. Per sabato e domenica ci sono quattro proposte, tutte con le irrinunciabili; A1, A2 e A3 si possono scegliere anche in versione low budget: ognuno ne sceglie una, quella più votata diventa il programma. "Raccoglie ♥" somma i cuori delle tappe di sabato e domenica. Il costo è una stima dei soli biglietti e ingressi per una famiglia (2 adulti e 2 ragazzi), pasti e metro esclusi.</p>
+    <p class="lead">Votazione chiusa: abbiamo scelto <b>A1 · Westminster e il fiume, versione low budget</b>. Ecco il programma giorno per giorno; le prenotazioni da fare sono nella checklist.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
-    <div class="plans" id="plans"></div>
-    <h3 style="margin:22px 0 10px">Giorno per giorno</h3>
     <div id="days"></div>
+    <div class="fold" id="plansWrap" style="margin-top:22px">
+      <h3 class="fold-h" role="button" tabindex="0">Le proposte votate <span class="fold-i">▾</span></h3>
+      <p class="fold-hint">Tocca per rivedere le quattro proposte e i voti.</p>
+      <div class="plans" id="plans" style="margin-top:10px"></div>
+    </div>
   </section>
 
   <section id="logistica">
@@ -660,6 +664,14 @@ const FOOD = [
 ];
 
 const CHECK = [
+  {g:"Prenotazioni del programma", items:[
+    {id:"b_tussauds", t:"Museo delle cere: biglietti online per sabato 5 dicembre, primo ingresso", n:"Da fare subito: online costa meno e i weekend di dicembre si riempiono. 4 adulti e 4 ragazzi; conviene confrontare i biglietti combinati."},
+    {id:"b_bm", t:"British Museum: slot gratuito per venerdì 4 dicembre verso le 17:30", n:"Gratis, sul sito del museo. Il venerdì è aperto fino alle 20:30."},
+    {id:"b_sky", t:"Sky Garden: prenotazione gratuita per sabato 5 dicembre verso le 17:00", n:"Le prenotazioni si aprono circa 3 settimane prima, quindi verso metà novembre, e finiscono in fretta: segnatevi la data. Per 8 persone."},
+    {id:"b_guard", t:"Cambio della guardia: controllare il calendario per domenica 6 dicembre", n:"Il calendario di dicembre esce a ridosso delle date. Se domenica non c'è cerimonia, si vede Buckingham Palace da fuori e si passeggia a St James's Park."},
+    {id:"b_tea", t:"Sala da tè per domenica pomeriggio verso le 16:30, per 8", n:"Tè e scones, ~£8–15 a testa. Meglio prenotare."},
+    {id:"b_ristorante", t:"Cene: prenotare per 8 dove serve", n:"Sabato sera vicino a casa (Churchill Arms o Honest Burgers). Venerdì e domenica Chinatown o Poppies Soho: Poppies si può prenotare."}
+  ]},
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
     {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
@@ -681,13 +693,8 @@ const CHECK = [
     {id:"v_rain", fam:true, t:"Giacca impermeabile, ombrello, abiti a strati, scarpe comode"},
     {id:"v_power", fam:true, t:"Powerbank e cavi"},
     {id:"v_liquid", fam:true, t:"Liquidi max 100 ml in bustina trasparente"}
-  ]},
-  {g:"Da prenotare dopo la scelta", items:[
-    {id:"b_hp", t:"Warner Bros Studio Tour (se lo scegliamo)", n:"A dicembre si esaurisce con mesi di anticipo: se è tra i più votati va prenotato subito."},
-    {id:"b_musical", t:"Musical (se lo scegliamo)", n:"Verificare i giorni di spettacolo, la domenica molti sono chiusi."},
-    {id:"b_ww", t:"Winter Wonderland: fascia oraria d'ingresso (se lo scegliamo)", n:"Nel weekend l'ingresso è a pagamento e a orario."},
-    {id:"b_ristorante", t:"Decidere le cene (fuori o a casa) e prenotare dove serve", n:"Soprattutto venerdì e sabato sera: per 8 persone senza prenotazione è difficile. Idee nella sezione Dove mangiare."}
   ]}
+
 ];
 
 const DAYS = [
@@ -699,13 +706,29 @@ const DAYS = [
     ["15:50","Tramonto"],
     ["16:30","Statua dell'orso Paddington ★ (stazione di Paddington, 2 fermate da casa)"],
     ["17:30","British Museum ★: il venerdì è aperto fino alle 20:30. Da Paddington Elizabeth line fino a Tottenham Court Road (8 min). Prenotare lo slot gratuito"],
-    ["19:45","Cena a Chinatown o Soho, 10 min a piedi"]
+    ["19:45","Cena a Chinatown (es. Dumplings' Legend) o Poppies Fish & Chips a Soho, 10 min a piedi"]
   ]},
-  {d:"Sabato 5 dicembre", short:"Sab 5", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta.", rows:[]},
-  {d:"Domenica 6 dicembre", short:"Dom 6", stops:[], tag:"Giornata intera", note:"Dipende dalla proposta scelta. Negozi 12–18.", rows:[]},
+  {d:"Sabato 5 dicembre", short:"Sab 5", tag:"Giornata intera", stops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], rows:[
+    ["9:30","Partenza: Central line fino a Bond Street o Circle line fino a Baker Street"],
+    ["10:00","Museo delle cere ★ (Baker Street), biglietti online per il primo ingresso"],
+    ["12:30","Pranzo al sacco (meal deal da supermercato, ~£4–5 a testa), per esempio a Regent's Park"],
+    ["13:30","Big Ben ★ e Westminster a piedi: Parlamento, Abbazia, Downing Street, Horse Guards, Trafalgar Square"],
+    ["15:00","Battello di linea ★ (Uber Boat) da Westminster Pier alla Torre, al tramonto (~30 min, contactless)"],
+    ["16:00","Tower Bridge illuminato a piedi"],
+    ["17:00","Sky Garden: vista dal 35° piano, gratis con prenotazione (10 min a piedi dalla Torre)"],
+    ["19:00","Rientro verso casa e cena vicino: The Churchill Arms (thai) o Honest Burgers Portobello, prenotando per 8"]
+  ]},
+  {d:"Domenica 6 dicembre", short:"Dom 6", tag:"Giornata intera", note:"Negozi aperti 12–18.", stops:["guard","nhm","harrods","lights"], rows:[
+    ["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00 (verificare il calendario)"],
+    ["11:00","Passeggiata a St James's Park, poi metro fino a South Kensington"],
+    ["12:00","Natural History Museum, con picnic"],
+    ["15:00","Harrods, solo da guardare (10 min a piedi dal museo)"],
+    ["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],
+    ["19:00","Cena: Poppies Fish & Chips a Soho o Chinatown, a due passi da Regent Street"]
+  ]},
   {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["sci"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
-    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30. Con la proposta A3 invece Winter Wonderland a Hyde Park"],
+    ["10:00","Famiglia Brindisi: Science Museum (South Kensington, 10 min da casa), uscita alle 11:30"],
     ["12:00","Famiglia Brindisi a casa: si prendono i bagagli, Central line fino a Liverpool Street"],
     ["13:15","Famiglia Brindisi prende lo Stansted Express da Liverpool Street"],
     ["16:15","Volo Stansted → Brindisi"]
@@ -958,8 +981,9 @@ function renderRank(){
 }
 
 function renderDays(){
-  $("#days").innerHTML = DAYS.map(d => `<div class="card day">
-    <div class="day-h"><h3>${esc(d.d)}</h3><span class="pill">${esc(d.tag)}</span></div>
+  const now = new Date(), today = now.getFullYear() === 2026 && now.getMonth() === 11 ? now.getDate() - 4 : -1;
+  $("#days").innerHTML = DAYS.map((d, i) => `<div class="card day ${i === today ? "today" : ""}" id="day-${i}">
+    <div class="day-h"><h3>${esc(d.d)}</h3><span class="pill ${i === today ? "red" : ""}">${i === today ? "Oggi" : esc(d.tag)}</span></div>
     ${d.note?`<p class="small muted" style="margin:0 0 6px">${esc(d.note)}</p>`:""}
     <ul class="tl">${d.rows.map(r => `<li><span class="h">${esc(r[0])}</span><span class="${r[1]?"":"tbd"}">${r[1] ? esc(r[1]) : "Da decidere dopo i voti"}</span></li>`).join("")}</ul>
   </div>`).join("");
@@ -995,13 +1019,19 @@ function planVotes(){
   return by;
 }
 const planLabel = p => p.short || p.id;
+// Esito della votazione (chiusa)
+const CHOSEN = {id:"A1", low:true};
 const leadingPlan = () => { const pv = planVotes(); return PLANS.slice().sort((a, b) => pv[b.id].length - pv[a.id].length)[0]; };
 const planCount = (pv, p) => `${pv[p.id].length}${pv[p.id].low.length ? ` (${pv[p.id].low.length} low budget)` : ""}`;
 
 function renderVoteBoxes(){
   const VP = votes().people, attrDone = ALL_PEOPLE.every(p => VP.has(p));
   let html, done;
-  if (attrDone) {
+  if (CHOSEN) {
+    const pv = planVotes();
+    done = true;
+    html = `<div class="vb-t"><b>Programma scelto ✓</b><span>A1 · Westminster e il fiume, versione low budget: ${pv.A1.length} voti su 8${pv.A1.low.length === pv.A1.length ? ", tutti low budget" : ` (${pv.A1.low.length} low budget)`}${PLANS.slice(1).some(p => pv[p.id].length) ? "; " + PLANS.slice(1).filter(p => pv[p.id].length).map(p => `${planLabel(p)}: ${pv[p.id].length}`).join(" · ") : ""}.</span><div class="vb-bar"><i style="width:100%"></i></div></div><a href="#days">Vedi</a>`;
+  } else if (attrDone) {
     // Attrazioni votate da tutti: ora si vota l'itinerario
     const pv = planVotes(), voted = ALL_PEOPLE.filter(p => PLANS.some(pl => pv[pl.id].includes(p))), missing = ALL_PEOPLE.filter(p => !voted.includes(p));
     done = !missing.length;
@@ -1156,7 +1186,7 @@ function initMap(){
 function renderMapTools(){
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
-    + (mapMode === "d1" || mapMode === "d2" || mapMode === "d3" ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${esc(planLabel(p))}</button>`).join("") : "");
+    + (!CHOSEN && (mapMode === "d1" || mapMode === "d2" || mapMode === "d3") ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${esc(planLabel(p))}</button>`).join("") : "");
 }
 
 function renderMap(fit){
@@ -1186,10 +1216,10 @@ function renderMap(fit){
   } else if (dayIdx >= 0) {
     const day = DAYS[dayIdx];
     const plan = PLANS.find(p => p.id === mapPlanId());
-    const stops = dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : dayIdx === 3 && plan.monStops ? plan.monStops : day.stops;
+    const stops = CHOSEN && !mapPlan ? day.stops : dayIdx === 1 ? plan.satStops : dayIdx === 2 ? plan.sunStops : dayIdx === 3 && plan.monStops ? plan.monStops : day.stops;
     list = stops.map(id => allActs().find(a => a.id === id)).filter(a => a && a.ll);
-    if (dayIdx === 1 || dayIdx === 2) note = `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
-    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi (proposta ${planLabel(plan)}): ${list[0].n} e rientro a casa per i bagagli.`;
+    if (dayIdx === 1 || dayIdx === 2) note = CHOSEN && !mapPlan ? `${day.d}: numeri nell'ordine delle tappe.` : `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
+    if (dayIdx === 3 && list.length) note = `Lunedì mattina della famiglia Brindisi: ${list[0].n} e rientro a casa per i bagagli.`;
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
     else L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {
@@ -1259,7 +1289,7 @@ document.addEventListener("click", e => {
     const id = el.dataset.likefood, r = FOOD.find(x => x.id === id);
     return needMe(() => { const k = "like|" + id + "|" + me; setKey(k, val(k) === "1" ? "" : "1", "Ristorante: " + r.n); });
   }
-  if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; renderMap(true); return; }
+  if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; if (CHOSEN) mapPlan = ""; renderMap(true); return; }
   if (el.dataset.mapplan) { mapPlan = el.dataset.mapplan; renderMap(true); return; }
   if (el.dataset.planmap) {
     mapPlan = el.dataset.planmap; mapMode = "d1"; renderMap(true);

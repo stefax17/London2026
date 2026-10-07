@@ -243,6 +243,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .maptools{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
 .maptools::-webkit-scrollbar{display:none}
 .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i.ln{width:22px;height:0;border-radius:0;vertical-align:3px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:4px}
 .mapnote{font-size:13px;color:var(--muted);margin:0 0 8px;min-height:18px}
 .pin{width:26px;height:26px;border-radius:50%;background:#7b8190;color:#fff;border:2px solid #fff;font:700 11px/22px Inter,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.4)}
@@ -489,6 +490,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
     <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante votato</span><span><i style="background:#9aa0ab"></i>Ristorante non votato</span></div>
+    <div class="legend"><span><b style="color:var(--text)">Percorsi dei giorni:</b></span><span><i class="ln" style="border-top:3px solid #2457c5"></i>Metro</span><span><i class="ln" style="border-top:3px dotted #2f7a4d"></i>A piedi</span><span><i class="ln" style="border-top:3px dashed #0f8b8d"></i>Battello</span><span><i class="ln" style="border-top:3px dashed #c8102e"></i>Bus</span></div>
   </section>
 </main>
 
@@ -704,7 +706,7 @@ const CHECK = [
 ];
 
 const DAYS = [
-  {d:"Venerdì 4 dicembre", short:"Ven 4", tag:"Arrivo", stops:["paddington","british"], rows:[
+  {d:"Venerdì 4 dicembre", legs:[["home","paddington","metro","Circle o District line, 2 fermate (oppure 20 min a piedi)"],["paddington","british","metro","Elizabeth line fino a Tottenham Court Road (8 min), poi 10 min a piedi"],["british","home","metro","Dopo cena: Central line da Tottenham Court Road a Notting Hill Gate (15 min)"]], short:"Ven 4", tag:"Arrivo", stops:["paddington","british"], rows:[
     ["12:15","Famiglia Brindisi atterra a Stansted"],
     ["13:40","Famiglia Milano atterra a Heathrow"],
     ["~14:15","Brindisi a casa (stima)"],
@@ -714,7 +716,7 @@ const DAYS = [
     ["17:30","British Museum ★: il venerdì è aperto fino alle 20:30. Da Paddington Elizabeth line fino a Tottenham Court Road (8 min). Prenotare lo slot gratuito"],
     ["19:45","Cena a Chinatown (es. Dumplings' Legend) o Poppies Fish & Chips a Soho, 10 min a piedi"]
   ]},
-  {d:"Sabato 5 dicembre", short:"Sab 5", tag:"Giornata intera", stops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], rows:[
+  {d:"Sabato 5 dicembre", legs:[["home","tussauds","metro","Circle line fino a Baker Street (15 min)"],["tussauds","bigben","metro","Jubilee line da Baker Street a Westminster (10 min)"],["bigben","westm","walk","Westminster a piedi: Whitehall, Downing Street, Horse Guards, Trafalgar Square"],["westm","boat","walk","A piedi fino al Westminster Pier (10 min)"],["boat","towerwalk","boat","Battello di linea fino a Tower Pier (~30 min)"],["towerwalk","skygarden","walk","A piedi, 10–15 min"],["skygarden","home","metro","Central line da Bank a Notting Hill Gate (25 min)"]], short:"Sab 5", tag:"Giornata intera", stops:["tussauds","bigben","westm","boat","towerwalk","skygarden"], rows:[
     ["9:30","Partenza: Central line fino a Bond Street o Circle line fino a Baker Street"],
     ["10:00","Museo delle cere ★ (Baker Street), biglietti online per il primo ingresso"],
     ["12:30","Pranzo al sacco (meal deal da supermercato, ~£4–5 a testa), per esempio a Regent's Park"],
@@ -724,7 +726,7 @@ const DAYS = [
     ["17:00","Sky Garden: vista dal 35° piano, gratis con prenotazione (10 min a piedi dalla Torre)"],
     ["19:00","Rientro verso casa e cena vicino: The Churchill Arms (thai) o Honest Burgers Portobello, prenotando per 8"]
   ]},
-  {d:"Domenica 6 dicembre", short:"Dom 6", tag:"Giornata intera", note:"Negozi aperti 12–18.", stops:["guard","nhm","sci","harrods","lights","piccadilly"], rows:[
+  {d:"Domenica 6 dicembre", legs:[["home","guard","metro","Metro fino a Green Park (Central e Victoria line, ~20 min), poi 5 min a piedi"],["guard","nhm","metro","A piedi per St James's Park, poi Piccadilly line da Green Park a South Kensington (10 min)"],["nhm","sci","walk","Accanto, 2 min a piedi"],["sci","harrods","walk","10 min a piedi"],["harrods","lights","bus","Bus rosso di linea al piano di sopra verso Piccadilly e Regent Street, per le luci"],["lights","piccadilly","walk","A piedi: Regent Street, Piccadilly Circus, Leicester Square, Covent Garden"],["piccadilly","home","metro","Dopo cena: Central line da Tottenham Court Road a Notting Hill Gate (15 min)"]], short:"Dom 6", tag:"Giornata intera", note:"Negozi aperti 12–18.", stops:["guard","nhm","sci","harrods","lights","piccadilly"], rows:[
     ["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00 (verificare il calendario)"],
     ["11:00","Passeggiata a St James's Park, poi metro fino a South Kensington"],
     ["12:00","Natural History Museum, con picnic"],
@@ -734,7 +736,7 @@ const DAYS = [
     ["18:00","A piedi: Piccadilly Circus con i maxischermi, Leicester Square (M&M's e LEGO), Covent Garden con il grande albero di Natale"],
     ["19:00","Cena: Chinatown o Poppies Fish & Chips a Soho, a due passi"]
   ]},
-  {d:"Lunedì 7 dicembre", short:"Lun 7", tag:"Partenza", stops:["ww"], rows:[
+  {d:"Lunedì 7 dicembre", legs:[["home","ww","metro","Central line fino a Marble Arch (5 min), oppure 25 min a piedi nel parco"],["ww","home","metro","Central line da Marble Arch a Notting Hill Gate, poi bagagli"]], short:"Lun 7", tag:"Partenza", stops:["ww"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],
     ["10:00","Famiglia Brindisi: Winter Wonderland a Hyde Park (15 min da casa). Il lunedì mattina l'ingresso è gratuito e c'è poca gente, si pagano solo le giostre. Alle 11:30 si riparte"],
     ["12:00","Famiglia Brindisi a casa: si prendono i bagagli, Central line fino a Liverpool Street"],
@@ -1156,6 +1158,12 @@ function loadImages(){
 }
 
 // ---------- MAPPA ----------
+const LEG_STYLE = {
+  metro:{n:"🚇 Metro / treno", c:"#2457c5", w:4, d:null},
+  walk:{n:"🚶 A piedi", c:"#2f7a4d", w:4, d:"1 8"},
+  boat:{n:"⛴️ Battello", c:"#0f8b8d", w:4, d:"12 8"},
+  bus:{n:"🚌 Bus", c:"#c8102e", w:4, d:"6 6"}
+};
 const actNum = a => allActs().findIndex(x => x.id === a.id) + 1;
 const AIRPORTS = [
   {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35"},
@@ -1230,6 +1238,15 @@ function renderMap(fit){
     if (dayIdx === 1 || dayIdx === 2) note = CHOSEN && !mapPlan ? `${day.d}: numeri nell'ordine delle tappe.` : `${day.d} secondo la proposta ${plan.n}: numeri nell'ordine delle tappe.`;
     if (dayIdx === 3 && list.length) note = day.altStops ? "Lunedì mattina della famiglia Brindisi: le alternative (una a scelta), poi rientro a casa per i bagagli." : `Lunedì mattina della famiglia Brindisi: ${list[0].n} e rientro a casa per i bagagli.`;
     if (!list.length) note = `${day.d}: ` + (dayIdx === 0 ? "arrivi dagli aeroporti; " : dayIdx === DAYS.length - 1 ? "partenze dagli aeroporti; " : "") + "le tappe compariranno quando il programma sarà deciso.";
+    else if (CHOSEN && !mapPlan && day.legs) {
+      const pt = id => id === "home" ? HOME : (allActs().find(a => a.id === id) || {}).ll;
+      day.legs.forEach(([from, to, mode, label]) => {
+        const a = pt(from), b = pt(to); if (!a || !b) return;
+        const st = LEG_STYLE[mode];
+        L.polyline([a, b], {color:st.c, weight:st.w, dashArray:st.d, lineCap:"round", opacity:.9}).bindPopup(`<b>${st.n}</b><br>${esc(label)}`).addTo(mapLayer);
+      });
+      note += " Tocca una linea per vedere il mezzo.";
+    }
     else if (!(dayIdx === 3 && day.altStops && !mapPlan)) L.polyline([HOME, ...list.map(a => a.ll), HOME], {color:"#1d2b4f", weight:3, dashArray:"6 6", opacity:.8}).addTo(mapLayer);
   } else if (mapMode === "food" || mapMode === "foodv") {
     list = [];

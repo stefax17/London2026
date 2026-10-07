@@ -644,6 +644,12 @@ const FOOD = [
   {id:"r_windsor", ll:[51.5053,-0.1990], near:true, book:true, n:"The Windsor Castle", k:"Pub · Sunday roast",
    d:"Pub del 1835 tra Notting Hill e Kensington, famoso per il Sunday roast, l'arrosto della domenica con patate e verdure. Accetta prenotazioni.",
    z:"Campden Hill, 10 min da casa", pr:"~£20–25"},
+  {id:"r_porterhouse", ll:[51.5105,-0.1235], book:true, n:"The Porterhouse", k:"Pub irlandese",
+   d:"Grande pub irlandese su più piani a Covent Garden, con tante birre alla spina. Famiglie benvenute: fish & chips, burger, pizza e la domenica il roast.",
+   z:"Covent Garden", pr:"~£20–25"},
+  {id:"r_lambflag", ll:[51.5117,-0.1260], book:true, n:"Lamb & Flag", k:"Pub storico inglese",
+   d:"Pub del '600 frequentato da Dickens, con 5–7 birre inglesi alla spina (cask ale Fuller's). Bambini ammessi al piano di sopra durante il servizio cibo, c'è il menu bambini.",
+   z:"Covent Garden", pr:"~£20–25"},
   {id:"r_poppies", ll:[51.5131,-0.1316], book:true, n:"Poppies Fish & Chips Soho", k:"Fish & chips",
    d:"Fish & chips tradizionale in un locale in stile anni '50, prenotabile. Comodo prima o dopo le luci di Natale.",
    z:"Soho", pr:"~£15–20"},
@@ -678,7 +684,7 @@ const CHECK = [
     {id:"b_guard", t:"Cambio della guardia: controllare il calendario per domenica 6 dicembre", n:"Il calendario di dicembre esce a ridosso delle date. Se domenica non c'è cerimonia, si vede Buckingham Palace da fuori e si passeggia a St James's Park."},
     {id:"b_ww", t:"Winter Wonderland: biglietto d'ingresso gratuito per lunedì 7 dicembre mattina (famiglia Brindisi)", n:"Anche quando l'ingresso è gratis conviene prenotare la fascia oraria sul sito; le giostre si pagano a parte."},
     {id:"b_tea", t:"Sala da tè per domenica pomeriggio verso le 16:30, per 8", n:"Tè e scones, ~£8–15 a testa. Meglio prenotare."},
-    {id:"b_ristorante", t:"Cene: prenotare per 8 dove serve", n:"Sabato sera vicino a casa (Churchill Arms o Honest Burgers). Venerdì e domenica Chinatown o Poppies Soho: Poppies si può prenotare."}
+    {id:"b_ristorante", t:"Cene: prenotare per 8 dove serve", n:"Sabato sera vicino a casa (Churchill Arms o Honest Burgers). Venerdì Chinatown o Poppies Soho (prenotabile). Domenica pub a Covent Garden: The Porterhouse o Lamb & Flag, prenotando per 8 e dicendo che ci sono bambini."}
   ]},
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
@@ -734,7 +740,7 @@ const DAYS = [
     ["15:30","Harrods, solo un passaggio veloce (10 min a piedi, 20–30 min dentro)"],
     ["16:30","Tè e scones in una sala da tè, poi bus rosso di linea al piano di sopra lungo Regent Street per le luci ★ (£1,75, sotto gli 11 anni gratis)"],
     ["18:00","A piedi: Piccadilly Circus con i maxischermi, Leicester Square (M&M's e LEGO), Covent Garden con il grande albero di Natale"],
-    ["19:00","Cena: Chinatown o Poppies Fish & Chips a Soho, a due passi"]
+    ["19:00","Cena in un pub a Covent Garden: The Porterhouse (irlandese) o Lamb & Flag (storico inglese, birre alla spina). In alternativa Chinatown"]
   ]},
   {d:"Lunedì 7 dicembre", legs:[["home","ww","metro","Central line fino a Marble Arch (5 min), oppure 25 min a piedi nel parco"],["ww","home","metro","Central line da Marble Arch a Notting Hill Gate, poi bagagli"]], short:"Lun 7", tag:"Partenza", stops:["ww"], rows:[
     ["9:30","Famiglia Milano esce di casa verso Heathrow (volo 12:35)"],

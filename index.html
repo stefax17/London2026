@@ -494,7 +494,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
     <div class="legend"><span><i style="background:#2f7a4d"></i>Casa</span><span><i style="background:#b3262e;width:16px;height:16px"></i>Heathrow (Milano)</span><span><i style="background:#9a7210;width:16px;height:16px"></i>Stansted (Brindisi)</span><span><i style="background:#7b8190"></i>Nessun voto</span><span><i style="background:#b3262e"></i>Votata</span><span><i style="background:#b3262e;box-shadow:0 0 0 2px #e4b64f"></i>Irrinunciabile per qualcuno</span><span><i style="background:#6b4fa0"></i>Ristorante votato</span><span><i style="background:#9aa0ab"></i>Ristorante non votato</span></div>
-    <div class="legend"><span><b style="color:var(--text)">Percorsi dei giorni:</b></span><span><i class="ln" style="border-top:3px solid #2457c5"></i>Metro</span><span><i class="ln" style="border-top:3px dotted #2f7a4d"></i>A piedi</span><span><i class="ln" style="border-top:3px dashed #0f8b8d"></i>Battello</span><span><i class="ln" style="border-top:3px dashed #c8102e"></i>Bus</span></div>
+    <div class="legend"><span><b style="color:var(--text)">Percorsi:</b></span><span><i class="ln" style="border-top:3px solid #2457c5"></i>Metro</span><span><i class="ln" style="border-top:3px dotted #2f7a4d"></i>A piedi</span><span><i class="ln" style="border-top:3px dashed #0f8b8d"></i>Battello</span><span><i class="ln" style="border-top:3px dashed #c8102e"></i>Bus</span></div>
   </section>
 </main>
 
@@ -1183,8 +1183,8 @@ const LEG_STYLE = {
 };
 const actNum = a => allActs().findIndex(x => x.id === a.id) + 1;
 const AIRPORTS = [
-  {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35"},
-  {code:"STN", n:"Stansted", fam:"Brindisi", ll:[51.8860,0.2389], col:"#9a7210", info:"Arrivo ven 12:15 · ripartenza lun 16:15"}
+  {code:"LHR", n:"Heathrow", fam:"Milano", ll:[51.4700,-0.4543], col:"#b3262e", info:"Arrivo ven 13:40 · ripartenza lun 12:35", route:"Heathrow → Paddington con Heathrow Express o Elizabeth line, poi metro fino a casa"},
+  {code:"STN", n:"Stansted", fam:"Brindisi", ll:[51.8860,0.2389], col:"#9a7210", info:"Arrivo ven 12:15 · ripartenza lun 16:15", route:"Stansted → Liverpool Street con Stansted Express, poi metro fino a casa"}
 ];
 const FORK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff" style="margin-top:4px"><path d="M7 2v7a2 2 0 0 0 1.5 1.9V22h2V10.9A2 2 0 0 0 12 9V2h-1.2v6h-1V2H8.6v6h-1V2zm9 0c-1.7 0-3 2.2-3 5v5h2v10h2V2z"/></svg>';
 const PLANE_SVG = '<svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
@@ -1239,14 +1239,15 @@ function renderMap(fit){
   const dayIdx = mapMode.startsWith("d") ? +mapMode.slice(1) : -1;
   if (mapMode === "apt" || dayIdx === 0 || dayIdx === DAYS.length - 1) {
     AIRPORTS.forEach(ap => {
-      L.polyline([ap.ll, HOME], {color:ap.col, weight:4, dashArray:"2 8", lineCap:"round", opacity:.9}).addTo(mapLayer);
+      const st = LEG_STYLE.metro;
+      L.polyline([ap.ll, HOME], {color:st.c, weight:st.w, dashArray:st.d, lineCap:"round", opacity:.9}).bindPopup(`<b>${st.n}</b><br>${esc(ap.route)}`).addTo(mapLayer);
       pts.push(ap.ll);
     });
   }
   let list, note = "";
   if (mapMode === "apt") {
     list = [];
-    note = "Heathrow (famiglia Milano) e Stansted (famiglia Brindisi): collegamento indicativo fino a casa.";
+    note = "Heathrow (famiglia Milano) e Stansted (famiglia Brindisi): collegamento in treno fino a casa, tocca una linea per i dettagli.";
   } else if (dayIdx >= 0) {
     const day = DAYS[dayIdx];
     const plan = PLANS.find(p => p.id === mapPlanId());

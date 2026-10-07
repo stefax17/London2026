@@ -1244,7 +1244,9 @@ function renderMap(fit){
       const v = ap.via, tr = LEG_STYLE.train, me = LEG_STYLE.metro;
       L.polyline([ap.ll, v.ll], {color:tr.c, weight:tr.w, dashArray:tr.d, lineCap:"round", opacity:.9}).bindPopup(`<b>${tr.n}</b><br>${esc(v.train)}`).addTo(mapLayer);
       L.polyline([v.ll, HOME], {color:me.c, weight:me.w, dashArray:me.d, lineCap:"round", opacity:.9}).bindPopup(`<b>${me.n}</b><br>${esc(v.metro)}`).addTo(mapLayer);
-      L.marker(v.ll, {icon:L.divIcon({className:"", html:`<div class="chg">⇄</div>`, iconSize:[20,20], iconAnchor:[10,10]}), zIndexOffset:950})
+      // se il cambio coincide con una tappa del giorno, il simbolo si sposta di lato per non coprirne il numero
+      const onStop = dayIdx >= 0 && DAYS[dayIdx].stops.some(id => { const a = allActs().find(x => x.id === id); return a && a.ll && a.ll[0] === v.ll[0] && a.ll[1] === v.ll[1]; });
+      L.marker(v.ll, {icon:L.divIcon({className:"", html:`<div class="chg">⇄</div>`, iconSize:[20,20], iconAnchor:onStop ? [-8,30] : [10,10]}), zIndexOffset:onStop ? 0 : 950})
         .bindPopup(`<b>Cambio a ${esc(v.n)}</b><br>Famiglia ${ap.fam}<br>${esc(v.train)}<br>${esc(v.metro)}`).addTo(mapLayer);
       pts.push(ap.ll);
     });

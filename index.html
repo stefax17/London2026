@@ -412,7 +412,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
           <li><b>Stansted Express</b> fino a Liverpool Street (~50 min, ~£20–25 adulto, meglio online in anticipo, verificare offerte famiglia).</li>
           <li>Metro <b>Central line</b> diretta fino a <b>Notting Hill Gate</b> (~25 min).</li>
         </ol>
-        <p class="small muted" style="margin:8px 0 0">Arrivo stimato a casa: ~14:15. Il 7/12 il treno da Liverpool Street va preso entro le 13:15.</p>
+        <p class="small muted" style="margin:8px 0 0">Arrivo stimato a casa: verso le 15:00. Il ragazzo di 9 anni non può usare i varchi automatici del controllo passaporti, quindi tutta la famiglia passa dallo sportello e serve più tempo. Il 7/12 il treno da Liverpool Street va preso entro le 13:15.</p>
       </div>
     </div>
 
@@ -639,7 +639,10 @@ const ACTS = [
    z:"City", t:"1,5–2h", pa:"~£25", pc:"~£10–11", book:true, note:"Domenica solo funzioni, niente visite. Online costa meno"},
   {id:"giftzone", ll:[51.5164,-0.0743], cat:"mercati", prio:"bassa", free:true, n:"Gift Zone (souvenir economici)",
    d:"Negozio di souvenir con prezzi molto più bassi del centro: una tazza di Londra costa £3–4 invece di £10 e oltre. Fa anche deposito bagagli.",
-   z:"Aldgate, 3 min da Liverpool Street", t:"20–30 min", pa:"Gratis", pc:"Gratis", note:"Aperto 10:30–19:00"}
+   z:"Aldgate, 3 min da Liverpool Street", t:"20–30 min", pa:"Gratis", pc:"Gratis", note:"Aperto 10:30–19:00"},
+  {id:"horseguards", wp:"Horse_Guards_Parade", ll:[51.5046,-0.1291], cat:"classici", prio:"media", free:true, n:"Cambio della Guardia a cavallo (Horse Guards Parade)",
+   d:"Le guardie reali a cavallo, con elmi e corazze, si danno il cambio nel cortile di Horse Guards. La domenica alle 10:00 (nei giorni feriali alle 11:00), di solito con molta meno gente che a Buckingham Palace.",
+   z:"Whitehall, accanto a St James's Park", t:"30 min (arrivare 20 min prima)", pa:"Gratis", pc:"Gratis", note:"Verificare il calendario"}
 ];
 
 const FOOD = [
@@ -689,7 +692,7 @@ const CHECK = [
     {id:"b_tussauds", t:"Combinato museo delle cere + London Eye per sabato 5 dicembre: cere al primo ingresso, London Eye verso le 13:45", n:"Da fare subito: online costa meno e i weekend di dicembre si riempiono. ~£186 a famiglia (2 adulti e 2 ragazzi), un biglietto per famiglia."},
     {id:"b_cruise", t:"Crociera guidata Westminster → Tower per sabato 5 dicembre, partenza verso le 15:00", n:"City Cruises o simili, da Westminster Pier, online: ~£48 a famiglia (adulti ~£14,50, ragazzi ~£9,75)."},
     {id:"b_bm", t:"British Museum: slot gratuito per venerdì 4 dicembre verso le 17:30", n:"Gratis, sul sito del museo. Il venerdì è aperto fino alle 20:30."},
-    {id:"b_guard", t:"Cambio della guardia: controllare il calendario per domenica 6 dicembre", n:"Il calendario di dicembre esce a ridosso delle date. Se domenica non c'è cerimonia, si vede Buckingham Palace da fuori e si passeggia a St James's Park."},
+    {id:"b_guard", t:"Cambio della guardia a cavallo a Horse Guards Parade: controllare il calendario per domenica 6 dicembre, ore 10:00", n:"La domenica a Buckingham Palace non c'è il cambio con la banda (solo lunedì, mercoledì e venerdì), per questo andiamo a Horse Guards. Il calendario di dicembre esce a ridosso delle date."},
     {id:"b_ww", t:"Winter Wonderland: biglietto d'ingresso gratuito per lunedì 7 dicembre mattina (famiglia Brindisi)", n:"Anche quando l'ingresso è gratis conviene prenotare la fascia oraria sul sito; le giostre si pagano a parte."},
     {id:"b_tea", t:"Sala da tè per domenica pomeriggio verso le 16:30, per 8", n:"Tè e scones, ~£8–15 a testa. Meglio prenotare."},
     {id:"b_ristorante", t:"Cene: prenotare per 8 dove serve", n:"In base ai vostri voti: venerdì Poppies Soho, sabato Honest Burgers Portobello (prenotano gruppi da 6 in su), domenica The Windsor Castle per il Sunday roast. Per 8 persone e dicendo che ci sono bambini."}
@@ -700,8 +703,7 @@ const CHECK = [
     {id:"d_team", fam:true, t:"Tessera sanitaria italiana di tutti: controllare che sia valida fino a dopo il 7 dicembre (consigliata)", n:"Non c'è niente da comprare: è la tessera che avete già. Il retro (TEAM) vale per le cure necessarie nel Regno Unito. Guardate la data di scadenza sul fronte: se scade prima del viaggio, la nuova arriva di solito per posta in automatico, altrimenti si richiede alla propria ASL o online sul sito dell'Agenzia delle Entrate."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
     {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."},
-    {id:"b_orari", t:"Chiedere all'host orari di check-in, check-out e istruzioni d'ingresso"},
-    {id:"b_conferma", t:"Confermare la prenotazione con l'appartamento qualche giorno prima (3–5 giorni)", n:"Messaggio dall'app Booking: conferma di date e numero di persone (8 in 4 camere), orario di arrivo previsto e un contatto telefonico per il giorno dell'arrivo."}
+    {id:"b_conferma", t:"Qualche giorno prima (3–5 giorni): confermare la prenotazione con l'appartamento e chiedere orari di check-in, check-out e istruzioni d'ingresso", n:"Messaggio dall'app Booking: conferma di date e numero di persone (8 in 4 camere), orario di arrivo previsto e un contatto telefonico per il giorno dell'arrivo. Chiedere anche se si possono lasciare le valigie venerdì se si arriva prima del check-in e lunedì fino alle 12 (la famiglia Brindisi torna a prenderle dopo il Winter Wonderland)."}
   ]},
   {g:"Soldi e trasporti", items:[
     {id:"s_card", fam:true, t:"Adulti: carta contactless o telefono per metro e bus", n:"Nessuna carta speciale: va bene la normale carta di credito, debito o prepagata contactless, oppure Apple Pay / Google Pay. Si appoggia al lettore giallo all'entrata e all'uscita, come a Milano. Ognuno la sua, perché una carta paga per una sola persona. Tetto di spesa giornaliero ~£9 in zona 1–2."},
@@ -723,7 +725,7 @@ const DAYS = [
   {d:"Venerdì 4 dicembre", meals:[["Pranzo","In viaggio: famiglia Brindisi a Stansted o sullo Stansted Express, famiglia Milano a Heathrow o in aereo","Merenda a casa con la spesa appena fatta"],["Cena","Poppies Fish & Chips, Soho (♥2), ~£15–20, prenotabile","Chinatown (♥1) o fast food (♥4) se i ragazzi sono stanchi"]], legs:[["home","paddington","metro","Circle o District line, 2 fermate (oppure 20 min a piedi)"],["paddington","british","metro","Elizabeth line fino a Tottenham Court Road (8 min), poi 10 min a piedi"],["british","home","metro","Dopo cena: Central line da Tottenham Court Road a Notting Hill Gate (15 min)"]], short:"Ven 4", tag:"Arrivo", stops:["paddington","british"], rows:[
     ["12:15","Famiglia Brindisi atterra a Stansted"],
     ["13:40","Famiglia Milano atterra a Heathrow"],
-    ["~14:15","Brindisi a casa (stima)"],
+    ["~15:00","Brindisi a casa (stima: il ragazzo di 9 anni non può usare i varchi automatici, si passa dallo sportello)"],
     ["~15:30","Milano a casa (stima), sistemazione e spesa"],
     ["15:50","Tramonto"],
     ["16:30","Statua dell'orso Paddington ★ (stazione di Paddington, 2 fermate da casa)"],
@@ -742,9 +744,10 @@ const DAYS = [
     ["17:20","A piedi fino alla Cattedrale di St Paul (~20 min): la cupola illuminata vista da fuori, poi metro dalla fermata St Paul's"],
     ["18:20","Rientro con la Central line diretta, riposo e cena vicino a casa (vedi Dove mangiare)"]
   ]},
-  {d:"Domenica 6 dicembre", meals:[["Pranzo","Picnic o caffetteria al Natural History Museum","Pret, Leon o Wagamama (♥2) a South Kensington"],["Cena","The Windsor Castle (♥4): pub storico con il Sunday roast, 10 min da casa, ~£20–25. Prenotare: la sera il roast può finire","Pub a Covent Garden prima di rientrare: The Porterhouse (irlandese) o Lamb & Flag (birre inglesi alla spina); oppure Pizza Pilgrims Queensway (♥1) vicino a casa"]], legs:[["home","guard","metro","Metro fino a Green Park (Central e Victoria line, ~20 min), poi 5 min a piedi"],["guard","nhm","metro","A piedi per St James's Park, poi Piccadilly line da Green Park a South Kensington (10 min)"],["nhm","sci","walk","Accanto, 2 min a piedi"],["sci","harrods","walk","10 min a piedi"],["harrods","lights","bus","Bus rosso di linea al piano di sopra verso Piccadilly e Regent Street, per le luci"],["lights","piccadilly","walk","A piedi: Regent Street, Piccadilly Circus, Leicester Square, Covent Garden"],["piccadilly","home","metro","Central line da Tottenham Court Road a Notting Hill Gate (15 min), poi cena vicino a casa"]], short:"Dom 6", tag:"Giornata intera", note:"Negozi aperti 12–18.", stops:["guard","nhm","sci","harrods","lights","piccadilly"], rows:[
-    ["9:30","Arrivo a Buckingham Palace per il cambio della guardia delle 10:00 (verificare il calendario)"],
-    ["11:00","Passeggiata a St James's Park, poi metro fino a South Kensington"],
+  {d:"Domenica 6 dicembre", meals:[["Pranzo","Picnic o caffetteria al Natural History Museum","Pret, Leon o Wagamama (♥2) a South Kensington"],["Cena","The Windsor Castle (♥4): pub storico con il Sunday roast, 10 min da casa, ~£20–25. Prenotare: la sera il roast può finire","Pub a Covent Garden prima di rientrare: The Porterhouse (irlandese) o Lamb & Flag (birre inglesi alla spina); oppure Pizza Pilgrims Queensway (♥1) vicino a casa"]], legs:[["home","horseguards","metro","Circle o District line da Notting Hill Gate a Westminster (~20 min), poi 5 min a piedi"],["horseguards","nhm","metro","A piedi attraverso St James's Park fino alla fermata St James's Park, poi District o Circle line fino a South Kensington (10 min)"],["nhm","sci","walk","Accanto, 2 min a piedi"],["sci","harrods","walk","10 min a piedi"],["harrods","lights","bus","Bus rosso di linea al piano di sopra verso Piccadilly e Regent Street, per le luci"],["lights","piccadilly","walk","A piedi: Regent Street, Piccadilly Circus, Leicester Square, Covent Garden"],["piccadilly","home","metro","Central line da Tottenham Court Road a Notting Hill Gate (15 min), poi cena vicino a casa"]], short:"Dom 6", tag:"Giornata intera", note:"Negozi aperti 12–18.", stops:["horseguards","nhm","sci","harrods","lights","piccadilly"], rows:[
+    ["9:15","Partenza: Circle o District line fino a Westminster"],
+    ["9:40","Horse Guards Parade: cambio della guardia a cavallo alle 10:00, circa 30 min (verificare il calendario)"],
+    ["10:40","Passeggiata a St James's Park con Buckingham Palace in fondo al parco, poi metro fino a South Kensington"],
     ["12:00","Natural History Museum, pranzo al museo (vedi Dove mangiare)"],
     ["14:00","Science Museum, proprio accanto (gratis)"],
     ["15:30","Harrods, solo un passaggio veloce (10 min a piedi, 20–30 min dentro)"],

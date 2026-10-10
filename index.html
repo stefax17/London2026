@@ -64,7 +64,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .count{font-size:14px;padding:6px 12px}
 .count b{font-weight:700}
 a.tickets{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;margin:0 0 12px}
-.tickets-note{font-size:12px;color:var(--muted);margin:-6px 0 12px}
+.hero-row a.tickets{margin:0}
 .btn-ghost{background:#1d2b4f;border:1px solid #1d2b4f;color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
 
 /* sticky bar */
@@ -296,7 +296,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <div class="votebox hero-vote" id="voteHero"></div>
     <div class="hero-row">
       <div class="count" id="countdown"></div>
-      <button class="btn-ghost" id="shareBtn" type="button">Condividi link</button>
+      <a class="tickets" href="https://drive.google.com/drive/folders/1_f1s_ltrXIy3uUtF8oabfw1Ij-WRIamA" target="_blank" rel="noopener">🎟️ Biglietti (Drive privato)</a>
     </div>
   </div>
   <svg class="skyline" viewBox="0 0 800 210" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
@@ -379,8 +379,6 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
   <section id="programma">
     <h2>Programma</h2>
     <p class="lead">Votazione chiusa: abbiamo scelto <b>A1 · Westminster e il fiume, versione low budget</b>, con London Eye e crociera guidata aggiunti il sabato (~£235 a famiglia per il sabato). Ecco il programma giorno per giorno; le prenotazioni da fare sono nella checklist.</p>
-    <a class="tickets" href="https://drive.google.com/drive/folders/1_f1s_ltrXIy3uUtF8oabfw1Ij-WRIamA" target="_blank" rel="noopener">🎟️ Biglietti (Drive privato)</a>
-    <p class="tickets-note">Cartella con i biglietti di ogni famiglia divisi per giorno: si apre solo con l'account Google invitato.</p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div id="days"></div>
     <div class="fold" id="plansWrap" style="margin-top:22px">
@@ -722,7 +720,7 @@ const CHECK = [
     {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
     {id:"d_team", fam:true, t:"Tessera sanitaria italiana di tutti: controllare che sia valida fino a dopo il 7 dicembre (consigliata)", n:"Non c'è niente da comprare: è la tessera che avete già. Il retro (TEAM) vale per le cure necessarie nel Regno Unito. Guardate la data di scadenza sul fronte: se scade prima del viaggio, la nuova arriva di solito per posta in automatico, altrimenti si richiede alla propria ASL o online sul sito dell'Agenzia delle Entrate."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
-    {id:"d_tickets", fam:true, t:"Biglietti sul telefono: aprire la cartella Drive e salvarli offline", n:"In metro spesso non c'è campo. Dalla cartella Biglietti (pulsante nel Programma): sui PDF della propria famiglia, Rendi disponibile offline oppure scaricarli nel telefono. Serve l'account Google invitato."},
+    {id:"d_tickets", fam:true, t:"Biglietti sul telefono: aprire la cartella Drive e salvarli offline", n:"In metro spesso non c'è campo. Dalla cartella Biglietti (pulsante in alto nella home): sui PDF della propria famiglia, Rendi disponibile offline oppure scaricarli nel telefono. Serve l'account Google invitato."},
     {id:"d_board", fam:true, t:"Check-in online e carte d'imbarco sul telefono", n:"Ryanair: check-in gratuito da 24 ore prima se non si compra il posto."},
     {id:"b_conferma", t:"Qualche giorno prima (3–5 giorni): confermare la prenotazione con l'appartamento e chiedere orari di check-in, check-out e istruzioni d'ingresso", n:"Messaggio dall'app Booking: conferma di date e numero di persone (8 in 4 camere), orario di arrivo previsto e un contatto telefonico per il giorno dell'arrivo. Chiedere anche se si possono lasciare le valigie venerdì se si arriva prima del check-in e lunedì fino alle 12 (la famiglia Brindisi torna a prenderle dopo i negozi). Se l'appartamento non le tiene, piano B: Gift Zone, a 3 min da Liverpool Street, fa anche deposito bagagli. In quel caso si esce di casa con le valigie, Central line diretta fino a Liverpool Street, si lasciano a Gift Zone e si torna con la Central line diretta fino a Oxford Circus per Hamleys, LEGO e M&M's. Poi di nuovo Central line fino a Liverpool Street, si riprendono e si prende il treno."},
     {id:"b_guard", t:"Cambio della guardia a cavallo a Horse Guards Parade: controllare il calendario per domenica 6 dicembre, ore 10:00", n:"La domenica a Buckingham Palace non c'è il cambio con la banda (solo lunedì, mercoledì e venerdì), quindi andiamo a Horse Guards e poi vediamo Buckingham Palace da fuori, in fondo a St James's Park. Il calendario di dicembre esce a ridosso delle date."}
@@ -1425,12 +1423,6 @@ document.addEventListener("click", e => {
       setKey(k, was === id ? "" : id, "Irrinunciabile: " + (was === id ? "(nessuna)" : a.n));
       if (was && was !== id) toast("Irrinunciabile spostata su " + a.n);
     });
-  }
-  if (el.id === "shareBtn") {
-    const url = location.href.split("#")[0];
-    if (navigator.share) navigator.share({title:"Londra 2026", url}).catch(() => {});
-    else if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Link copiato"), () => toast(url));
-    else toast(url);
   }
 });
 $("#whoModal").addEventListener("click", e => { if (e.target.id === "whoModal") { afterWho = null; e.currentTarget.classList.remove("open"); } });

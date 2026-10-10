@@ -113,6 +113,8 @@ section{padding:30px 0 6px}
 .votebox a{flex:none;text-decoration:none;background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px}
 .votebox .vb-todos{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
 .votebox a.vb-todo{background:transparent;color:inherit;border:1px solid rgba(29,43,79,.25);font-weight:600;font-size:12px;padding:4px 10px}
+.hero-vote .vb-t{flex-basis:100%}
+.votebox b.vb-b2{margin-top:10px;font-size:14px}
 .votebox .vb-small{display:block;font-size:12px;margin-top:2px}
 .votebox .vb-bar + span{display:block;margin-top:8px}
 .votebox.ok{background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
@@ -925,14 +927,18 @@ function renderWho(){
 function chkStats(){
   const VP = votes().people, pv = planVotes();
   let total = 2, done = (ALL_PEOPLE.every(p => VP.has(p)) ? 1 : 0) + (ALL_PEOPLE.every(p => PLANS.some(pl => pv[pl.id].includes(p))) ? 1 : 0);
-  const todo = [];
+  const todo = [], book = {total: 0, done: 0};
   CHECK.forEach(gr => gr.items.forEach(it => {
-    const keys = it.fam ? ["|M", "|B"] : [""];
+    const keys = it.fam ? ["|M", "|B"] : [""], isBook = gr.g === "Prenotazioni del programma";
     let all = true;
-    keys.forEach(k => { total++; if (val("chk|" + it.id + k) === "1") done++; else all = false; });
-    if (!all && gr.g === "Prenotazioni del programma") todo.push(it);
+    keys.forEach(k => {
+      const on = val("chk|" + it.id + k) === "1";
+      if (isBook) { book.total++; if (on) book.done++; } else { total++; if (on) done++; }
+      if (!on) all = false;
+    });
+    if (!all && isBook) todo.push(it);
   }));
-  return {total, done, todo};
+  return {total, done, todo, book};
 }
 
 function renderChecklist(){
@@ -1118,11 +1124,11 @@ function renderVoteBoxes(){
   ids.forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
   if (CHOSEN) {
     // Votazioni chiuse: in alto lo stato dei preparativi
-    const st = chkStats(), all = st.done === st.total;
+    const st = chkStats(), all = st.done === st.total && st.book.done === st.book.total;
     const todo = st.todo.map(it => `<a class="vb-todo" href="#chk-${it.id}">${esc(it.s || it.t)}</a>`).join("");
     const el = $("#voteHero");
     el.className = "votebox hero-vote" + (all ? " ok" : "");
-    el.innerHTML = `<div class="vb-t"><b>Preparativi: ${st.done} su ${st.total} fatti${all ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.done/st.total*100)}%"></i></div>${st.todo.length ? `<span>Da prenotare:</span><div class="vb-todos">${todo}</div>` : `<span>Prenotazioni tutte fatte ✓</span>`}</div><a href="#checklist">Checklist</a>`;
+    el.innerHTML = `<div class="vb-t"><b>Prenotazioni: ${st.book.done} su ${st.book.total} fatte${st.book.done === st.book.total ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.book.done/st.book.total*100)}%"></i></div>${st.todo.length ? `<span>Da prenotare:</span><div class="vb-todos">${todo}</div>` : `<span>Tutte fatte ✓</span>`}<b class="vb-b2">Altri preparativi: ${st.done} su ${st.total} fatti${st.done === st.total ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.done/st.total*100)}%"></i></div><span class="vb-small">Documenti, soldi e valigia: si spuntano man mano, molti a ridosso della partenza.</span></div><a href="#checklist">Checklist</a>`;
   }
 }
 

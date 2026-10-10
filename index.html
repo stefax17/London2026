@@ -1109,7 +1109,7 @@ function renderVoteBoxes(){
     const todo = st.todo.map(it => `<a class="vb-todo" href="#chk-${it.id}">${esc(it.s || it.t)}</a>`).join("");
     const el = $("#voteHero");
     el.className = "votebox hero-vote" + (all ? " ok" : "");
-    el.innerHTML = `<div class="vb-t"><b>Preparativi: ${st.done} su ${st.total} fatti${all ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.done/st.total*100)}%"></i></div>${st.todo.length ? `<span>Da prenotare:</span><div class="vb-todos">${todo}</div>` : `<span>Prenotazioni tutte fatte ✓</span>`}<span class="vb-small">Programma scelto: A1 · Westminster e il fiume ✓</span></div><a href="#checklist">Checklist</a>`;
+    el.innerHTML = `<div class="vb-t"><b>Preparativi: ${st.done} su ${st.total} fatti${all ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.done/st.total*100)}%"></i></div>${st.todo.length ? `<span>Da prenotare:</span><div class="vb-todos">${todo}</div>` : `<span>Prenotazioni tutte fatte ✓</span>`}</div><a href="#checklist">Checklist</a>`;
   }
 }
 

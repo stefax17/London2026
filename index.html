@@ -109,6 +109,10 @@ section{padding:30px 0 6px}
 .votebox .vb-bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:6px}
 .votebox .vb-bar i{display:block;height:100%;background:var(--red);border-radius:99px}
 .votebox a{flex:none;text-decoration:none;background:var(--red);color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px}
+.votebox .vb-todos{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.votebox a.vb-todo{background:transparent;color:inherit;border:1px solid rgba(29,43,79,.25);font-weight:600;font-size:12px;padding:4px 10px}
+.votebox .vb-small{display:block;font-size:12px;margin-top:2px}
+.votebox .vb-bar + span{display:block;margin-top:8px}
 .votebox.ok{background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
 .votebox.ok .vb-bar i{background:var(--green)}
 .hero-vote{margin-top:16px;background:rgba(255,255,255,.72);border-color:rgba(255,255,255,.9);color:#13213f;max-width:520px}
@@ -692,12 +696,13 @@ const FOOD = [
 
 const CHECK = [
   {g:"Prenotazioni del programma", items:[
-    {id:"b_tussauds", t:"Combinato museo delle cere + London Eye per sabato 5 dicembre: cere al primo ingresso, London Eye verso le 13:45", n:"Da fare subito: online costa meno e i weekend di dicembre si riempiono. ~£186 a famiglia (2 adulti e 2 ragazzi), un biglietto per famiglia."},
-    {id:"b_cruise", t:"Crociera guidata Westminster → Tower per sabato 5 dicembre: biglietto singolo aperto, valido per qualsiasi partenza del giorno", n:"City Cruises o simili, da Westminster Pier, online: ~£48 a famiglia (adulti ~£14,50, ragazzi ~£9,75). Aperto e non a orario fisso: se il London Eye si allunga si prende la barca dopo (ogni 30–40 min). Non serve il pass giornaliero con salita e discesa libere."},
-    {id:"b_bm", t:"British Museum: slot gratuito per venerdì 4 dicembre verso le 17:30", n:"Gratis, sul sito del museo. Il venerdì è aperto fino alle 20:30."},
-    {id:"b_guard", t:"Cambio della guardia a cavallo a Horse Guards Parade: controllare il calendario per domenica 6 dicembre, ore 10:00", n:"La domenica a Buckingham Palace non c'è il cambio con la banda (solo lunedì, mercoledì e venerdì), quindi andiamo a Horse Guards e poi vediamo Buckingham Palace da fuori, in fondo a St James's Park. Il calendario di dicembre esce a ridosso delle date."},
-    {id:"b_tea", t:"Sala da tè per domenica pomeriggio verso le 16:30, per 8", n:"Tè e scones, ~£8–15 a testa. Meglio prenotare."},
-    {id:"b_ristorante", t:"Cene: prenotare per 8 dove serve", n:"In base ai vostri voti: venerdì Poppies Soho, sabato Honest Burgers Portobello (prenotano gruppi da 6 in su), domenica The Windsor Castle per il Sunday roast. Per 8 persone e dicendo che ci sono bambini."}
+    {id:"b_tussauds", s:"Cere + London Eye", t:"Combinato museo delle cere + London Eye per sabato 5 dicembre: cere al primo ingresso, London Eye verso le 13:45", n:"Da fare subito: online costa meno e i weekend di dicembre si riempiono. ~£186 a famiglia (2 adulti e 2 ragazzi), un biglietto per famiglia."},
+    {id:"b_cruise", s:"Crociera", t:"Crociera guidata Westminster → Tower per sabato 5 dicembre: biglietto singolo aperto, valido per qualsiasi partenza del giorno", n:"City Cruises o simili, da Westminster Pier, online: ~£48 a famiglia (adulti ~£14,50, ragazzi ~£9,75). Aperto e non a orario fisso: se il London Eye si allunga si prende la barca dopo (ogni 30–40 min). Non serve il pass giornaliero con salita e discesa libere."},
+    {id:"b_bm", s:"British Museum", t:"British Museum: slot gratuito per venerdì 4 dicembre verso le 17:30", n:"Gratis, sul sito del museo. Il venerdì è aperto fino alle 20:30."},
+    {id:"b_guard", s:"Calendario Horse Guards", t:"Cambio della guardia a cavallo a Horse Guards Parade: controllare il calendario per domenica 6 dicembre, ore 10:00", n:"La domenica a Buckingham Palace non c'è il cambio con la banda (solo lunedì, mercoledì e venerdì), quindi andiamo a Horse Guards e poi vediamo Buckingham Palace da fuori, in fondo a St James's Park. Il calendario di dicembre esce a ridosso delle date."},
+    {id:"b_nhm", s:"Natural History Museum", t:"Natural History Museum: slot gratuito per domenica 6 dicembre verso le 11:45, per 8", n:"Gratis sul sito del museo. Le domeniche di dicembre senza prenotazione la coda per entrare può essere di 30–60 min."},
+    {id:"b_tea", s:"Sala da tè", t:"Sala da tè per domenica pomeriggio verso le 16:30, per 8", n:"Tè e scones, ~£8–15 a testa. Meglio prenotare."},
+    {id:"b_ristorante", s:"Cene", t:"Cene: prenotare per 8 dove serve", n:"In base ai vostri voti: venerdì Poppies Soho, sabato Honest Burgers Portobello (prenotano gruppi da 6 in su), domenica The Windsor Castle per il Sunday roast. Per 8 persone e dicendo che ci sono bambini."}
   ]},
   {g:"Documenti", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
@@ -903,6 +908,20 @@ function renderWho(){
     : `<button type="button" id="whoBtn">Chi sei? Tocca qui per scegliere</button>`;
 }
 
+// Stato della checklist (stesso conteggio della barra): fatti, totale e prenotazioni ancora da fare
+function chkStats(){
+  const VP = votes().people, pv = planVotes();
+  let total = 2, done = (ALL_PEOPLE.every(p => VP.has(p)) ? 1 : 0) + (ALL_PEOPLE.every(p => PLANS.some(pl => pv[pl.id].includes(p))) ? 1 : 0);
+  const todo = [];
+  CHECK.forEach(gr => gr.items.forEach(it => {
+    const keys = it.fam ? ["|M", "|B"] : [""];
+    let all = true;
+    keys.forEach(k => { total++; if (val("chk|" + it.id + k) === "1") done++; else all = false; });
+    if (!all && gr.g === "Prenotazioni del programma") todo.push(it);
+  }));
+  return {total, done, todo};
+}
+
 function renderChecklist(){
   let total = 2, done = 0;
   // Voci automatiche delle votazioni: 1) cose da vedere, 2) scelta del programma
@@ -932,7 +951,7 @@ function renderChecklist(){
         total++; if (on) { done++; whoDid.push((fam ? fam + ": " : "") + by(key)); } else allOn = false;
         return `<button type="button" class="chk ${on?"on":""}" data-chk="${key}" data-desc="${esc(it.t + (fam ? " ("+fam+")" : ""))}" aria-pressed="${on}" aria-label="${esc(it.t)}${fam?" – "+fam:""}">${on?ICON.check:""}${lab || (on ? "" : "&nbsp;")}</button>`;
       }).join("");
-      return `<div class="item ${allOn?"done":""}"><div class="txt"><div>${esc(it.t)}</div>${it.n?`<div class="note">${esc(it.n)}</div>`:""}${whoDid.length?`<div class="by">✓ ${esc(whoDid.join(" · "))}</div>`:""}</div><div class="checks">${btns}</div></div>`;
+      return `<div class="item ${allOn?"done":""}" id="chk-${it.id}"><div class="txt"><div>${esc(it.t)}</div>${it.n?`<div class="note">${esc(it.n)}</div>`:""}${whoDid.length?`<div class="by">✓ ${esc(whoDid.join(" · "))}</div>`:""}</div><div class="checks">${btns}</div></div>`;
     }).join("");
     return `<div class="group"><h3>${esc(gr.g)}</h3><div class="items">${rows}</div></div>`;
   }).join("");
@@ -1082,7 +1101,16 @@ function renderVoteBoxes(){
     done = false;
     html = `<div class="vb-t"><b>Votazioni: ${n} su 8</b><span>${n ? `Hanno votato: <b style="display:inline;font-size:inherit">${esc(voted.join(", "))}</b><br>` : ""}Mancano: ${esc(missing.join(", "))}. Chiudiamole presto per fare il programma!</span><div class="vb-bar"><i style="width:${Math.round(n/8*100)}%"></i></div></div><a href="#vedere">Vota ora</a>`;
   }
-  ["#voteHero", "#voteProg"].forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
+  const ids = CHOSEN ? ["#voteProg"] : ["#voteHero", "#voteProg"];
+  ids.forEach(id => { const el = $(id); el.className = "votebox" + (id === "#voteHero" ? " hero-vote" : "") + (done ? " ok" : ""); el.innerHTML = html; });
+  if (CHOSEN) {
+    // Votazioni chiuse: in alto lo stato dei preparativi
+    const st = chkStats(), all = st.done === st.total;
+    const todo = st.todo.map(it => `<a class="vb-todo" href="#chk-${it.id}">${esc(it.s || it.t)}</a>`).join("");
+    const el = $("#voteHero");
+    el.className = "votebox hero-vote" + (all ? " ok" : "");
+    el.innerHTML = `<div class="vb-t"><b>Preparativi: ${st.done} su ${st.total} fatti${all ? " ✓" : ""}</b><div class="vb-bar"><i style="width:${Math.round(st.done/st.total*100)}%"></i></div>${st.todo.length ? `<span>Da prenotare:</span><div class="vb-todos">${todo}</div>` : `<span>Prenotazioni tutte fatte ✓</span>`}<span class="vb-small">Programma scelto: A1 · Westminster e il fiume ✓</span></div><a href="#checklist">Checklist</a>`;
+  }
 }
 
 // Quanti ♥ raccoglie una proposta: somma dei ♥ delle tappe di sabato e domenica (calcolata dai voti attuali)

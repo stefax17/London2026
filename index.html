@@ -717,7 +717,7 @@ const CHECK = [
   ]},
   {g:"Documenti e controlli", items:[
     {id:"d_pass", fam:true, t:"Passaporto valido per tutti", n:"La carta d'identità non basta più per il Regno Unito."},
-    {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA, £16 a testa, vale 2 anni. Farla con qualche settimana di margine."},
+    {id:"d_eta", fam:true, t:"ETA UK per ognuno, bambini compresi", n:"Dall'app ufficiale UK ETA o dal sito del governo britannico, ~£16 a testa (verificare il prezzo sul sito), vale 2 anni. Farla con qualche settimana di margine. Attenzione ai siti non ufficiali che fanno pagare di più: usare solo gov.uk.", u:"https://www.gov.uk/eta", ul:"Sito ufficiale ETA (gov.uk)"},
     {id:"d_team", fam:true, t:"Tessera sanitaria italiana di tutti: controllare che sia valida fino a dopo il 7 dicembre (consigliata)", n:"Non c'è niente da comprare: è la tessera che avete già. Il retro (TEAM) vale per le cure necessarie nel Regno Unito. Guardate la data di scadenza sul fronte: se scade prima del viaggio, la nuova arriva di solito per posta in automatico, altrimenti si richiede alla propria ASL o online sul sito dell'Agenzia delle Entrate."},
     {id:"d_ass", fam:true, t:"Assicurazione di viaggio", n:"Facoltativa."},
     {id:"d_tickets", fam:true, t:"Biglietti sul telefono: aprire la cartella Drive e salvarli offline", n:"In metro spesso non c'è campo. Dalla cartella Biglietti (pulsante in alto nella home): sui PDF della propria famiglia, Rendi disponibile offline oppure scaricarli nel telefono. Serve l'account Google invitato."},
@@ -968,7 +968,7 @@ function renderChecklist(){
         total++; if (on) { done++; whoDid.push((fam ? fam + ": " : "") + by(key)); } else allOn = false;
         return `<button type="button" class="chk ${on?"on":""}" data-chk="${key}" data-desc="${esc(it.t + (fam ? " ("+fam+")" : ""))}" aria-pressed="${on}" aria-label="${esc(it.t)}${fam?" – "+fam:""}">${on?ICON.check:""}${lab || (on ? "" : "&nbsp;")}</button>`;
       }).join("");
-      return `<div class="item ${allOn?"done":""}" id="chk-${it.id}"><div class="txt"><div>${esc(it.t)}</div>${it.n?`<div class="note">${esc(it.n)}</div>`:""}${whoDid.length?`<div class="by">✓ ${esc(whoDid.join(" · "))}</div>`:""}</div><div class="checks">${btns}</div></div>`;
+      return `<div class="item ${allOn?"done":""}" id="chk-${it.id}"><div class="txt"><div>${esc(it.t)}</div>${it.n?`<div class="note">${esc(it.n)}${it.u?` <a href="${esc(it.u)}" target="_blank" rel="noopener">${esc(it.ul || "Link")} ↗</a>`:""}</div>`:""}${whoDid.length?`<div class="by">✓ ${esc(whoDid.join(" · "))}</div>`:""}</div><div class="checks">${btns}</div></div>`;
     }).join("");
     return `<div class="group"><h3>${esc(gr.g)}</h3><div class="items">${rows}</div></div>`;
   }).join("");

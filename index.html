@@ -504,6 +504,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
     <h2>Mappa</h2>
     <p class="lead">La casa e tutte le proposte, con lo stesso numero delle schede. Scegliendo un giorno si vede il percorso di quel giorno.</p>
     <div class="maptools" id="mapTools"></div>
+    <div class="maptools" id="mapSub" hidden></div>
     <p class="mapnote" id="mapNote"></p>
     <p class="mapnote" id="mapHint" hidden>Tocca la mappa per spostarla con un dito, due dita per lo zoom.</p>
     <div id="mapBox"></div>
@@ -1309,9 +1310,12 @@ let dayFood = false;
 try { dayFood = localStorage.getItem("londra26_dayfood") === "1"; } catch (e) {}
 
 function renderMapTools(){
+  // sotto i filtri, ben visibile: nella mappa di un giorno si aggiungono o tolgono i ristoranti
+  const sub = $("#mapSub"), isDay = mapMode.startsWith("d");
+  sub.hidden = !isDay;
+  sub.innerHTML = isDay ? `<button type="button" class="chip ${dayFood?"on":""}" data-dayfood="1">🍽️ ${dayFood ? "Nascondi i ristoranti del giorno" : "Mostra i ristoranti del giorno"}</button>` : "";
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
-    + (mapMode.startsWith("d") ? `<button type="button" class="chip ${dayFood?"on":""}" data-dayfood="1">🍽️ Ristoranti</button>` : "")
     + (!CHOSEN && (mapMode === "d1" || mapMode === "d2" || mapMode === "d3") ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${esc(planLabel(p))}</button>`).join("") : "");
 }
 
@@ -1383,7 +1387,7 @@ function renderMap(fit){
       const r = e.f ? FOOD.find(x => x.id === e.f) : null, ll = r ? r.ll : e.ll, n = r ? r.n : e.n;
       if (!ll) return;
       const info = r ? `${esc(r.k)} · ${esc(r.pr)}<br><a href="#act-${r.id}">Apri la scheda</a>` : (e.zone ? `Catena con più locali: punto indicativo in zona ${esc(e.zone)}` : esc(e.d || ""));
-      L.marker(ll, {icon:L.divIcon({className:"", html:`<div class="pin ${e.alt ? "fa" : "f"}">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset:e.alt ? 0 : 20})
+      L.marker(ll, {icon:L.divIcon({className:"", html:`<div class="pin ${e.alt ? "fa" : "f"}">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset:e.alt ? -200 : -100})
         .bindPopup(`<b>${esc(n)}</b><br>${esc(e.m)} · ${e.alt ? "alternativa" : "proposta"}<br>${info}`).addTo(mapLayer);
       pts.push(ll);
     });

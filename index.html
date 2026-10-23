@@ -263,6 +263,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
 .pin.d{background:#1d2b4f}
 .pin.f{background:#6b4fa0}
 .pin.fo{background:#9aa0ab;opacity:.85}
+.pin.fa{background:#b7a6d6}
 .home{width:34px;height:34px;border-radius:50%;background:#2f7a4d;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .home svg{width:18px;height:18px;fill:#fff}
 .apt{position:relative;width:46px;height:46px}
@@ -676,7 +677,7 @@ const FOOD = [
   {id:"r_poppies", ll:[51.5131,-0.1316], book:true, n:"Poppies Fish & Chips Soho", k:"Fish & chips",
    d:"Fish & chips tradizionale in un locale in stile anni '50, prenotabile. Comodo prima o dopo le luci di Natale.",
    z:"Soho", pr:"~£15–20"},
-  {id:"r_hummingbird", ll:[51.5135,-0.2028], n:"The Hummingbird Bakery", k:"Cupcake e dolci americani",
+  {id:"r_hummingbird", ll:[51.5141,-0.2032], n:"The Hummingbird Bakery", k:"Cupcake e dolci americani",
    d:"Pasticceria famosa per i cupcake colorati e la red velvet. Tre negozi sul nostro giro: Spitalfields, 1 Frying Pan Alley, vicino a Gift Zone (sabato pomeriggio, chiude alle 19 lun–sab, alle 16 la domenica); South Kensington, 47 Old Brompton Road, vicino ai musei (domenica pomeriggio, chiude alle 20 tutti i giorni); Portobello Road 133, sotto casa (chiude alle 18 lun–ven, 19 il sabato, 17 la domenica).",
    z:"Spitalfields, South Kensington, Notting Hill", pr:"~£4–5 a cupcake"},
   {id:"r_flatiron", ll:[51.5114,-0.1233], n:"Flat Iron Covent Garden", k:"Bistecca",
@@ -1275,9 +1276,42 @@ function initMap(){
   }).observe($("#mapBox"));
 }
 
+// Dove mangiare di ogni giorno sulla mappa (proposte e alternative). f = scheda di Dove mangiare; zone = catena, punto indicativo in zona
+const DAY_FOOD = [
+  [
+    {n:"The Hummingbird Bakery Portobello", ll:[51.5141,-0.2032], m:"Merenda (facoltativa)", d:"133 Portobello Road, venerdì chiude alle 18"},
+    {f:"r_poppies", m:"Cena"},
+    {f:"r_chinatown", m:"Cena", alt:true},
+    {n:"McDonald's / Burger King", ll:[51.5160,-0.1302], m:"Cena", alt:true, zone:"Tottenham Court Road"}
+  ],
+  [
+    {n:"McDonald's / Burger King", ll:[51.5233,-0.1575], m:"Pranzo", zone:"Baker Street"},
+    {n:"Pret / Tesco (meal deal)", ll:[51.5218,-0.1580], m:"Pranzo", alt:true, zone:"Baker Street"},
+    {n:"The Hummingbird Bakery Spitalfields", ll:[51.5171,-0.0766], m:"Dolce: cupcake per la colazione di domenica", d:"1 Frying Pan Alley, sabato chiude alle 19"},
+    {f:"r_honest", m:"Cena"},
+    {f:"r_churchill", m:"Cena", alt:true}
+  ],
+  [
+    {n:"Caffetteria del Natural History Museum", ll:[51.4961,-0.1772], m:"Pranzo", d:"Dentro il museo, oppure picnic"},
+    {n:"Pret / Leon / Wagamama", ll:[51.4936,-0.1734], m:"Pranzo", alt:true, zone:"South Kensington"},
+    {n:"The Hummingbird Bakery South Kensington", ll:[51.4928,-0.1767], m:"Merenda", d:"47 Old Brompton Road, chiude alle 20"},
+    {f:"r_windsor", m:"Cena"},
+    {f:"r_porterhouse", m:"Cena", alt:true},
+    {f:"r_lambflag", m:"Cena", alt:true},
+    {f:"r_pizza", m:"Cena", alt:true}
+  ],
+  [
+    {n:"Pret / Leon", ll:[51.5186,-0.0811], m:"Pranzo della famiglia Brindisi", zone:"Liverpool Street"},
+    {n:"The Hummingbird Bakery Spitalfields", ll:[51.5171,-0.0766], m:"Spuntino per il viaggio (facoltativo)", d:"1 Frying Pan Alley, chiude alle 19"}
+  ]
+];
+let dayFood = false;
+try { dayFood = localStorage.getItem("londra26_dayfood") === "1"; } catch (e) {}
+
 function renderMapTools(){
   const opts = [["all","Tutte"],["voted","Solo votate"],["must","Solo irrinunciabili"],["food","Ristoranti"],["foodv","Ristoranti votati"],["apt","Aeroporti"], ...DAYS.map((d, i) => ["d"+i, d.short])];
   $("#mapTools").innerHTML = opts.map(([k, l]) => `<button type="button" class="chip ${mapMode===k?"on":""}" data-mapmode="${k}">${esc(l)}</button>`).join("")
+    + (mapMode.startsWith("d") ? `<button type="button" class="chip ${dayFood?"on":""}" data-dayfood="1">🍽️ Ristoranti</button>` : "")
     + (!CHOSEN && (mapMode === "d1" || mapMode === "d2" || mapMode === "d3") ? `<span class="small muted" style="flex:none;align-self:center;margin-left:6px">Proposta:</span>` + PLANS.map(p => `<button type="button" class="chip ${mapPlanId()===p.id?"on":""}" data-mapplan="${p.id}">${esc(planLabel(p))}</button>`).join("") : "");
 }
 
@@ -1344,6 +1378,17 @@ function renderMap(fit){
     if (mapMode === "voted" && !list.length) note = "Nessuna proposta votata per ora.";
     if (mapMode === "must") note = list.length ? "Le irrinunciabili di ognuno: tocca un punto per vedere di chi è." : "Nessuna irrinunciabile scelta per ora.";
   }
+  if (dayIdx >= 0 && dayFood && DAY_FOOD[dayIdx]) {
+    DAY_FOOD[dayIdx].forEach(e => {
+      const r = e.f ? FOOD.find(x => x.id === e.f) : null, ll = r ? r.ll : e.ll, n = r ? r.n : e.n;
+      if (!ll) return;
+      const info = r ? `${esc(r.k)} · ${esc(r.pr)}<br><a href="#act-${r.id}">Apri la scheda</a>` : (e.zone ? `Catena con più locali: punto indicativo in zona ${esc(e.zone)}` : esc(e.d || ""));
+      L.marker(ll, {icon:L.divIcon({className:"", html:`<div class="pin ${e.alt ? "fa" : "f"}">${FORK_SVG}</div>`, iconSize:[26,26], iconAnchor:[13,13]}), zIndexOffset:e.alt ? 0 : 20})
+        .bindPopup(`<b>${esc(n)}</b><br>${esc(e.m)} · ${e.alt ? "alternativa" : "proposta"}<br>${info}`).addTo(mapLayer);
+      pts.push(ll);
+    });
+    note = (note ? note + " " : "") + "🍽️ Forchetta viola: proposta, lilla: alternativa.";
+  }
   $("#mapNote").textContent = note;
   list.forEach((a, i) => {
     const s = score(V, a.id), m = (V.musts[a.id] || []).length, l = (V.likes[a.id] || []).length;
@@ -1396,6 +1441,7 @@ document.addEventListener("click", e => {
     const id = el.dataset.likefood, r = FOOD.find(x => x.id === id);
     return needMe(() => { const k = "like|" + id + "|" + me; setKey(k, val(k) === "1" ? "" : "1", "Ristorante: " + r.n); });
   }
+  if (el.dataset.dayfood) { dayFood = !dayFood; try { localStorage.setItem("londra26_dayfood", dayFood ? "1" : "0"); } catch (e) {} renderMap(true); return; }
   if (el.dataset.mapmode) { mapMode = el.dataset.mapmode; if (CHOSEN) mapPlan = ""; renderMap(true); return; }
   if (el.dataset.mapplan) { mapPlan = el.dataset.mapplan; renderMap(true); return; }
   if (el.dataset.planmap) {

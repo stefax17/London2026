@@ -63,6 +63,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .count{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:12px;padding:8px 12px;font-weight:600}
 .count{font-size:14px;padding:6px 12px}
 .count b{font-weight:700}
+.tg{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;vertical-align:0;flex:none}
+.tg-p{background:#c8102e}.tg-b{background:#e0a800}.tg-f{background:#2f9e5b}
+.tg-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:0 0 12px}
 a.tickets{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;margin:0 0 12px}
 .hero-row a.tickets{margin:0}
 .btn-ghost{background:#1d2b4f;border:1px solid #1d2b4f;color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
@@ -380,6 +383,7 @@ footer{padding:34px 0 40px;text-align:center;font-size:13px;color:var(--muted)}
   <section id="programma">
     <h2>Programma</h2>
     <p class="lead">Votazione chiusa: abbiamo scelto <b>A1 · Westminster e il fiume, versione low budget</b>, con London Eye e crociera guidata aggiunti il sabato (~£235 a famiglia per il sabato). Ecco il programma giorno per giorno; le prenotazioni da fare sono nella checklist.</p>
+    <p class="tg-legend"><span><i class="tg tg-p"></i>Pagato: non saltare</span><span><i class="tg tg-b"></i>Prenotato</span><span><i class="tg tg-f"></i>Gratis: si può saltare</span></p>
     <div class="votebox" id="voteProg" style="margin-bottom:12px"></div>
     <div id="days"></div>
     <div class="fold" id="plansWrap" style="margin-top:22px">
@@ -1059,12 +1063,22 @@ function renderRank(){
     : `<li class="empty" style="display:block">Appena arrivano i voti qui compare la classifica.</li>`;
 }
 
+// Colore delle righe del programma: p = pagato (rosso, non saltare), b = prenotato (giallo), f = gratis (verde, si può saltare).
+// Le righe di spostamento, voli e rientri restano senza colore.
+const ROW_TAG = {
+  "0|~15:45":"f", "0|16:30":"f", "0|17:30":"b", "0|19:45":"b",
+  "1|10:00":"p", "1|12:00":"f", "1|12:45":"f", "1|13:45":"p", "1|15:00":"p", "1|15:45":"f", "1|16:40":"f", "1|17:05":"f", "1|17:20":"f", "1|18:20":"b",
+  "2|9:40":"f", "2|10:30":"f", "2|10:50":"f", "2|12:00":"b", "2|14:30":"b", "2|15:50":"f", "2|16:15":"f", "2|16:45":"b", "2|18:00":"f", "2|19:00":"b",
+  "3|10:00":"f", "3|11:00":"f"
+};
+const TAG_TXT = {p:"Pagato: non saltare", b:"Prenotato (gratis o da pagare sul posto)", f:"Gratis: si può saltare"};
+
 function renderDays(){
   const now = new Date(), today = now.getFullYear() === 2026 && now.getMonth() === 11 ? now.getDate() - 4 : -1;
   $("#days").innerHTML = DAYS.map((d, i) => `<div class="card day ${i === today ? "today" : ""}" id="day-${i}">
     <div class="day-h"><h3>${esc(d.d)}</h3><span class="pill ${i === today ? "red" : ""}">${i === today ? "Oggi" : esc(d.tag)}</span></div>
     ${d.note?`<p class="small muted" style="margin:0 0 6px">${esc(d.note)}</p>`:""}
-    <ul class="tl">${d.rows.map(r => `<li><span class="h">${esc(r[0])}</span><span class="${r[1]?"":"tbd"}">${r[1] ? esc(r[1]) : "Da decidere dopo i voti"}</span></li>`).join("")}</ul>
+    <ul class="tl">${d.rows.map(r => { const t = ROW_TAG[i + "|" + r[0]]; return `<li><span class="h">${esc(r[0])}</span><span class="${r[1]?"":"tbd"}">${t ? `<i class="tg tg-${t}" title="${TAG_TXT[t]}"></i>` : ""}${r[1] ? esc(r[1]) : "Da decidere dopo i voti"}</span></li>`; }).join("")}</ul>
     ${d.meals ? `<div class="opts meals"><div class="plan-day">🍽️ Dove mangiare</div>${d.meals.map(m => `<div class="meal"><b>${esc(m[0])}</b><span>${esc(m[1])}</span><small>In alternativa: ${esc(m[2])}</small></div>`).join("")}</div>` : ""}
     ${d.options ? `<div class="opts"><div class="plan-day">${esc(d.options.title)}</div><ol class="optl">${d.options.rows.map(o => `<li><b>${esc(o[0])}</b><span>${esc(o[1])}</span></li>`).join("")}</ol></div>` : ""}
   </div>`).join("");
